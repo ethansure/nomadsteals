@@ -213,7 +213,7 @@ export function SearchBar({
 
       {/* Quick Links */}
       <div className="mt-5 flex flex-wrap items-center gap-2 px-1">
-        <span className="text-sm text-[#2D3436]/50">Popular:</span>
+        <span className="text-sm text-white/80 font-medium">Popular:</span>
         {[
           { from: 'us-west', to: 'asia-east', label: '🌴 West Coast → Asia' },
           { from: 'us-east', to: 'europe-west', label: '🗽 East Coast → Europe' },
@@ -228,7 +228,7 @@ export function SearchBar({
               setTo(route.to);
               setToType('region');
             }}
-            className="px-4 py-2 text-sm bg-[#FFF8F0] hover:bg-[#FFEFE5] hover:text-[#FF6B6B] rounded-full transition-all duration-300 font-medium"
+            className="px-4 py-2 text-sm bg-white/90 text-[#2D3436] hover:bg-white hover:text-[#FF6B6B] rounded-full transition-all duration-300 font-medium shadow-sm"
           >
             {route.label}
           </button>
