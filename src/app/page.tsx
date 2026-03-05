@@ -8,7 +8,7 @@ import { SearchBar } from "@/components/SearchBar";
 import { getServerDeals, getServerStats, formatRelativeTime } from "@/lib/api/server";
 import { popularCities } from "@/lib/sample-data";
 import { Deal } from "@/lib/types";
-import { Target, Wallet, Flame, Zap, Building, Calendar, Plane, Building2, Package } from "lucide-react";
+import { Compass, Wallet, Flame, Sparkles, MapPin, Calendar, Plane, Building2, Package, Sun, Palmtree, Umbrella } from "lucide-react";
 
 // Force dynamic rendering to always get fresh scraped deals
 export const dynamic = 'force-dynamic';
@@ -33,34 +33,44 @@ export default async function Home() {
   const todayDeals = deals.slice(0, 6);
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-[#FFFAF5]">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxIDAgNiAyLjY5IDYgNnMtMi42OSA2LTYgNi02LTIuNjktNi02IDIuNjktNiA2LTZ6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjwvZz48L3N2Zz4=')]" />
+      {/* Hero Section - Dreamy Sunset Vibe */}
+      <section className="relative bg-gradient-to-br from-[#FF6B6B] via-[#FFA07A] to-[#FFD93D] text-white overflow-hidden">
+        {/* Background Decorations */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 text-8xl opacity-10 animate-pulse">🌴</div>
+          <div className="absolute bottom-20 right-20 text-7xl opacity-10">✈️</div>
+          <div className="absolute top-1/3 right-1/4 text-5xl opacity-5">🌺</div>
+          <div className="absolute bottom-1/3 left-1/4 text-4xl opacity-5">🐚</div>
+        </div>
+        
+        {/* Wave Pattern at Bottom */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-20 fill-[#FFFAF5]">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V120H0Z" />
+          </svg>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 py-20 relative">
+        <div className="max-w-7xl mx-auto px-6 py-24 pb-32 relative">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur rounded-full text-sm mb-6">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 backdrop-blur-sm rounded-full text-sm mb-8 border border-white/20">
+              <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
               <span>Updated {formatRelativeTime(stats.updatedAt)}</span>
-              <span className="mx-2">•</span>
+              <span className="mx-2 opacity-50">•</span>
               <span>{stats.totalDeals.toLocaleString()} deals live</span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              Today's Best
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              Find Your Next
               <br />
-              <span className="text-yellow-300">Travel Deals</span>
+              <span className="text-[#2D3436]">Escape</span> ✨
             </h1>
 
-            <p className="text-xl text-blue-100 mb-8 max-w-xl">
-              Hand-picked flights, hotels & packages with Value Scores. 
-              Average savings of {stats.avgSavings}% across all deals.
+            <p className="text-xl text-white/90 mb-10 max-w-xl leading-relaxed">
+              Hand-picked flights, hotels & packages at prices that'll make you smile. 
+              Average savings of <span className="font-bold">{stats.avgSavings}%</span> across all deals.
             </p>
 
             {/* Search/Filter Bar */}
@@ -68,19 +78,17 @@ export default async function Home() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
             {[
-              { label: "Active Deals", value: stats.totalDeals, Icon: Target },
-              { label: "Avg Savings", value: `${stats.avgSavings}%`, Icon: Wallet },
-              { label: "Hot Deals", value: stats.hotDeals, Icon: Flame },
-              { label: "Error Fares", value: deals.filter((d) => d.isHistoricLow).length, Icon: Zap },
+              { label: "Active Deals", value: stats.totalDeals, Icon: Compass, emoji: "🧭" },
+              { label: "Avg Savings", value: `${stats.avgSavings}%`, Icon: Wallet, emoji: "💰" },
+              { label: "Hot Deals", value: stats.hotDeals, Icon: Flame, emoji: "🔥" },
+              { label: "Error Fares", value: deals.filter((d) => d.isHistoricLow).length, Icon: Sparkles, emoji: "✨" },
             ].map((stat, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
-                <div className="flex justify-center mb-1">
-                  <stat.Icon className="w-6 h-6" />
-                </div>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <div className="text-sm text-blue-200">{stat.label}</div>
+              <div key={i} className="bg-white/20 backdrop-blur-sm rounded-2xl p-5 text-center border border-white/20 hover:bg-white/30 transition-all duration-300">
+                <div className="text-3xl mb-2">{stat.emoji}</div>
+                <div className="text-3xl font-bold">{stat.value}</div>
+                <div className="text-sm text-white/80">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -89,25 +97,29 @@ export default async function Home() {
 
       {/* Hot Deals Section */}
       {hotDeals.length > 0 && (
-        <section className="py-16 px-6">
+        <section className="py-20 px-6 bg-[#FFFAF5]">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-10">
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                  <Flame className="w-8 h-8 text-red-500" />
+                <h2 className="text-3xl md:text-4xl font-bold text-[#2D3436] flex items-center gap-3">
+                  <span className="text-4xl">🔥</span>
                   Hot Deals
-                  <span className="px-3 py-1 bg-red-100 text-red-600 text-sm font-medium rounded-full">
+                  <span className="px-4 py-1.5 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white text-sm font-semibold rounded-full shadow-lg shadow-[#FF6B6B]/20">
                     {hotDeals.length} new
                   </span>
                 </h2>
-                <p className="text-gray-600 mt-1">Incredible prices that won't last long</p>
+                <p className="text-[#2D3436]/60 mt-2 text-lg">Incredible prices that won't last long</p>
               </div>
-              <Link href="/deals?hot=true" className="text-blue-600 font-medium hover:text-blue-700 transition">
-                View all →
+              <Link 
+                href="/deals?hot=true" 
+                className="hidden md:flex items-center gap-2 text-[#FF6B6B] font-semibold hover:text-[#E85555] transition-colors"
+              >
+                View all
+                <span>→</span>
               </Link>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {hotDeals.slice(0, 3).map((deal) => (
                 <DealCard key={deal.id} deal={deal} />
               ))}
@@ -117,22 +129,26 @@ export default async function Home() {
       )}
 
       {/* Popular Cities */}
-      <section className="py-16 px-6 bg-white">
+      <section className="py-20 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-10">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <Building className="w-8 h-8 text-indigo-500" />
+              <h2 className="text-3xl md:text-4xl font-bold text-[#2D3436] flex items-center gap-3">
+                <span className="text-4xl">🌴</span>
                 Popular Destinations
               </h2>
-              <p className="text-gray-600 mt-1">Browse deals by city</p>
+              <p className="text-[#2D3436]/60 mt-2 text-lg">Browse deals by city</p>
             </div>
-            <Link href="/cities" className="text-blue-600 font-medium hover:text-blue-700 transition">
-              All cities →
+            <Link 
+              href="/cities" 
+              className="hidden md:flex items-center gap-2 text-[#20B2AA] font-semibold hover:text-[#178F89] transition-colors"
+            >
+              All cities
+              <span>→</span>
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {popularCities.slice(0, 8).map(city => (
               <CityCard key={city.code} city={city} />
             ))}
@@ -141,42 +157,41 @@ export default async function Home() {
       </section>
 
       {/* Today's Deals */}
-      <section className="py-16 px-6">
+      <section className="py-20 px-6 bg-[#FFFAF5]">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-10">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <Calendar className="w-8 h-8 text-blue-500" />
+              <h2 className="text-3xl md:text-4xl font-bold text-[#2D3436] flex items-center gap-3">
+                <span className="text-4xl">☀️</span>
                 Today's Deals
               </h2>
-              <p className="text-gray-600 mt-1">Fresh deals updated daily</p>
+              <p className="text-[#2D3436]/60 mt-2 text-lg">Fresh deals updated daily</p>
             </div>
             
-            {/* Sort Options */}
             <Link 
               href="/deals" 
-              className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition"
+              className="px-6 py-3 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-[#FF6B6B]/25 transition-all duration-300 hover:-translate-y-0.5"
             >
               Browse All Deals →
             </Link>
           </div>
 
           {/* Filter Tags */}
-          <div className="flex flex-wrap gap-2 mb-8">
+          <div className="flex flex-wrap gap-3 mb-10">
             {[
-              { label: "All", href: "/deals", Icon: null },
-              { label: "Flights", href: "/deals?type=flight", Icon: Plane },
-              { label: "Hotels", href: "/deals?type=hotel", Icon: Building2 },
-              { label: "Packages", href: "/deals?type=package", Icon: Package },
-              { label: "Hot Deals", href: "/deals?hot=true", Icon: Flame },
+              { label: "All", href: "/deals", Icon: null, active: true },
+              { label: "Flights", href: "/deals?type=flight", Icon: Plane, active: false },
+              { label: "Hotels", href: "/deals?type=hotel", Icon: Building2, active: false },
+              { label: "Packages", href: "/deals?type=package", Icon: Package, active: false },
+              { label: "Hot Deals", href: "/deals?hot=true", Icon: Flame, active: false },
             ].map((tag, i) => (
               <Link 
                 key={tag.label}
                 href={tag.href}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition flex items-center gap-1.5 ${
-                  i === 0 
-                    ? "bg-blue-600 text-white" 
-                    : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
+                  tag.active 
+                    ? "bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white shadow-lg shadow-[#FF6B6B]/20" 
+                    : "bg-white text-[#2D3436]/70 hover:bg-[#FFF8F0] border border-[#FF6B6B]/10 hover:border-[#FF6B6B]/20"
                 }`}
               >
                 {tag.Icon && <tag.Icon className="w-4 h-4" />}
@@ -186,28 +201,26 @@ export default async function Home() {
           </div>
 
           {todayDeals.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {todayDeals.map((deal) => (
                 <DealCard key={deal.id} deal={deal} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-              <div className="flex justify-center mb-4">
-                <Plane className="w-12 h-12 text-gray-400" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No deals available yet</h3>
-              <p className="text-gray-600 mb-4">Check back soon for the latest travel deals!</p>
+            <div className="text-center py-16 bg-white rounded-3xl border border-[#FF6B6B]/10 shadow-soft">
+              <div className="text-6xl mb-4">✈️</div>
+              <h3 className="text-xl font-bold text-[#2D3436] mb-2">No deals available yet</h3>
+              <p className="text-[#2D3436]/60 mb-4">Check back soon for the latest travel deals!</p>
             </div>
           )}
 
           {todayDeals.length > 0 && (
-            <div className="text-center mt-12">
+            <div className="text-center mt-14">
               <Link 
                 href="/deals"
-                className="px-8 py-4 bg-white border border-gray-200 rounded-2xl font-medium text-gray-700 hover:bg-gray-50 transition inline-block"
+                className="px-10 py-4 bg-white border-2 border-[#FF6B6B]/20 rounded-full font-semibold text-[#2D3436] hover:bg-[#FFF8F0] hover:border-[#FF6B6B]/30 transition-all duration-300 inline-block"
               >
-                Load More Deals
+                Load More Deals 🌊
               </Link>
             </div>
           )}
@@ -215,38 +228,41 @@ export default async function Home() {
       </section>
 
       {/* Value Score Explainer */}
-      <section className="py-16 px-6 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex justify-center mb-4">
-            <Zap className="w-12 h-12 text-yellow-400" />
-          </div>
-          <h2 className="text-3xl font-bold mb-4">What's a Value Score?</h2>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+      <section className="py-20 px-6 bg-gradient-to-br from-[#2D3436] to-[#4A5154] text-white relative overflow-hidden">
+        {/* Background Decoration */}
+        <div className="absolute top-10 right-10 text-8xl opacity-5">⭐</div>
+        <div className="absolute bottom-10 left-10 text-6xl opacity-5">💎</div>
+        
+        <div className="max-w-4xl mx-auto text-center relative">
+          <div className="text-5xl mb-6">✨</div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-5">What's a Value Score?</h2>
+          <p className="text-white/70 mb-12 max-w-2xl mx-auto text-lg leading-relaxed">
             Our proprietary Value Score (0-100) compares current prices to historical data 
             to identify truly exceptional deals — not just "on sale" prices.
           </p>
           <div className="grid md:grid-cols-3 gap-6 text-left">
-            <div className="bg-white/5 backdrop-blur rounded-xl p-6">
-              <div className="text-green-400 font-bold text-2xl mb-2">90+</div>
-              <div className="font-semibold mb-1">Incredible</div>
-              <p className="text-gray-400 text-sm">Extremely rare pricing. Book immediately.</p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-7 border border-white/10 hover:bg-white/15 transition-all duration-300">
+              <div className="text-[#20B2AA] font-bold text-3xl mb-3">90+</div>
+              <div className="font-semibold mb-2 text-lg">Incredible 🤩</div>
+              <p className="text-white/60 text-sm leading-relaxed">Extremely rare pricing. Book immediately.</p>
             </div>
-            <div className="bg-white/5 backdrop-blur rounded-xl p-6">
-              <div className="text-lime-400 font-bold text-2xl mb-2">70-89</div>
-              <div className="font-semibold mb-1">Great Value</div>
-              <p className="text-gray-400 text-sm">Well below typical prices. Worth booking.</p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-7 border border-white/10 hover:bg-white/15 transition-all duration-300">
+              <div className="text-[#FFD93D] font-bold text-3xl mb-3">70-89</div>
+              <div className="font-semibold mb-2 text-lg">Great Value 😎</div>
+              <p className="text-white/60 text-sm leading-relaxed">Well below typical prices. Worth booking.</p>
             </div>
-            <div className="bg-white/5 backdrop-blur rounded-xl p-6">
-              <div className="text-amber-400 font-bold text-2xl mb-2">50-69</div>
-              <div className="font-semibold mb-1">Good</div>
-              <p className="text-gray-400 text-sm">Solid savings opportunity.</p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-7 border border-white/10 hover:bg-white/15 transition-all duration-300">
+              <div className="text-[#FFA07A] font-bold text-3xl mb-3">50-69</div>
+              <div className="font-semibold mb-2 text-lg">Good 👍</div>
+              <p className="text-white/60 text-sm leading-relaxed">Solid savings opportunity.</p>
             </div>
           </div>
           <Link 
             href="/about#value-score"
-            className="inline-block mt-8 text-blue-400 font-medium hover:text-blue-300 transition"
+            className="inline-flex items-center gap-2 mt-10 text-[#20B2AA] font-semibold hover:text-[#48D1CC] transition-colors"
           >
-            Learn more about Value Scores →
+            Learn more about Value Scores
+            <span>→</span>
           </Link>
         </div>
       </section>

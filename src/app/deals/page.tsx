@@ -12,20 +12,13 @@ import { RegionSelectCompact } from "@/components/RegionSelect";
 import { filterDeals, sortDeals, searchDeals } from "@/lib/utils";
 import { formatSearchTitle, getRegion } from "@/lib/regions";
 import { Deal, DealType, SortOption } from "@/lib/types";
-import { Target, Plane, Building2, Package, Flame, Globe, Search, Frown, Palmtree, MapPin, Umbrella } from "lucide-react";
+import { Plane, Building2, Package, Flame, SlidersHorizontal, Sparkles, MapPin, Compass } from "lucide-react";
 
-const DealTypeIcons = {
-  all: Target,
-  flight: Plane,
-  hotel: Building2,
-  package: Package,
-};
-
-const dealTypes: { value: DealType | "all"; label: string; Icon: typeof Target }[] = [
-  { value: "all", label: "All Deals", Icon: Target },
-  { value: "flight", label: "Flights", Icon: Plane },
-  { value: "hotel", label: "Hotels", Icon: Building2 },
-  { value: "package", label: "Packages", Icon: Package },
+const dealTypes: { value: DealType | "all"; label: string; emoji: string }[] = [
+  { value: "all", label: "All Deals", emoji: "🧭" },
+  { value: "flight", label: "Flights", emoji: "✈️" },
+  { value: "hotel", label: "Hotels", emoji: "🏨" },
+  { value: "package", label: "Packages", emoji: "📦" },
 ];
 
 const sortOptions: { value: SortOption; label: string }[] = [
@@ -164,25 +157,32 @@ function DealsPageContent() {
   }, [deals, searchQuery, selectedType, sortBy, maxPrice, showHotOnly]);
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-[#FFFAF5]">
       <Header />
       
-      {/* Page Header */}
-      <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-12 px-6">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            {searchTitle || 'Browse All Deals'}
-          </h1>
-          <p className="text-blue-100 text-lg max-w-2xl">
+      {/* Page Header - Warm Gradient */}
+      <section className="bg-gradient-to-br from-[#FF6B6B] via-[#FFA07A] to-[#FFD93D] text-white py-16 px-6 relative overflow-hidden">
+        {/* Background Decorations */}
+        <div className="absolute top-10 right-20 text-6xl opacity-10">🌴</div>
+        <div className="absolute bottom-10 left-20 text-5xl opacity-10">✈️</div>
+        
+        <div className="max-w-7xl mx-auto relative">
+          <div className="flex items-center gap-3 mb-4">
+            <Compass className="w-8 h-8" />
+            <h1 className="text-4xl md:text-5xl font-bold">
+              {searchTitle || 'Explore All Deals'}
+            </h1>
+          </div>
+          <p className="text-white/90 text-lg max-w-2xl">
             {stats.totalDeals > 0 ? (
               <>
                 {hasLocationFilters 
                   ? `${filteredDeals.length} matching deals found.`
                   : `${stats.totalDeals.toLocaleString()} curated travel deals.`
                 }
-                {' '}Average savings of {stats.avgSavings}% across all listings.
+                {' '}Average savings of <span className="font-bold">{stats.avgSavings}%</span> across all listings.
                 {stats.updatedAt && (
-                  <span className="block mt-1 text-sm text-blue-200">
+                  <span className="block mt-2 text-sm text-white/70">
                     Last updated: {formatRelativeTime(stats.updatedAt)}
                   </span>
                 )}
@@ -193,7 +193,7 @@ function DealsPageContent() {
           </p>
           
           {/* Search Bar */}
-          <div className="mt-8">
+          <div className="mt-10">
             <SearchBar 
               variant="hero"
               initialFrom={fromRegion || fromCity}
@@ -206,10 +206,10 @@ function DealsPageContent() {
       </section>
       
       {/* Filters & Results */}
-      <section className="py-8 px-6">
+      <section className="py-10 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Filter Bar */}
-          <div className="bg-white rounded-2xl shadow-sm p-4 mb-8 border border-gray-100">
+          <div className="bg-white rounded-3xl shadow-soft p-5 mb-10 border border-[#FF6B6B]/5">
             <div className="flex flex-wrap items-center gap-4">
               {/* Type Filters */}
               <div className="flex flex-wrap gap-2">
@@ -217,38 +217,38 @@ function DealsPageContent() {
                   <button
                     key={type.value}
                     onClick={() => setSelectedType(type.value)}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-1.5 ${
+                    className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
                       selectedType === type.value
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        ? "bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white shadow-lg shadow-[#FF6B6B]/20"
+                        : "bg-[#FFF8F0] text-[#2D3436]/70 hover:bg-[#FFEFE5]"
                     }`}
                   >
-                    <type.Icon className="w-4 h-4" />
+                    <span>{type.emoji}</span>
                     {type.label}
                   </button>
                 ))}
               </div>
               
-              <div className="h-8 w-px bg-gray-200 hidden md:block" />
+              <div className="h-8 w-px bg-[#FF6B6B]/10 hidden md:block" />
               
               {/* Hot Deals Toggle */}
               <button
                 onClick={() => setShowHotOnly(!showHotOnly)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-1.5 ${
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 flex items-center gap-2 ${
                   showHotOnly
-                    ? "bg-red-500 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-[#FF6B6B] to-[#E85555] text-white shadow-lg shadow-[#FF6B6B]/30"
+                    : "bg-[#FFF8F0] text-[#2D3436]/70 hover:bg-[#FFEFE5]"
                 }`}
               >
-                <Flame className="w-4 h-4" />
-                Hot Deals Only
+                🔥 Hot Deals Only
               </button>
               
               {/* More Filters Toggle (Mobile) */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="md:hidden px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium"
+                className="md:hidden px-5 py-2.5 bg-[#FFF8F0] text-[#2D3436]/70 rounded-full text-sm font-semibold flex items-center gap-2"
               >
+                <SlidersHorizontal className="w-4 h-4" />
                 {showFilters ? "Hide Filters" : "More Filters"}
               </button>
               
@@ -259,7 +259,7 @@ function DealsPageContent() {
                 <select
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  className="px-4 py-2 bg-gray-100 rounded-xl text-sm outline-none"
+                  className="px-4 py-2.5 bg-[#FFF8F0] rounded-xl text-sm outline-none border border-transparent focus:border-[#20B2AA]/30 transition-colors cursor-pointer"
                 >
                   {priceRanges.map((range) => (
                     <option key={range.value} value={range.value}>{range.label}</option>
@@ -269,7 +269,7 @@ function DealsPageContent() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="px-4 py-2 bg-gray-100 rounded-xl text-sm outline-none"
+                  className="px-4 py-2.5 bg-[#FFF8F0] rounded-xl text-sm outline-none border border-transparent focus:border-[#20B2AA]/30 transition-colors cursor-pointer"
                 >
                   {sortOptions.map((option) => (
                     <option key={option.value} value={option.value}>Sort: {option.label}</option>
@@ -280,11 +280,11 @@ function DealsPageContent() {
             
             {/* Mobile Expanded Filters */}
             {showFilters && (
-              <div className="md:hidden mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-3">
+              <div className="md:hidden mt-5 pt-5 border-t border-[#FF6B6B]/10 grid grid-cols-2 gap-3">
                 <select
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  className="px-4 py-3 bg-gray-100 rounded-xl text-sm outline-none"
+                  className="px-4 py-3 bg-[#FFF8F0] rounded-xl text-sm outline-none"
                 >
                   {priceRanges.map((range) => (
                     <option key={range.value} value={range.value}>{range.label}</option>
@@ -294,7 +294,7 @@ function DealsPageContent() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="px-4 py-3 bg-gray-100 rounded-xl text-sm outline-none"
+                  className="px-4 py-3 bg-[#FFF8F0] rounded-xl text-sm outline-none"
                 >
                   {sortOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
@@ -305,13 +305,13 @@ function DealsPageContent() {
           </div>
           
           {/* Results Header */}
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-gray-600">
+          <div className="flex items-center justify-between mb-8">
+            <p className="text-[#2D3436]/60">
               {loading ? (
                 'Loading deals...'
               ) : (
                 <>
-                  Showing <span className="font-semibold text-gray-900">{filteredDeals.length}</span> deals
+                  Showing <span className="font-bold text-[#2D3436]">{filteredDeals.length}</span> deals
                   {searchQuery && <span> for "{searchQuery}"</span>}
                 </>
               )}
@@ -319,50 +319,46 @@ function DealsPageContent() {
           </div>
           
           {/* Results Grid */}
-          <div className="grid lg:grid-cols-4 gap-8">
+          <div className="grid lg:grid-cols-4 gap-10">
             {/* Deals List */}
             <div className="lg:col-span-3">
               {loading ? (
                 // Loading skeleton
-                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
                   {[1, 2, 3, 4, 5, 6].map(i => (
-                    <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
-                      <div className="h-48 bg-gray-200" />
-                      <div className="p-4 space-y-3">
-                        <div className="h-4 bg-gray-200 rounded w-3/4" />
-                        <div className="h-4 bg-gray-200 rounded w-1/2" />
-                        <div className="h-8 bg-gray-200 rounded w-1/3" />
+                    <div key={i} className="bg-white rounded-3xl overflow-hidden animate-pulse shadow-soft">
+                      <div className="h-52 bg-gradient-to-r from-[#FFF8F0] to-[#FFFAF5]" />
+                      <div className="p-6 space-y-4">
+                        <div className="h-5 bg-[#FFF8F0] rounded-full w-3/4" />
+                        <div className="h-4 bg-[#FFF8F0] rounded-lg w-1/2" />
+                        <div className="h-8 bg-[#FFF8F0] rounded-xl w-1/3" />
                       </div>
                     </div>
                   ))}
                 </div>
               ) : error ? (
-                <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-                  <div className="flex justify-center mb-4">
-                    <Frown className="w-14 h-14 text-gray-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Oops!</h3>
-                  <p className="text-gray-600 mb-6">{error}</p>
+                <div className="text-center py-20 bg-white rounded-3xl border border-[#FF6B6B]/10 shadow-soft">
+                  <div className="text-6xl mb-4">😕</div>
+                  <h3 className="text-xl font-bold text-[#2D3436] mb-2">Oops!</h3>
+                  <p className="text-[#2D3436]/60 mb-6">{error}</p>
                   <button
                     onClick={() => window.location.reload()}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
+                    className="px-8 py-3 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white rounded-full font-semibold hover:shadow-lg hover:shadow-[#FF6B6B]/25 transition-all duration-300"
                   >
                     Try Again
                   </button>
                 </div>
               ) : filteredDeals.length > 0 ? (
-                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
                   {filteredDeals.map(deal => (
                     <DealCard key={deal.id} deal={deal} />
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-                  <div className="flex justify-center mb-4">
-                    <Search className="w-14 h-14 text-gray-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">No deals found</h3>
-                  <p className="text-gray-600 mb-6">Try adjusting your filters or search terms</p>
+                <div className="text-center py-20 bg-white rounded-3xl border border-[#FF6B6B]/10 shadow-soft">
+                  <div className="text-6xl mb-4">🔍</div>
+                  <h3 className="text-xl font-bold text-[#2D3436] mb-2">No deals found</h3>
+                  <p className="text-[#2D3436]/60 mb-6">Try adjusting your filters or search terms</p>
                   <button
                     onClick={() => {
                       setSearchQuery("");
@@ -370,7 +366,7 @@ function DealsPageContent() {
                       setMaxPrice("all");
                       setShowHotOnly(false);
                     }}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
+                    className="px-8 py-3 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white rounded-full font-semibold hover:shadow-lg hover:shadow-[#FF6B6B]/25 transition-all duration-300"
                   >
                     Clear All Filters
                   </button>
@@ -379,17 +375,17 @@ function DealsPageContent() {
             </div>
             
             {/* Sidebar */}
-            <div className="hidden lg:block space-y-6">
+            <div className="hidden lg:block space-y-8">
               {/* Region Quick Filters */}
-              <div className="bg-white rounded-2xl p-5 border border-gray-100">
-                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-blue-600" />
+              <div className="bg-white rounded-3xl p-6 border border-[#FF6B6B]/5 shadow-soft">
+                <h3 className="font-bold text-[#2D3436] mb-5 flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-[#FF6B6B]" />
                   Quick Filters
                 </h3>
                 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div>
-                    <label className="text-xs font-medium text-gray-500 mb-1 block">Destination</label>
+                    <label className="text-xs font-semibold text-[#2D3436]/50 mb-2 block uppercase tracking-wide">Destination</label>
                     <RegionSelectCompact
                       value={toRegion || toCity}
                       onChange={(value, type) => {
@@ -406,7 +402,7 @@ function DealsPageContent() {
                   </div>
                   
                   <div>
-                    <label className="text-xs font-medium text-gray-500 mb-1 block">Origin</label>
+                    <label className="text-xs font-semibold text-[#2D3436]/50 mb-2 block uppercase tracking-wide">Origin</label>
                     <RegionSelectCompact
                       value={fromRegion || fromCity}
                       onChange={(value, type) => {
@@ -424,14 +420,14 @@ function DealsPageContent() {
                 </div>
                 
                 {/* Popular Routes */}
-                <div className="mt-4 pt-4 border-t border-gray-100">
-                  <div className="text-xs font-medium text-gray-500 mb-2">Popular Routes</div>
+                <div className="mt-6 pt-6 border-t border-[#FF6B6B]/10">
+                  <div className="text-xs font-semibold text-[#2D3436]/50 mb-3 uppercase tracking-wide">Popular Routes</div>
                   <div className="space-y-1">
                     {[
-                      { label: 'West Coast → Asia', from: 'us-west', to: 'asia-east', Icon: Palmtree },
-                      { label: 'East Coast → Europe', from: 'us-east', to: 'europe-west', Icon: Building2 },
-                      { label: 'US → Caribbean', from: '', to: 'caribbean', Icon: Umbrella },
-                      { label: 'US → Hawaii', from: '', to: 'hawaii', Icon: MapPin },
+                      { label: '🌴 West Coast → Asia', from: 'us-west', to: 'asia-east' },
+                      { label: '🗽 East Coast → Europe', from: 'us-east', to: 'europe-west' },
+                      { label: '🏝️ US → Caribbean', from: '', to: 'caribbean' },
+                      { label: '🌺 US → Hawaii', from: '', to: 'hawaii' },
                     ].map((route, i) => (
                       <button
                         key={i}
@@ -441,9 +437,8 @@ function DealsPageContent() {
                           if (route.to) params.set('toRegion', route.to);
                           router.push(`/deals?${params.toString()}`);
                         }}
-                        className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 rounded-lg transition flex items-center gap-2"
+                        className="w-full text-left px-4 py-3 text-sm hover:bg-[#FFF8F0] hover:text-[#FF6B6B] rounded-xl transition-all duration-300"
                       >
-                        <route.Icon className="w-4 h-4 text-gray-400" />
                         {route.label}
                       </button>
                     ))}
@@ -466,24 +461,24 @@ function DealsPageContent() {
 // Loading fallback for Suspense
 function DealsPageSkeleton() {
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-[#FFFAF5]">
       <Header />
-      <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-12 px-6">
+      <section className="bg-gradient-to-br from-[#FF6B6B] via-[#FFA07A] to-[#FFD93D] text-white py-16 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="h-12 bg-white/20 rounded-xl w-64 mb-4 animate-pulse" />
+          <div className="h-12 bg-white/20 rounded-2xl w-64 mb-4 animate-pulse" />
           <div className="h-6 bg-white/20 rounded-xl w-96 animate-pulse" />
         </div>
       </section>
-      <section className="py-8 px-6">
+      <section className="py-10 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
-                <div className="h-48 bg-gray-200" />
-                <div className="p-4 space-y-3">
-                  <div className="h-4 bg-gray-200 rounded w-3/4" />
-                  <div className="h-4 bg-gray-200 rounded w-1/2" />
-                  <div className="h-8 bg-gray-200 rounded w-1/3" />
+              <div key={i} className="bg-white rounded-3xl overflow-hidden animate-pulse shadow-soft">
+                <div className="h-52 bg-gradient-to-r from-[#FFF8F0] to-[#FFFAF5]" />
+                <div className="p-6 space-y-4">
+                  <div className="h-5 bg-[#FFF8F0] rounded-full w-3/4" />
+                  <div className="h-4 bg-[#FFF8F0] rounded-lg w-1/2" />
+                  <div className="h-8 bg-[#FFF8F0] rounded-xl w-1/3" />
                 </div>
               </div>
             ))}

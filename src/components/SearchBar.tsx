@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { RegionSelect } from './RegionSelect';
 import { formatSearchTitle } from '@/lib/regions';
-import { ArrowLeftRight, X } from "lucide-react";
+import { Search, ArrowLeftRight, MapPin, Plane } from 'lucide-react';
 
 interface SearchBarProps {
   variant?: 'hero' | 'compact' | 'inline';
@@ -89,7 +89,7 @@ export function SearchBar({
 
   if (variant === 'compact') {
     return (
-      <div className={`flex items-center gap-2 ${className}`}>
+      <div className={`flex items-center gap-3 ${className}`}>
         <RegionSelect
           value={from}
           onChange={handleFromChange}
@@ -98,10 +98,10 @@ export function SearchBar({
         />
         <button
           onClick={handleSwap}
-          className="p-2 hover:bg-gray-100 rounded-lg transition"
+          className="p-2 hover:bg-[#FFF8F0] rounded-full transition-colors text-[#2D3436]/60 hover:text-[#FF6B6B]"
           title="Swap origin and destination"
         >
-          <ArrowLeftRight className="w-4 h-4 text-gray-500" />
+          <ArrowLeftRight className="w-4 h-4" />
         </button>
         <RegionSelect
           value={to}
@@ -111,7 +111,7 @@ export function SearchBar({
         />
         <button
           onClick={handleSearch}
-          className="px-4 py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition whitespace-nowrap"
+          className="px-5 py-3 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white font-semibold rounded-2xl hover:shadow-lg hover:shadow-[#FF6B6B]/25 transition-all duration-300 whitespace-nowrap"
         >
           Search
         </button>
@@ -123,7 +123,7 @@ export function SearchBar({
     return (
       <div className={`inline-flex items-center gap-2 ${className}`}>
         <div className="flex items-center gap-1 text-sm">
-          <span className="text-gray-500">From:</span>
+          <span className="text-[#2D3436]/50">From:</span>
           <RegionSelect
             value={from}
             onChange={handleFromChange}
@@ -133,12 +133,12 @@ export function SearchBar({
         </div>
         <button
           onClick={handleSwap}
-          className="p-1 hover:bg-gray-100 rounded transition text-gray-400"
+          className="p-1.5 hover:bg-[#FFF8F0] rounded-full transition-colors text-[#2D3436]/40 hover:text-[#FF6B6B]"
         >
-          <ArrowLeftRight className="w-4 h-4" />
+          <ArrowLeftRight className="w-3.5 h-3.5" />
         </button>
         <div className="flex items-center gap-1 text-sm">
-          <span className="text-gray-500">To:</span>
+          <span className="text-[#2D3436]/50">To:</span>
           <RegionSelect
             value={to}
             onChange={handleToChange}
@@ -148,7 +148,7 @@ export function SearchBar({
         </div>
         <button
           onClick={handleSearch}
-          className="px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
+          className="px-4 py-2 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-[#FF6B6B]/20 transition-all duration-300"
         >
           Go
         </button>
@@ -158,11 +158,12 @@ export function SearchBar({
 
   // Hero variant (default)
   return (
-    <div className={`bg-white rounded-2xl p-3 shadow-xl ${className}`}>
-      <div className="flex flex-col md:flex-row gap-3">
+    <div className={`bg-white rounded-3xl p-4 shadow-soft-lg border border-white/50 ${className}`}>
+      <div className="flex flex-col md:flex-row gap-4">
         {/* Origin */}
         <div className="flex-1">
-          <label className="block text-xs font-medium text-gray-500 mb-1.5 px-1">
+          <label className="block text-xs font-semibold text-[#2D3436]/50 mb-2 px-1 uppercase tracking-wide flex items-center gap-1.5">
+            <Plane className="w-3.5 h-3.5" />
             From
           </label>
           <RegionSelect
@@ -177,18 +178,17 @@ export function SearchBar({
         <div className="flex items-end pb-3 justify-center">
           <button
             onClick={handleSwap}
-            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition"
+            className="p-3 bg-[#FFF8F0] hover:bg-[#FFEFE5] rounded-full transition-all duration-300 text-[#FF6B6B] hover:rotate-180"
             title="Swap origin and destination"
           >
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
+            <ArrowLeftRight className="w-5 h-5" />
           </button>
         </div>
 
         {/* Destination */}
         <div className="flex-1">
-          <label className="block text-xs font-medium text-gray-500 mb-1.5 px-1">
+          <label className="block text-xs font-semibold text-[#2D3436]/50 mb-2 px-1 uppercase tracking-wide flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5" />
             To
           </label>
           <RegionSelect
@@ -203,24 +203,22 @@ export function SearchBar({
         <div className="flex items-end">
           <button
             onClick={handleSearch}
-            className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition flex items-center justify-center gap-2"
+            className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white font-semibold rounded-2xl hover:shadow-lg hover:shadow-[#FF6B6B]/30 transition-all duration-300 flex items-center justify-center gap-2 hover:-translate-y-0.5"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <Search className="w-5 h-5" />
             Search Deals
           </button>
         </div>
       </div>
 
       {/* Quick Links */}
-      <div className="mt-4 flex flex-wrap items-center gap-2 px-1">
-        <span className="text-sm text-gray-500">Popular:</span>
+      <div className="mt-5 flex flex-wrap items-center gap-2 px-1">
+        <span className="text-sm text-[#2D3436]/50">Popular:</span>
         {[
-          { from: 'us-west', to: 'asia-east', label: 'West Coast → Asia' },
-          { from: 'us-east', to: 'europe-west', label: 'East Coast → Europe' },
-          { from: '', to: 'asia-southeast', label: 'Southeast Asia' },
-          { from: '', to: 'caribbean', label: 'Caribbean' },
+          { from: 'us-west', to: 'asia-east', label: '🌴 West Coast → Asia' },
+          { from: 'us-east', to: 'europe-west', label: '🗽 East Coast → Europe' },
+          { from: '', to: 'asia-southeast', label: '🏝️ Southeast Asia' },
+          { from: '', to: 'caribbean', label: '🌊 Caribbean' },
         ].map((route, i) => (
           <button
             key={i}
@@ -230,7 +228,7 @@ export function SearchBar({
               setTo(route.to);
               setToType('region');
             }}
-            className="px-3 py-1 text-sm bg-gray-100 hover:bg-blue-100 hover:text-blue-700 rounded-full transition"
+            className="px-4 py-2 text-sm bg-[#FFF8F0] hover:bg-[#FFEFE5] hover:text-[#FF6B6B] rounded-full transition-all duration-300 font-medium"
           >
             {route.label}
           </button>
@@ -248,7 +246,7 @@ export function RegionBadge({ city, className = '' }: { city: string; className?
   if (!region) return null;
   
   return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full ${className}`}>
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 bg-[#FFF8F0] text-[#2D3436]/70 text-xs rounded-full font-medium ${className}`}>
       {region.emoji} {region.name}
     </span>
   );
@@ -282,19 +280,18 @@ export function SearchResultsHeader({
   if (!hasFilters) return null;
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 mb-6 flex items-center justify-between">
+    <div className="bg-gradient-to-r from-[#FFF8F0] to-[#FFFAF5] rounded-2xl p-5 mb-6 flex items-center justify-between border border-[#FF6B6B]/10">
       <div>
-        <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-        <p className="text-sm text-gray-600">
+        <h2 className="text-xl font-bold text-[#2D3436]">{title}</h2>
+        <p className="text-sm text-[#2D3436]/60">
           {resultCount} {resultCount === 1 ? 'deal' : 'deals'} found
         </p>
       </div>
       <button
         onClick={onClear}
-        className="px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-white rounded-lg transition flex items-center gap-1.5"
+        className="px-4 py-2 text-sm text-[#2D3436]/60 hover:text-[#FF6B6B] hover:bg-white rounded-xl transition-all duration-300"
       >
-        <X className="w-4 h-4" />
-        Clear search
+        ✕ Clear search
       </button>
     </div>
   );

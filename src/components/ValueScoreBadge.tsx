@@ -1,83 +1,118 @@
 "use client";
 
-import { getValueScoreColor, getValueScoreLabel } from "@/lib/utils";
-import { Lightbulb } from "lucide-react";
+import { Sparkles, TrendingUp, Star } from "lucide-react";
 
 interface ValueScoreBadgeProps {
   score: number;
   size?: "sm" | "md" | "lg";
   showLabel?: boolean;
-  className?: string;
 }
 
-export function ValueScoreBadge({ score, size = "md", showLabel = false, className = "" }: ValueScoreBadgeProps) {
-  const colorClass = getValueScoreColor(score);
-  const label = getValueScoreLabel(score);
+export function ValueScoreBadge({ score, size = "md", showLabel = false }: ValueScoreBadgeProps) {
+  const getStyle = () => {
+    if (score >= 90) return {
+      bg: "bg-gradient-to-r from-[#20B2AA] to-[#48D1CC]",
+      shadow: "shadow-[#20B2AA]/30",
+      label: "Incredible",
+      emoji: "🤩"
+    };
+    if (score >= 70) return {
+      bg: "bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A]",
+      shadow: "shadow-[#FF6B6B]/30",
+      label: "Great Value",
+      emoji: "😎"
+    };
+    if (score >= 50) return {
+      bg: "bg-gradient-to-r from-[#FFA07A] to-[#FFD93D]",
+      shadow: "shadow-[#FFA07A]/30",
+      label: "Good",
+      emoji: "👍"
+    };
+    return {
+      bg: "bg-gradient-to-r from-[#DEB887] to-[#F5DEB3]",
+      shadow: "",
+      label: "Fair",
+      emoji: "👌",
+      textDark: true
+    };
+  };
+  
+  const style = getStyle();
   
   const sizeClasses = {
-    sm: "text-xs px-2 py-0.5",
-    md: "text-sm px-2.5 py-1",
-    lg: "text-base px-3 py-1.5",
+    sm: "text-xs px-2.5 py-1",
+    md: "text-sm px-3.5 py-1.5",
+    lg: "text-base px-4 py-2"
+  };
+  
+  const iconSizes = {
+    sm: "w-3 h-3",
+    md: "w-4 h-4",
+    lg: "w-5 h-5"
   };
   
   return (
-    <div className={`inline-flex items-center gap-1.5 ${className}`}>
-      <div className={`${colorClass} ${sizeClasses[size]} text-white font-bold rounded-full flex items-center gap-1`}>
-        <svg className={size === "sm" ? "w-3 h-3" : size === "lg" ? "w-5 h-5" : "w-4 h-4"} viewBox="0 0 24 24" fill="currentColor">
-          <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-        <span>{score}</span>
-      </div>
-      {showLabel && (
-        <span className="text-gray-600 text-sm font-medium">{label}</span>
-      )}
+    <div className={`${style.bg} ${style.shadow} ${sizeClasses[size]} ${style.textDark ? 'text-[#2D3436]' : 'text-white'} font-bold rounded-full flex items-center gap-1.5 shadow-lg`}>
+      <Sparkles className={iconSizes[size]} />
+      <span>{score}</span>
+      {showLabel && <span className="font-medium opacity-90">{style.label}</span>}
     </div>
   );
 }
 
-export function ValueScoreExplainer() {
-  const examples = [
-    { score: 95, label: "Incredible", desc: "Extremely rare pricing" },
-    { score: 85, label: "Great", desc: "Well below typical prices" },
-    { score: 70, label: "Good", desc: "Solid savings opportunity" },
-    { score: 50, label: "Average", desc: "Normal market pricing" },
-  ];
-  
+export function ValueScoreExplainer({ className = "" }: { className?: string }) {
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-          <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
+    <div className={`bg-gradient-to-br from-[#2D3436] to-[#4A5154] rounded-3xl p-7 text-white ${className}`}>
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+          <Star className="w-5 h-5 text-[#FFD93D]" />
         </div>
-        <div>
-          <h3 className="font-bold text-gray-900">Value Score Explained</h3>
-          <p className="text-sm text-gray-600">How we rate deal quality</p>
-        </div>
+        <h3 className="font-bold text-lg">Value Score</h3>
       </div>
       
-      <p className="text-gray-700 text-sm mb-4">
-        Our proprietary Value Score (0-100) analyzes current prices against historical data, 
-        seasonal trends, and market averages to help you identify truly exceptional deals.
+      <p className="text-white/70 text-sm mb-6 leading-relaxed">
+        Our proprietary score (0-100) identifies truly exceptional deals by comparing prices to historical data.
       </p>
       
-      <div className="space-y-2">
-        {examples.map(({ score, label, desc }) => (
-          <div key={score} className="flex items-center gap-3 py-2 border-b border-blue-100 last:border-0">
-            <ValueScoreBadge score={score} size="sm" />
-            <div className="flex-1">
-              <span className="font-medium text-gray-900">{label}</span>
-              <span className="text-gray-500 text-sm ml-2">— {desc}</span>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#20B2AA] to-[#48D1CC] rounded-lg flex items-center justify-center text-xs font-bold">
+              90+
             </div>
+            <span className="text-sm font-medium">Incredible 🤩</span>
           </div>
-        ))}
+          <span className="text-xs text-white/50">Book now!</span>
+        </div>
+        
+        <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] rounded-lg flex items-center justify-center text-xs font-bold">
+              70+
+            </div>
+            <span className="text-sm font-medium">Great Value 😎</span>
+          </div>
+          <span className="text-xs text-white/50">Worth it</span>
+        </div>
+        
+        <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#FFA07A] to-[#FFD93D] rounded-lg flex items-center justify-center text-xs font-bold text-[#2D3436]">
+              50+
+            </div>
+            <span className="text-sm font-medium">Good 👍</span>
+          </div>
+          <span className="text-xs text-white/50">Solid savings</span>
+        </div>
       </div>
       
-      <p className="text-xs text-gray-500 mt-4 flex items-center gap-1.5">
-        <Lightbulb className="w-3.5 h-3.5" />
-        Tip: Look for deals with scores above 80 for the best value
-      </p>
+      <a 
+        href="/about#value-score" 
+        className="mt-6 text-sm text-[#20B2AA] hover:text-[#48D1CC] font-medium flex items-center gap-1.5 transition-colors"
+      >
+        Learn more
+        <TrendingUp className="w-4 h-4" />
+      </a>
     </div>
   );
 }
