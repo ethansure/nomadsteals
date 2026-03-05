@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Deal } from "@/lib/types";
+import { getRegionForCity } from "@/lib/regions";
 
 const typeColors = {
   flight: "bg-blue-500",
@@ -67,6 +68,16 @@ export function DealCard({ deal }: { deal: Deal }) {
       
       {/* Content */}
       <div className="p-5">
+        {/* Region Badge */}
+        {(() => {
+          const region = getRegionForCity(deal.destinationCity);
+          return region ? (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full mb-2">
+              {region.emoji} {region.name}
+            </span>
+          ) : null;
+        })()}
+        
         {/* Route */}
         {deal.originCity && (
           <div className="text-sm text-gray-500 mb-1 flex items-center gap-2">

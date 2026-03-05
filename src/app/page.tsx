@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { DealCard } from "@/components/DealCard";
 import { CityCard } from "@/components/CityCard";
 import { NewsletterForm } from "@/components/Newsletter";
+import { SearchBar } from "@/components/SearchBar";
 import { getServerDeals, getServerStats, formatRelativeTime } from "@/lib/api/server";
 import { popularCities } from "@/lib/sample-data";
 import { Deal } from "@/lib/types";
@@ -62,30 +63,7 @@ export default async function Home() {
             </p>
 
             {/* Search/Filter Bar */}
-            <div className="bg-white rounded-2xl p-2 flex flex-col md:flex-row gap-2 shadow-xl">
-              <div className="flex-1 flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
-                <span className="text-gray-400">🔍</span>
-                <input 
-                  type="text" 
-                  placeholder="Where do you want to go?"
-                  className="flex-1 bg-transparent outline-none text-gray-900 placeholder-gray-400"
-                />
-              </div>
-              <div className="flex gap-2">
-                <select className="px-4 py-3 bg-gray-50 rounded-xl text-gray-700 outline-none">
-                  <option>All Types</option>
-                  <option>✈️ Flights</option>
-                  <option>🏨 Hotels</option>
-                  <option>📦 Packages</option>
-                </select>
-                <Link 
-                  href="/deals"
-                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition"
-                >
-                  Search
-                </Link>
-              </div>
-            </div>
+            <SearchBar variant="hero" />
           </div>
 
           {/* Stats Cards */}

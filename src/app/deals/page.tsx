@@ -1,12 +1,16 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { DealCard } from "@/components/DealCard";
 import { ValueScoreExplainer } from "@/components/ValueScoreBadge";
 import { NewsletterForm } from "@/components/Newsletter";
+import { SearchBar, SearchResultsHeader } from "@/components/SearchBar";
+import { RegionSelectCompact } from "@/components/RegionSelect";
 import { filterDeals, sortDeals, searchDeals } from "@/lib/utils";
+import { formatSearchTitle, getRegion } from "@/lib/regions";
 import { Deal, DealType, SortOption } from "@/lib/types";
 
 const dealTypes: { value: DealType | "all"; label: string; emoji: string }[] = [
@@ -50,6 +54,9 @@ function formatRelativeTime(dateString: string): string {
 }
 
 export default function DealsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,13 +68,30 @@ export default function DealsPage() {
   const [maxPrice, setMaxPrice] = useState<string>("all");
   const [showHotOnly, setShowHotOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Region/city filters from URL
+  const fromCity = searchParams.get('from') || '';
+  const fromRegion = searchParams.get('fromRegion') || '';
+  const toCity = searchParams.get('to') || '';
+  const toRegion = searchParams.get('toRegion') || '';
+  
+  const hasLocationFilters = fromCity || fromRegion || toCity || toRegion;
 
-  // Fetch deals from API
+  // Fetch deals from API with location filters
   useEffect(() => {
     async function fetchDeals() {
       try {
         setLoading(true);
-        const response = await fetch('/api/deals?limit=100');
+        
+        // Build API URL with filters
+        const params = new URLSearchParams();
+        params.set('limit', '100');
+        if (fromCity) params.set('from', fromCity);
+        if (fromRegion) params.set('fromRegion', fromRegion);
+        if (toCity) params.set('to', toCity);
+        if (toRegion) params.set('toRegion', toRegion);
+        
+        const response = await fetch(`/api/deals?${params.toString()}`);
         const data = await response.json();
         
         if (data.success) {
@@ -89,7 +113,17 @@ export default function DealsPage() {
     }
     
     fetchDeals();
-  }, []);
+  }, [fromCity, fromRegion, toCity, toRegion]);
+  
+  // Clear location filters
+  const clearLocationFilters = () => {
+    router.push('/deals');
+  };
+  
+  // Get search title
+  const searchTitle = hasLocationFilters
+    ? formatSearchTitle({ fromCity, fromRegion, toCity, toRegion })
+    : null;
 
   const filteredDeals = useMemo(() => {
     let filtered = [...deals];
@@ -127,12 +161,17 @@ export default function DealsPage() {
       {/* Page Header */}
       <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-12 px-6">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Browse All Deals</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            {searchTitle || 'Browse All Deals'}
+          </h1>
           <p className="text-blue-100 text-lg max-w-2xl">
             {stats.totalDeals > 0 ? (
               <>
-                {stats.totalDeals.toLocaleString()} curated travel deals.
-                Average savings of {stats.avgSavings}% across all listings.
+                {hasLocationFilters 
+                  ? `${filteredDeals.length} matching deals found.`
+                  : `${stats.totalDeals.toLocaleString()} curated travel deals.`
+                }
+                {' '}Average savings of {stats.avgSavings}% across all listings.
                 {stats.updatedAt && (
                   <span className="block mt-1 text-sm text-blue-200">
                     Last updated: {formatRelativeTime(stats.updatedAt)}
@@ -145,19 +184,14 @@ export default function DealsPage() {
           </p>
           
           {/* Search Bar */}
-          <div className="mt-8 max-w-2xl">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search destinations, airlines, hotels..."
-                className="w-full px-5 py-4 pl-12 bg-white/10 backdrop-blur border border-white/20 rounded-xl text-white placeholder-white/60 outline-none focus:ring-2 focus:ring-white/50"
-              />
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
+          <div className="mt-8">
+            <SearchBar 
+              variant="hero"
+              initialFrom={fromRegion || fromCity}
+              initialFromType={fromRegion ? 'region' : 'city'}
+              initialTo={toRegion || toCity}
+              initialToType={toRegion ? 'region' : 'city'}
+            />
           </div>
         </div>
       </section>
@@ -331,6 +365,73 @@ export default function DealsPage() {
             
             {/* Sidebar */}
             <div className="hidden lg:block space-y-6">
+              {/* Region Quick Filters */}
+              <div className="bg-white rounded-2xl p-5 border border-gray-100">
+                <h3 className="font-semibold text-gray-900 mb-4">🌍 Quick Filters</h3>
+                
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-gray-500 mb-1 block">Destination</label>
+                    <RegionSelectCompact
+                      value={toRegion || toCity}
+                      onChange={(value, type) => {
+                        const params = new URLSearchParams(searchParams.toString());
+                        params.delete('to');
+                        params.delete('toRegion');
+                        if (value) {
+                          params.set(type === 'region' ? 'toRegion' : 'to', value);
+                        }
+                        router.push(`/deals?${params.toString()}`);
+                      }}
+                      placeholder="Any destination"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="text-xs font-medium text-gray-500 mb-1 block">Origin</label>
+                    <RegionSelectCompact
+                      value={fromRegion || fromCity}
+                      onChange={(value, type) => {
+                        const params = new URLSearchParams(searchParams.toString());
+                        params.delete('from');
+                        params.delete('fromRegion');
+                        if (value) {
+                          params.set(type === 'region' ? 'fromRegion' : 'from', value);
+                        }
+                        router.push(`/deals?${params.toString()}`);
+                      }}
+                      placeholder="Anywhere"
+                    />
+                  </div>
+                </div>
+                
+                {/* Popular Routes */}
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <div className="text-xs font-medium text-gray-500 mb-2">Popular Routes</div>
+                  <div className="space-y-1">
+                    {[
+                      { label: '🌴 West Coast → Asia', from: 'us-west', to: 'asia-east' },
+                      { label: '🗽 East Coast → Europe', from: 'us-east', to: 'europe-west' },
+                      { label: '🏝️ US → Caribbean', from: '', to: 'caribbean' },
+                      { label: '🌺 US → Hawaii', from: '', to: 'hawaii' },
+                    ].map((route, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          const params = new URLSearchParams();
+                          if (route.from) params.set('fromRegion', route.from);
+                          if (route.to) params.set('toRegion', route.to);
+                          router.push(`/deals?${params.toString()}`);
+                        }}
+                        className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 rounded-lg transition"
+                      >
+                        {route.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
               <ValueScoreExplainer />
               <NewsletterForm variant="card" />
             </div>
