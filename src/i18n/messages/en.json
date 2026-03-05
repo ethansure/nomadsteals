@@ -1,0 +1,314 @@
+{
+  "common": {
+    "siteName": "NomadSteals",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Try Again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "search": "Search",
+    "close": "Close",
+    "viewAll": "View all",
+    "learnMore": "Learn more",
+    "backToHome": "Back to Home"
+  },
+  "nav": {
+    "allDeals": "All Deals",
+    "destinations": "Destinations",
+    "about": "About",
+    "newsletter": "Newsletter",
+    "subscribeFree": "Subscribe Free",
+    "searchPlaceholder": "Search destinations, deals..."
+  },
+  "home": {
+    "hero": {
+      "updated": "Updated {time}",
+      "dealsLive": "{count} deals live",
+      "title": "Today's Best",
+      "titleHighlight": "Travel Deals",
+      "subtitle": "Hand-picked flights, hotels & packages with Value Scores. Average savings of {savings}% across all deals."
+    },
+    "stats": {
+      "activeDeals": "Active Deals",
+      "avgSavings": "Avg Savings",
+      "hotDeals": "Hot Deals",
+      "errorFares": "Error Fares"
+    },
+    "hotDeals": {
+      "title": "Hot Deals",
+      "new": "{count} new",
+      "subtitle": "Incredible prices that won't last long"
+    },
+    "popularDestinations": {
+      "title": "Popular Destinations",
+      "subtitle": "Browse deals by city",
+      "allCities": "All cities"
+    },
+    "todaysDeals": {
+      "title": "Today's Deals",
+      "subtitle": "Fresh deals updated daily",
+      "browseAll": "Browse All Deals",
+      "all": "All",
+      "flights": "Flights",
+      "hotels": "Hotels",
+      "packages": "Packages",
+      "hotDeals": "Hot Deals",
+      "noDeals": "No deals available yet",
+      "noDealsSubtitle": "Check back soon for the latest travel deals!",
+      "loadMore": "Load More Deals"
+    },
+    "valueScore": {
+      "title": "What's a Value Score?",
+      "subtitle": "Our proprietary Value Score (0-100) compares current prices to historical data to identify truly exceptional deals — not just \"on sale\" prices.",
+      "incredible": "Incredible",
+      "incredibleDesc": "Extremely rare pricing. Book immediately.",
+      "greatValue": "Great Value",
+      "greatValueDesc": "Well below typical prices. Worth booking.",
+      "good": "Good",
+      "goodDesc": "Solid savings opportunity.",
+      "learnMore": "Learn more about Value Scores"
+    }
+  },
+  "search": {
+    "from": "From",
+    "to": "To",
+    "fromPlaceholder": "Where are you flying from?",
+    "toPlaceholder": "Where do you want to go?",
+    "searchDeals": "Search Deals",
+    "swap": "Swap origin and destination",
+    "anywhere": "Anywhere",
+    "anyOrigin": "Any Origin",
+    "anyDestination": "Any Destination",
+    "popular": "Popular:",
+    "westCoastAsia": "West Coast → Asia",
+    "eastCoastEurope": "East Coast → Europe",
+    "southeastAsia": "Southeast Asia",
+    "caribbean": "Caribbean",
+    "clearSearch": "Clear search",
+    "dealsFound": "{count} {count, plural, one {deal} other {deals}} found"
+  },
+  "deals": {
+    "browseAll": "Browse All Deals",
+    "showing": "Showing",
+    "deals": "deals",
+    "for": "for",
+    "noDeals": "No deals found",
+    "noDealsSubtitle": "Try adjusting your filters or search terms",
+    "clearFilters": "Clear All Filters",
+    "type": {
+      "all": "All Deals",
+      "flight": "Flight",
+      "flights": "Flights",
+      "hotel": "Hotel",
+      "hotels": "Hotels",
+      "package": "Package",
+      "packages": "Packages",
+      "cruise": "Cruise"
+    },
+    "filters": {
+      "hotOnly": "Hot Deals Only",
+      "moreFilters": "More Filters",
+      "hideFilters": "Hide Filters",
+      "anyPrice": "Any Price",
+      "under": "Under ${price}",
+      "quickFilters": "Quick Filters",
+      "destination": "Destination",
+      "origin": "Origin",
+      "anyDestination": "Any destination",
+      "popularRoutes": "Popular Routes"
+    },
+    "sort": {
+      "label": "Sort:",
+      "valueScore": "Value Score",
+      "priceLow": "Price: Low to High",
+      "priceHigh": "Price: High to Low",
+      "savings": "Biggest Savings",
+      "newest": "Newest First",
+      "popularity": "Most Popular"
+    },
+    "card": {
+      "hot": "Hot",
+      "historicLow": "Historic Low",
+      "expiresSoon": "Expires soon",
+      "via": "via",
+      "save": "Save ${amount}",
+      "off": "{percent}% off",
+      "viewDeal": "View Deal",
+      "bookNow": "Book Now"
+    },
+    "curated": "{count} curated travel deals.",
+    "avgSavings": "Average savings of {percent}% across all listings.",
+    "lastUpdated": "Last updated: {time}"
+  },
+  "regions": {
+    "usWest": "US West Coast",
+    "usEast": "US East Coast",
+    "usMidwest": "US Midwest",
+    "canada": "Canada",
+    "europeWest": "Western Europe",
+    "europeSouth": "Southern Europe",
+    "europeCentral": "Central Europe",
+    "europeNorth": "Northern Europe",
+    "asiaEast": "East Asia",
+    "asiaSoutheast": "Southeast Asia",
+    "asiaSouth": "South Asia",
+    "oceania": "Oceania",
+    "latinAmerica": "Latin America",
+    "caribbean": "Caribbean",
+    "middleEast": "Middle East",
+    "africa": "Africa",
+    "hawaii": "Hawaii"
+  },
+  "newsletter": {
+    "title": "Get Deals Before Everyone Else",
+    "subtitle": "Join {count}+ savvy travelers who get our daily deal digest. Error fares, flash sales, and exclusive deals — straight to your inbox.",
+    "emailPlaceholder": "Enter your email",
+    "subscribe": "Subscribe Free",
+    "subscribing": "Subscribing...",
+    "subscribed": "You're subscribed!",
+    "subscribedSubtitle": "Check your inbox for a welcome email with today's best deals.",
+    "noSpam": "No spam, ever. Unsubscribe anytime.",
+    "freeForever": "Free forever • Unsubscribe anytime",
+    "dailyAlerts": "Daily Deal Alerts",
+    "dailyAlertsDesc": "The best travel deals delivered to your inbox every morning.",
+    "getDailyDeals": "Get Daily Deals",
+    "page": {
+      "title": "Get the Best Deals",
+      "titleHighlight": "Before Everyone Else",
+      "subtitle": "Join {count}+ savvy travelers who wake up to incredible deals in their inbox. Error fares, flash sales, and exclusive finds — delivered on your schedule.",
+      "socialProof": {
+        "subscribers": "subscribers",
+        "rating": "reader rating",
+        "saved": "saved by readers"
+      },
+      "benefits": {
+        "title": "Why Subscribe?",
+        "hotFirst": "Hot Deals First",
+        "hotFirstDesc": "Be the first to know about error fares and flash sales before they sell out",
+        "valueScore": "Value Score Picks",
+        "valueScoreDesc": "We only send deals with exceptional Value Scores — no mediocre discounts",
+        "personalized": "Personalized",
+        "personalizedDesc": "Set your home airport and dream destinations for tailored alerts",
+        "mobile": "Mobile Friendly",
+        "mobileDesc": "Clean, easy-to-read emails optimized for booking on the go"
+      },
+      "sample": {
+        "title": "What You'll Get",
+        "subtitle": "A preview of our daily deal digest",
+        "topDeal": "Today's Top Deal",
+        "errorFare": "Error Fare"
+      },
+      "testimonials": {
+        "title": "What Readers Say"
+      },
+      "faq": {
+        "title": "Common Questions",
+        "q1": "How often will I receive emails?",
+        "a1": "You choose! Get instant alerts for hot deals, a daily digest, or a weekly roundup. Customize it in your preferences.",
+        "q2": "Is it really free?",
+        "a2": "Yes! Our newsletter is 100% free, forever. We make money through affiliate commissions when you book, at no extra cost to you.",
+        "q3": "Can I unsubscribe anytime?",
+        "a3": "Absolutely. Every email has a one-click unsubscribe link. No questions asked, no guilt trips.",
+        "q4": "Will you sell my email?",
+        "a4": "Never. We hate spam as much as you do. Your email stays with us, period.",
+        "q5": "Can I filter deals by destination?",
+        "a5": "Yes! Set your preferred origins and destinations, max price, deal types, and more. Only get deals you actually care about."
+      },
+      "finalCta": {
+        "title": "Ready to Save on Travel?",
+        "subtitle": "Join {count}+ savvy travelers who get our personalized deal alerts."
+      }
+    }
+  },
+  "about": {
+    "title": "We Help You Travel",
+    "titleHighlight": "Smarter",
+    "subtitle": "NomadSteals is your daily source for hand-picked travel deals. We use data and experience to find deals that are actually worth your time.",
+    "stats": {
+      "dealsTracked": "Deals Tracked",
+      "subscribers": "Subscribers",
+      "avgSavings": "Avg Savings",
+      "monitoring": "Deal Monitoring"
+    },
+    "story": {
+      "title": "Our Story",
+      "p1": "NomadSteals started with a simple frustration: finding good travel deals was too hard. There were too many mediocre \"deals\" out there, and too much noise to sift through.",
+      "p2": "We built NomadSteals to be the travel deals site we always wanted. Every deal on our site is hand-reviewed by our team. We analyze pricing data to calculate our proprietary Value Score — so you know when a deal is actually exceptional, not just \"on sale.\"",
+      "p3": "We're travelers ourselves. We've booked error fares to Asia, scored luxury hotels at budget prices, and found hidden gem destinations. Now we share that knowledge with you."
+    },
+    "valueScore": {
+      "title": "The Value Score Difference",
+      "subtitle": "Not all \"deals\" are created equal. A 30% discount on an already-inflated price isn't really a deal. That's why we created the Value Score.",
+      "historical": "Historical Comparison:",
+      "historicalDesc": "We compare current prices to 12+ months of historical data",
+      "seasonal": "Seasonal Adjustment:",
+      "seasonalDesc": "We account for peak vs. off-peak pricing",
+      "route": "Route Analysis:",
+      "routeDesc": "We know what's typical for each route and destination",
+      "quality": "Quality Factor:",
+      "qualityDesc": "We consider the airline/hotel reputation in our scoring"
+    },
+    "team": {
+      "title": "What We Do",
+      "hunters": "Deal Hunters",
+      "huntersDesc": "Our team scours the web 24/7 for the best deals",
+      "nerds": "Data Nerds",
+      "nerdsDesc": "We analyze historical pricing to calculate Value Scores",
+      "travelers": "Travel Lovers",
+      "travelersDesc": "We're travelers too — we get it"
+    },
+    "money": {
+      "title": "How We Make Money",
+      "intro": "Transparency matters to us. Here's how NomadSteals stays free:",
+      "affiliate": "Affiliate Links:",
+      "affiliateDesc": "When you book through our links, we may earn a small commission at no extra cost to you. This doesn't affect our deal selection — we feature deals based on Value Score, not commission rates.",
+      "premium": "Premium Newsletter (Coming Soon):",
+      "premiumDesc": "We're building a premium tier with exclusive deals and features. Our free newsletter will always exist.",
+      "outro": "We will never feature a deal just because it pays us more. Our reputation depends on finding you genuinely great deals."
+    },
+    "contact": {
+      "title": "Get in Touch",
+      "subtitle": "Have a deal tip? Spotted an error? Want to partner with us? We'd love to hear from you.",
+      "email": "Email Us",
+      "twitter": "Follow on X"
+    },
+    "cta": {
+      "title": "Ready to Find Amazing Deals?",
+      "subtitle": "Join {count}+ travelers who get our daily deal digest.",
+      "browseDeals": "Browse Deals"
+    }
+  },
+  "footer": {
+    "description": "Daily curated travel deals with Value Scores to help you find the best flights, hotels, and vacation packages.",
+    "dealTypes": "Deal Types",
+    "flightDeals": "Flight Deals",
+    "hotelDeals": "Hotel Deals",
+    "vacationPackages": "Vacation Packages",
+    "hotDeals": "Hot Deals",
+    "popularDestinations": "Popular Destinations",
+    "dealsIn": "{city} Deals",
+    "company": "Company",
+    "aboutUs": "About Us",
+    "valueScoreExplained": "Value Score Explained",
+    "contact": "Contact",
+    "copyright": "© {year} NomadSteals. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "errors": {
+    "missingToken": "Missing verification token. Please use the link from your email.",
+    "invalidToken": "Invalid or expired token. Please subscribe again.",
+    "verificationFailed": "Verification failed. Please try again or contact support.",
+    "alreadyUnsubscribed": "This email has already been unsubscribed.",
+    "serverError": "Something went wrong. Please try again later."
+  },
+  "language": {
+    "select": "Select language",
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "es": "Español",
+    "ja": "日本語",
+    "ko": "한국어"
+  }
+}

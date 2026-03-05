@@ -1,0 +1,314 @@
+{
+  "common": {
+    "siteName": "NomadSteals",
+    "loading": "Cargando...",
+    "error": "Error",
+    "retry": "Reintentar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "search": "Buscar",
+    "close": "Cerrar",
+    "viewAll": "Ver todo",
+    "learnMore": "Más información",
+    "backToHome": "Volver al inicio"
+  },
+  "nav": {
+    "allDeals": "Todas las ofertas",
+    "destinations": "Destinos",
+    "about": "Nosotros",
+    "newsletter": "Boletín",
+    "subscribeFree": "Suscríbete gratis",
+    "searchPlaceholder": "Buscar destinos, ofertas..."
+  },
+  "home": {
+    "hero": {
+      "updated": "Actualizado {time}",
+      "dealsLive": "{count} ofertas activas",
+      "title": "Las mejores",
+      "titleHighlight": "ofertas de viaje",
+      "subtitle": "Vuelos, hoteles y paquetes seleccionados con puntuación de valor. Ahorro promedio del {savings}% en todas las ofertas."
+    },
+    "stats": {
+      "activeDeals": "Ofertas activas",
+      "avgSavings": "Ahorro promedio",
+      "hotDeals": "Ofertas destacadas",
+      "errorFares": "Tarifas error"
+    },
+    "hotDeals": {
+      "title": "Ofertas destacadas",
+      "new": "{count} nuevas",
+      "subtitle": "Precios increíbles que no durarán mucho"
+    },
+    "popularDestinations": {
+      "title": "Destinos populares",
+      "subtitle": "Explora ofertas por ciudad",
+      "allCities": "Todas las ciudades"
+    },
+    "todaysDeals": {
+      "title": "Ofertas de hoy",
+      "subtitle": "Ofertas nuevas actualizadas diariamente",
+      "browseAll": "Ver todas las ofertas",
+      "all": "Todas",
+      "flights": "Vuelos",
+      "hotels": "Hoteles",
+      "packages": "Paquetes",
+      "hotDeals": "Destacadas",
+      "noDeals": "No hay ofertas disponibles",
+      "noDealsSubtitle": "¡Vuelve pronto para las últimas ofertas de viaje!",
+      "loadMore": "Cargar más"
+    },
+    "valueScore": {
+      "title": "¿Qué es la puntuación de valor?",
+      "subtitle": "Nuestra puntuación de valor patentada (0-100) compara precios actuales con datos históricos para identificar ofertas verdaderamente excepcionales, no solo precios \"en oferta\".",
+      "incredible": "Increíble",
+      "incredibleDesc": "Precio extremadamente raro. Reserva inmediatamente.",
+      "greatValue": "Gran valor",
+      "greatValueDesc": "Muy por debajo de precios típicos. Vale la pena reservar.",
+      "good": "Bueno",
+      "goodDesc": "Oportunidad de ahorro sólida.",
+      "learnMore": "Más sobre la puntuación de valor"
+    }
+  },
+  "search": {
+    "from": "Desde",
+    "to": "Hacia",
+    "fromPlaceholder": "¿De dónde sales?",
+    "toPlaceholder": "¿A dónde quieres ir?",
+    "searchDeals": "Buscar ofertas",
+    "swap": "Intercambiar origen y destino",
+    "anywhere": "Cualquier lugar",
+    "anyOrigin": "Cualquier origen",
+    "anyDestination": "Cualquier destino",
+    "popular": "Popular:",
+    "westCoastAsia": "Costa Oeste → Asia",
+    "eastCoastEurope": "Costa Este → Europa",
+    "southeastAsia": "Sudeste Asiático",
+    "caribbean": "Caribe",
+    "clearSearch": "Limpiar búsqueda",
+    "dealsFound": "{count} {count, plural, one {oferta encontrada} other {ofertas encontradas}}"
+  },
+  "deals": {
+    "browseAll": "Ver todas las ofertas",
+    "showing": "Mostrando",
+    "deals": "ofertas",
+    "for": "para",
+    "noDeals": "No se encontraron ofertas",
+    "noDealsSubtitle": "Intenta ajustar los filtros o términos de búsqueda",
+    "clearFilters": "Limpiar filtros",
+    "type": {
+      "all": "Todas las ofertas",
+      "flight": "Vuelo",
+      "flights": "Vuelos",
+      "hotel": "Hotel",
+      "hotels": "Hoteles",
+      "package": "Paquete",
+      "packages": "Paquetes",
+      "cruise": "Crucero"
+    },
+    "filters": {
+      "hotOnly": "Solo destacadas",
+      "moreFilters": "Más filtros",
+      "hideFilters": "Ocultar filtros",
+      "anyPrice": "Cualquier precio",
+      "under": "Menos de ${price}",
+      "quickFilters": "Filtros rápidos",
+      "destination": "Destino",
+      "origin": "Origen",
+      "anyDestination": "Cualquier destino",
+      "popularRoutes": "Rutas populares"
+    },
+    "sort": {
+      "label": "Ordenar:",
+      "valueScore": "Puntuación de valor",
+      "priceLow": "Precio: menor a mayor",
+      "priceHigh": "Precio: mayor a menor",
+      "savings": "Mayor ahorro",
+      "newest": "Más recientes",
+      "popularity": "Más populares"
+    },
+    "card": {
+      "hot": "Destacada",
+      "historicLow": "Mínimo histórico",
+      "expiresSoon": "Expira pronto",
+      "via": "vía",
+      "save": "Ahorra ${amount}",
+      "off": "{percent}% de descuento",
+      "viewDeal": "Ver oferta",
+      "bookNow": "Reservar ahora"
+    },
+    "curated": "{count} ofertas de viaje seleccionadas.",
+    "avgSavings": "Ahorro promedio del {percent}% en todos los listados.",
+    "lastUpdated": "Última actualización: {time}"
+  },
+  "regions": {
+    "usWest": "Costa Oeste de EE.UU.",
+    "usEast": "Costa Este de EE.UU.",
+    "usMidwest": "Centro de EE.UU.",
+    "canada": "Canadá",
+    "europeWest": "Europa Occidental",
+    "europeSouth": "Europa del Sur",
+    "europeCentral": "Europa Central",
+    "europeNorth": "Europa del Norte",
+    "asiaEast": "Asia Oriental",
+    "asiaSoutheast": "Sudeste Asiático",
+    "asiaSouth": "Asia del Sur",
+    "oceania": "Oceanía",
+    "latinAmerica": "América Latina",
+    "caribbean": "Caribe",
+    "middleEast": "Medio Oriente",
+    "africa": "África",
+    "hawaii": "Hawái"
+  },
+  "newsletter": {
+    "title": "Recibe ofertas antes que nadie",
+    "subtitle": "Únete a más de {count} viajeros inteligentes que reciben nuestro resumen diario. Tarifas error, ventas flash y ofertas exclusivas — directo a tu bandeja.",
+    "emailPlaceholder": "Tu correo electrónico",
+    "subscribe": "Suscríbete gratis",
+    "subscribing": "Suscribiendo...",
+    "subscribed": "¡Suscrito!",
+    "subscribedSubtitle": "Revisa tu bandeja para el correo de bienvenida con las mejores ofertas de hoy.",
+    "noSpam": "Sin spam nunca. Cancela cuando quieras.",
+    "freeForever": "Gratis para siempre • Cancela cuando quieras",
+    "dailyAlerts": "Alertas diarias",
+    "dailyAlertsDesc": "Las mejores ofertas de viaje en tu bandeja cada mañana.",
+    "getDailyDeals": "Recibir ofertas diarias",
+    "page": {
+      "title": "Recibe las mejores ofertas",
+      "titleHighlight": "antes que nadie",
+      "subtitle": "Únete a más de {count} viajeros inteligentes que despiertan con ofertas increíbles en su bandeja. Tarifas error, ventas flash y hallazgos exclusivos — según tu horario.",
+      "socialProof": {
+        "subscribers": "suscriptores",
+        "rating": "valoración",
+        "saved": "ahorrado por lectores"
+      },
+      "benefits": {
+        "title": "¿Por qué suscribirse?",
+        "hotFirst": "Ofertas destacadas primero",
+        "hotFirstDesc": "Sé el primero en conocer tarifas error y ventas flash antes de que se agoten",
+        "valueScore": "Selección por puntuación",
+        "valueScoreDesc": "Solo enviamos ofertas con puntuaciones excepcionales — nada mediocre",
+        "personalized": "Personalizado",
+        "personalizedDesc": "Configura tu aeropuerto y destinos para alertas a medida",
+        "mobile": "Optimizado para móvil",
+        "mobileDesc": "Correos limpios y fáciles de leer, optimizados para reservar en movimiento"
+      },
+      "sample": {
+        "title": "Lo que recibirás",
+        "subtitle": "Vista previa del resumen diario",
+        "topDeal": "Oferta destacada de hoy",
+        "errorFare": "Tarifa error"
+      },
+      "testimonials": {
+        "title": "Lo que dicen los lectores"
+      },
+      "faq": {
+        "title": "Preguntas frecuentes",
+        "q1": "¿Con qué frecuencia recibiré correos?",
+        "a1": "¡Tú decides! Alertas instantáneas, resumen diario o semanal. Personalízalo en preferencias.",
+        "q2": "¿Es realmente gratis?",
+        "a2": "¡Sí! Nuestro boletín es 100% gratis, siempre. Ganamos con comisiones de afiliados cuando reservas, sin costo extra para ti.",
+        "q3": "¿Puedo cancelar en cualquier momento?",
+        "a3": "Absolutamente. Cada correo tiene un enlace para cancelar. Sin preguntas, sin drama.",
+        "q4": "¿Venderán mi correo?",
+        "a4": "Nunca. Odiamos el spam tanto como tú. Tu correo se queda con nosotros, punto.",
+        "q5": "¿Puedo filtrar ofertas por destino?",
+        "a5": "¡Sí! Configura orígenes, destinos, precio máximo, tipos de oferta y más. Solo recibe lo que te interesa."
+      },
+      "finalCta": {
+        "title": "¿Listo para ahorrar en viajes?",
+        "subtitle": "Únete a más de {count} viajeros que reciben alertas personalizadas."
+      }
+    }
+  },
+  "about": {
+    "title": "Te ayudamos a viajar",
+    "titleHighlight": "más inteligente",
+    "subtitle": "NomadSteals es tu fuente diaria de ofertas de viaje seleccionadas. Usamos datos y experiencia para encontrar ofertas que realmente valen tu tiempo.",
+    "stats": {
+      "dealsTracked": "Ofertas rastreadas",
+      "subscribers": "Suscriptores",
+      "avgSavings": "Ahorro promedio",
+      "monitoring": "Monitoreo"
+    },
+    "story": {
+      "title": "Nuestra historia",
+      "p1": "NomadSteals nació de una frustración simple: encontrar buenas ofertas de viaje era muy difícil. Había demasiadas \"ofertas\" mediocres y mucho ruido que filtrar.",
+      "p2": "Construimos NomadSteals para ser el sitio de ofertas que siempre quisimos. Cada oferta es revisada por nuestro equipo. Analizamos datos de precios para calcular nuestra puntuación de valor patentada — para que sepas cuando una oferta es realmente excepcional, no solo \"en oferta\".",
+      "p3": "Somos viajeros también. Hemos reservado tarifas error a Asia, conseguido hoteles de lujo a precios económicos y descubierto destinos ocultos. Ahora compartimos ese conocimiento contigo."
+    },
+    "valueScore": {
+      "title": "La diferencia de la puntuación de valor",
+      "subtitle": "No todas las \"ofertas\" son iguales. Un 30% de descuento sobre un precio ya inflado no es realmente una oferta. Por eso creamos la puntuación de valor.",
+      "historical": "Comparación histórica:",
+      "historicalDesc": "Comparamos precios actuales con más de 12 meses de datos históricos",
+      "seasonal": "Ajuste estacional:",
+      "seasonalDesc": "Consideramos precios de temporada alta vs. baja",
+      "route": "Análisis de ruta:",
+      "routeDesc": "Sabemos qué es típico para cada ruta y destino",
+      "quality": "Factor de calidad:",
+      "qualityDesc": "Consideramos la reputación de aerolíneas/hoteles"
+    },
+    "team": {
+      "title": "Lo que hacemos",
+      "hunters": "Cazadores de ofertas",
+      "huntersDesc": "Nuestro equipo busca 24/7 las mejores ofertas",
+      "nerds": "Analistas de datos",
+      "nerdsDesc": "Analizamos precios históricos para calcular puntuaciones",
+      "travelers": "Amantes de viajar",
+      "travelersDesc": "También somos viajeros — te entendemos"
+    },
+    "money": {
+      "title": "Cómo ganamos dinero",
+      "intro": "La transparencia importa. Así es como NomadSteals se mantiene gratis:",
+      "affiliate": "Enlaces de afiliados:",
+      "affiliateDesc": "Cuando reservas a través de nuestros enlaces, podemos ganar una pequeña comisión sin costo extra para ti. Esto no afecta nuestra selección — mostramos ofertas por puntuación, no por comisión.",
+      "premium": "Boletín Premium (Próximamente):",
+      "premiumDesc": "Estamos construyendo un nivel premium con ofertas exclusivas. El boletín gratuito siempre existirá.",
+      "outro": "Nunca mostraremos una oferta solo porque paga más. Nuestra reputación depende de encontrarte ofertas genuinamente buenas."
+    },
+    "contact": {
+      "title": "Contáctanos",
+      "subtitle": "¿Tienes un dato de oferta? ¿Encontraste un error? ¿Quieres colaborar? Nos encantaría saber de ti.",
+      "email": "Envíanos un correo",
+      "twitter": "Síguenos en X"
+    },
+    "cta": {
+      "title": "¿Listo para encontrar ofertas increíbles?",
+      "subtitle": "Únete a más de {count} viajeros que reciben nuestro resumen diario.",
+      "browseDeals": "Ver ofertas"
+    }
+  },
+  "footer": {
+    "description": "Ofertas de viaje diarias con puntuación de valor para ayudarte a encontrar los mejores vuelos, hoteles y paquetes.",
+    "dealTypes": "Tipos de oferta",
+    "flightDeals": "Ofertas de vuelos",
+    "hotelDeals": "Ofertas de hoteles",
+    "vacationPackages": "Paquetes vacacionales",
+    "hotDeals": "Ofertas destacadas",
+    "popularDestinations": "Destinos populares",
+    "dealsIn": "Ofertas en {city}",
+    "company": "Empresa",
+    "aboutUs": "Nosotros",
+    "valueScoreExplained": "Puntuación explicada",
+    "contact": "Contacto",
+    "copyright": "© {year} NomadSteals. Todos los derechos reservados.",
+    "privacy": "Política de privacidad",
+    "terms": "Términos de servicio"
+  },
+  "errors": {
+    "missingToken": "Falta el token de verificación. Usa el enlace del correo.",
+    "invalidToken": "Token inválido o expirado. Por favor suscríbete de nuevo.",
+    "verificationFailed": "Verificación fallida. Intenta de nuevo o contacta soporte.",
+    "alreadyUnsubscribed": "Este correo ya fue dado de baja.",
+    "serverError": "Algo salió mal. Por favor intenta más tarde."
+  },
+  "language": {
+    "select": "Seleccionar idioma",
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "es": "Español",
+    "ja": "日本語",
+    "ko": "한국어"
+  }
+}

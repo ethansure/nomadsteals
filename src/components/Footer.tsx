@@ -1,8 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Logo } from "./Logo";
+import { LanguageSwitcherCompact } from "./LanguageSwitcher";
 import { popularCities } from "@/lib/sample-data";
 
 export function Footer() {
+  const t = useTranslations('footer');
+  const tNav = useTranslations('nav');
+
   return (
     <footer className="bg-gray-900 text-gray-400">
       {/* Main Footer */}
@@ -14,7 +21,7 @@ export function Footer() {
               <Logo size="md" linkToHome={false} />
             </div>
             <p className="text-sm leading-relaxed">
-              Daily curated travel deals with Value Scores to help you find the best flights, hotels, and vacation packages.
+              {t('description')}
             </p>
             <div className="flex gap-4 mt-6">
               <a href="#" className="text-gray-400 hover:text-white transition" aria-label="Twitter">
@@ -33,27 +40,32 @@ export function Footer() {
                 </svg>
               </a>
             </div>
+            
+            {/* Language Switcher in Footer */}
+            <div className="mt-6">
+              <LanguageSwitcherCompact />
+            </div>
           </div>
           
           {/* Deal Types */}
           <div>
-            <h4 className="font-semibold text-white mb-4">Deal Types</h4>
+            <h4 className="font-semibold text-white mb-4">{t('dealTypes')}</h4>
             <ul className="space-y-3 text-sm">
-              <li><Link href="/deals?type=flight" className="hover:text-white transition">✈️ Flight Deals</Link></li>
-              <li><Link href="/deals?type=hotel" className="hover:text-white transition">🏨 Hotel Deals</Link></li>
-              <li><Link href="/deals?type=package" className="hover:text-white transition">📦 Vacation Packages</Link></li>
-              <li><Link href="/deals?hot=true" className="hover:text-white transition">🔥 Hot Deals</Link></li>
+              <li><Link href="/deals?type=flight" className="hover:text-white transition">✈️ {t('flightDeals')}</Link></li>
+              <li><Link href="/deals?type=hotel" className="hover:text-white transition">🏨 {t('hotelDeals')}</Link></li>
+              <li><Link href="/deals?type=package" className="hover:text-white transition">📦 {t('vacationPackages')}</Link></li>
+              <li><Link href="/deals?hot=true" className="hover:text-white transition">🔥 {t('hotDeals')}</Link></li>
             </ul>
           </div>
           
           {/* Popular Cities */}
           <div>
-            <h4 className="font-semibold text-white mb-4">Popular Destinations</h4>
+            <h4 className="font-semibold text-white mb-4">{t('popularDestinations')}</h4>
             <ul className="space-y-3 text-sm">
               {popularCities.slice(0, 5).map(city => (
                 <li key={city.code}>
                   <Link href={`/cities/${city.code.toLowerCase()}`} className="hover:text-white transition">
-                    {city.name} Deals
+                    {city.name}
                   </Link>
                 </li>
               ))}
@@ -62,12 +74,12 @@ export function Footer() {
           
           {/* Resources */}
           <div>
-            <h4 className="font-semibold text-white mb-4">Company</h4>
+            <h4 className="font-semibold text-white mb-4">{t('company')}</h4>
             <ul className="space-y-3 text-sm">
-              <li><Link href="/about" className="hover:text-white transition">About Us</Link></li>
-              <li><Link href="/newsletter" className="hover:text-white transition">Newsletter</Link></li>
-              <li><Link href="/about#value-score" className="hover:text-white transition">Value Score Explained</Link></li>
-              <li><Link href="/about#contact" className="hover:text-white transition">Contact</Link></li>
+              <li><Link href="/about" className="hover:text-white transition">{t('aboutUs')}</Link></li>
+              <li><Link href="/newsletter" className="hover:text-white transition">{tNav('newsletter')}</Link></li>
+              <li><Link href="/about#value-score" className="hover:text-white transition">{t('valueScoreExplained')}</Link></li>
+              <li><Link href="/about#contact" className="hover:text-white transition">{t('contact')}</Link></li>
             </ul>
           </div>
         </div>
@@ -76,10 +88,10 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm">© {new Date().getFullYear()} NomadSteals. All rights reserved.</p>
+          <p className="text-sm">{t('copyright', { year: new Date().getFullYear() })}</p>
           <div className="flex gap-6 text-sm">
-            <Link href="/privacy" className="hover:text-white transition">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-white transition">{t('privacy')}</Link>
+            <Link href="/terms" className="hover:text-white transition">{t('terms')}</Link>
           </div>
         </div>
       </div>

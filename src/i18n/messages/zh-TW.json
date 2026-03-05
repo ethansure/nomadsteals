@@ -1,0 +1,314 @@
+{
+  "common": {
+    "siteName": "NomadSteals",
+    "loading": "載入中...",
+    "error": "錯誤",
+    "retry": "重試",
+    "save": "儲存",
+    "cancel": "取消",
+    "search": "搜尋",
+    "close": "關閉",
+    "viewAll": "查看全部",
+    "learnMore": "瞭解更多",
+    "backToHome": "返回首頁"
+  },
+  "nav": {
+    "allDeals": "全部優惠",
+    "destinations": "熱門目的地",
+    "about": "關於我們",
+    "newsletter": "訂閱資訊",
+    "subscribeFree": "免費訂閱",
+    "searchPlaceholder": "搜尋目的地、優惠..."
+  },
+  "home": {
+    "hero": {
+      "updated": "更新於 {time}",
+      "dealsLive": "{count} 個優惠正在進行",
+      "title": "今日最佳",
+      "titleHighlight": "旅遊優惠",
+      "subtitle": "精選機票、飯店和套裝行程，配有價值評分。所有優惠平均節省 {savings}%。"
+    },
+    "stats": {
+      "activeDeals": "優惠數量",
+      "avgSavings": "平均節省",
+      "hotDeals": "熱門優惠",
+      "errorFares": "錯誤票價"
+    },
+    "hotDeals": {
+      "title": "熱門優惠",
+      "new": "{count} 個新優惠",
+      "subtitle": "超值價格，先到先得"
+    },
+    "popularDestinations": {
+      "title": "熱門目的地",
+      "subtitle": "按城市瀏覽優惠",
+      "allCities": "所有城市"
+    },
+    "todaysDeals": {
+      "title": "今日優惠",
+      "subtitle": "每日更新的新鮮優惠",
+      "browseAll": "瀏覽全部優惠",
+      "all": "全部",
+      "flights": "機票",
+      "hotels": "飯店",
+      "packages": "套裝",
+      "hotDeals": "熱門優惠",
+      "noDeals": "暫無優惠",
+      "noDealsSubtitle": "請稍後再來查看最新旅遊優惠！",
+      "loadMore": "載入更多"
+    },
+    "valueScore": {
+      "title": "什麼是價值評分？",
+      "subtitle": "我們專有的價值評分（0-100）將當前價格與歷史資料進行比較，幫您識別真正超值的優惠——而不僅僅是『打折』價格。",
+      "incredible": "超值",
+      "incredibleDesc": "極其罕見的價格，立即預訂。",
+      "greatValue": "很划算",
+      "greatValueDesc": "遠低於正常價格，值得預訂。",
+      "good": "不錯",
+      "goodDesc": "有一定的節省空間。",
+      "learnMore": "瞭解更多關於價值評分"
+    }
+  },
+  "search": {
+    "from": "出發地",
+    "to": "目的地",
+    "fromPlaceholder": "您從哪裡出發？",
+    "toPlaceholder": "您想去哪裡？",
+    "searchDeals": "搜尋優惠",
+    "swap": "交換出發地和目的地",
+    "anywhere": "任意地點",
+    "anyOrigin": "任意出發地",
+    "anyDestination": "任意目的地",
+    "popular": "熱門：",
+    "westCoastAsia": "美西 → 亞洲",
+    "eastCoastEurope": "美東 → 歐洲",
+    "southeastAsia": "東南亞",
+    "caribbean": "加勒比",
+    "clearSearch": "清除搜尋",
+    "dealsFound": "找到 {count} 個優惠"
+  },
+  "deals": {
+    "browseAll": "瀏覽全部優惠",
+    "showing": "顯示",
+    "deals": "個優惠",
+    "for": "關於",
+    "noDeals": "未找到優惠",
+    "noDealsSubtitle": "請嘗試調整篩選條件或搜尋詞",
+    "clearFilters": "清除所有篩選",
+    "type": {
+      "all": "全部優惠",
+      "flight": "機票",
+      "flights": "機票",
+      "hotel": "飯店",
+      "hotels": "飯店",
+      "package": "套裝",
+      "packages": "套裝",
+      "cruise": "郵輪"
+    },
+    "filters": {
+      "hotOnly": "僅顯示熱門",
+      "moreFilters": "更多篩選",
+      "hideFilters": "隱藏篩選",
+      "anyPrice": "不限價格",
+      "under": "${price} 以下",
+      "quickFilters": "快速篩選",
+      "destination": "目的地",
+      "origin": "出發地",
+      "anyDestination": "任意目的地",
+      "popularRoutes": "熱門路線"
+    },
+    "sort": {
+      "label": "排序：",
+      "valueScore": "價值評分",
+      "priceLow": "價格：從低到高",
+      "priceHigh": "價格：從高到低",
+      "savings": "最大折扣",
+      "newest": "最新優先",
+      "popularity": "最受歡迎"
+    },
+    "card": {
+      "hot": "熱門",
+      "historicLow": "歷史最低",
+      "expiresSoon": "即將到期",
+      "via": "來源",
+      "save": "節省 ${amount}",
+      "off": "優惠 {percent}%",
+      "viewDeal": "查看優惠",
+      "bookNow": "立即預訂"
+    },
+    "curated": "精選 {count} 個旅遊優惠。",
+    "avgSavings": "所有優惠平均節省 {percent}%。",
+    "lastUpdated": "最後更新：{time}"
+  },
+  "regions": {
+    "usWest": "美西",
+    "usEast": "美東",
+    "usMidwest": "美中",
+    "canada": "加拿大",
+    "europeWest": "西歐",
+    "europeSouth": "南歐",
+    "europeCentral": "中歐",
+    "europeNorth": "北歐",
+    "asiaEast": "東亞",
+    "asiaSoutheast": "東南亞",
+    "asiaSouth": "南亞",
+    "oceania": "大洋洲",
+    "latinAmerica": "拉美",
+    "caribbean": "加勒比",
+    "middleEast": "中東",
+    "africa": "非洲",
+    "hawaii": "夏威夷"
+  },
+  "newsletter": {
+    "title": "搶先獲取優惠資訊",
+    "subtitle": "加入 {count}+ 精明旅行者的行列，每日接收優惠摘要。錯誤票價、限時特賣、獨家優惠——直達您的信箱。",
+    "emailPlaceholder": "輸入您的電子郵件",
+    "subscribe": "免費訂閱",
+    "subscribing": "訂閱中...",
+    "subscribed": "訂閱成功！",
+    "subscribedSubtitle": "請查收歡迎郵件，內含今日最佳優惠。",
+    "noSpam": "絕無垃圾郵件，隨時退訂。",
+    "freeForever": "永久免費 • 隨時退訂",
+    "dailyAlerts": "每日優惠提醒",
+    "dailyAlertsDesc": "每天早晨將最佳旅遊優惠發送到您的信箱。",
+    "getDailyDeals": "獲取每日優惠",
+    "page": {
+      "title": "搶先獲得最佳優惠",
+      "titleHighlight": "領先一步",
+      "subtitle": "加入 {count}+ 精明旅行者的行列，每天醒來就能看到超值優惠。錯誤票價、限時特賣、獨家發現——按您的時間表送達。",
+      "socialProof": {
+        "subscribers": "訂閱者",
+        "rating": "讀者評分",
+        "saved": "讀者已節省"
+      },
+      "benefits": {
+        "title": "為什麼要訂閱？",
+        "hotFirst": "第一時間獲取熱門優惠",
+        "hotFirstDesc": "搶在售罄前第一時間瞭解錯誤票價和限時特賣",
+        "valueScore": "價值評分精選",
+        "valueScoreDesc": "我們只發送價值評分優秀的優惠——不發平庸的折扣",
+        "personalized": "個人化推薦",
+        "personalizedDesc": "設定您的出發機場和目的地，獲取定制提醒",
+        "mobile": "行動裝置友善",
+        "mobileDesc": "簡潔易讀的郵件，方便隨時預訂"
+      },
+      "sample": {
+        "title": "您將收到什麼",
+        "subtitle": "每日優惠摘要預覽",
+        "topDeal": "今日最佳優惠",
+        "errorFare": "錯誤票價"
+      },
+      "testimonials": {
+        "title": "讀者評價"
+      },
+      "faq": {
+        "title": "常見問題",
+        "q1": "我會多久收到一次郵件？",
+        "a1": "由您決定！可以選擇熱門優惠即時提醒、每日摘要或每週彙總。在偏好設定中自訂。",
+        "q2": "真的是免費的嗎？",
+        "a2": "是的！我們的資訊完全免費，永久免費。我們透過您預訂時的聯盟佣金獲利，不會增加您的費用。",
+        "q3": "可以隨時退訂嗎？",
+        "a3": "當然可以。每封郵件都有一鍵退訂連結。沒有任何問題，不會糾纏。",
+        "q4": "你們會出售我的電子郵件嗎？",
+        "a4": "永遠不會。我們和您一樣討厭垃圾郵件。您的電子郵件只在我們這裡使用。",
+        "q5": "可以按目的地篩選優惠嗎？",
+        "a5": "可以！設定您偏好的出發地和目的地、最高價格、優惠類型等。只收到您真正關心的優惠。"
+      },
+      "finalCta": {
+        "title": "準備好省錢旅行了嗎？",
+        "subtitle": "加入 {count}+ 精明旅行者，獲取個人化優惠提醒。"
+      }
+    }
+  },
+  "about": {
+    "title": "助您旅行",
+    "titleHighlight": "更聰明",
+    "subtitle": "NomadSteals 是您每日精選旅遊優惠的來源。我們用資料和經驗尋找真正值得您關注的優惠。",
+    "stats": {
+      "dealsTracked": "已追蹤優惠",
+      "subscribers": "訂閱者",
+      "avgSavings": "平均節省",
+      "monitoring": "全天候監控"
+    },
+    "story": {
+      "title": "我們的故事",
+      "p1": "NomadSteals 的誕生源於一個簡單的困擾：找到好的旅遊優惠太難了。市面上有太多平庸的『優惠』，需要篩選的雜訊太多。",
+      "p2": "我們打造了 NomadSteals，希望它成為我們一直想要的旅遊優惠網站。我們網站上的每個優惠都經過團隊人工審核。我們分析價格資料，計算專有的價值評分——讓您知道優惠是否真的超值，而不只是『打折』。",
+      "p3": "我們自己也是旅行者。我們曾經訂到過飛往亞洲的錯誤票價，以經濟價格住過豪華飯店，發現過小眾目的地。現在我們將這些經驗與您分享。"
+    },
+    "valueScore": {
+      "title": "價值評分的不同之處",
+      "subtitle": "並非所有『優惠』都一樣好。已經漲價的商品打三折並不是真正的優惠。這就是我們建立價值評分的原因。",
+      "historical": "歷史比較：",
+      "historicalDesc": "我們將當前價格與12個月以上的歷史資料進行比較",
+      "seasonal": "季節調整：",
+      "seasonalDesc": "我們考慮旺季與淡季的價格差異",
+      "route": "路線分析：",
+      "routeDesc": "我們瞭解每條路線和目的地的正常價格",
+      "quality": "品質因素：",
+      "qualityDesc": "我們在評分中考慮航空公司/飯店的聲譽"
+    },
+    "team": {
+      "title": "我們做什麼",
+      "hunters": "優惠獵手",
+      "huntersDesc": "我們的團隊全天候搜尋網路上的最佳優惠",
+      "nerds": "資料極客",
+      "nerdsDesc": "我們分析歷史價格來計算價值評分",
+      "travelers": "旅行愛好者",
+      "travelersDesc": "我們也是旅行者——我們懂你"
+    },
+    "money": {
+      "title": "我們如何獲利",
+      "intro": "透明度對我們很重要。以下是 NomadSteals 保持免費的方式：",
+      "affiliate": "聯盟連結：",
+      "affiliateDesc": "當您透過我們的連結預訂時，我們可能會獲得小額佣金，不會增加您的費用。這不影響我們的優惠選擇——我們根據價值評分而非佣金率來展示優惠。",
+      "premium": "高級訂閱（即將推出）：",
+      "premiumDesc": "我們正在建設一個具有獨家優惠和功能的高級層。我們的免費資訊將永遠存在。",
+      "outro": "我們永遠不會僅僅因為收取更多佣金就推薦某個優惠。我們的聲譽取決於為您找到真正超值的優惠。"
+    },
+    "contact": {
+      "title": "聯絡我們",
+      "subtitle": "有優惠線索？發現了錯誤？想要合作？我們很樂意聽取您的意見。",
+      "email": "發送郵件",
+      "twitter": "關注 X"
+    },
+    "cta": {
+      "title": "準備好發現超值優惠了嗎？",
+      "subtitle": "加入 {count}+ 旅行者，每日接收優惠摘要。",
+      "browseDeals": "瀏覽優惠"
+    }
+  },
+  "footer": {
+    "description": "每日精選旅遊優惠，配有價值評分，幫助您找到最佳機票、飯店和度假套裝。",
+    "dealTypes": "優惠類型",
+    "flightDeals": "機票優惠",
+    "hotelDeals": "飯店優惠",
+    "vacationPackages": "度假套裝",
+    "hotDeals": "熱門優惠",
+    "popularDestinations": "熱門目的地",
+    "dealsIn": "{city}優惠",
+    "company": "公司",
+    "aboutUs": "關於我們",
+    "valueScoreExplained": "價值評分說明",
+    "contact": "聯絡我們",
+    "copyright": "© {year} NomadSteals. 保留所有權利。",
+    "privacy": "隱私權政策",
+    "terms": "服務條款"
+  },
+  "errors": {
+    "missingToken": "缺少驗證令牌。請使用郵件中的連結。",
+    "invalidToken": "令牌無效或已過期。請重新訂閱。",
+    "verificationFailed": "驗證失敗。請重試或聯絡支援。",
+    "alreadyUnsubscribed": "此電子郵件已退訂。",
+    "serverError": "出現錯誤。請稍後重試。"
+  },
+  "language": {
+    "select": "選擇語言",
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "es": "Español",
+    "ja": "日本語",
+    "ko": "한국어"
+  }
+}

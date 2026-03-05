@@ -1,0 +1,314 @@
+{
+  "common": {
+    "siteName": "NomadSteals",
+    "loading": "加载中...",
+    "error": "错误",
+    "retry": "重试",
+    "save": "保存",
+    "cancel": "取消",
+    "search": "搜索",
+    "close": "关闭",
+    "viewAll": "查看全部",
+    "learnMore": "了解更多",
+    "backToHome": "返回首页"
+  },
+  "nav": {
+    "allDeals": "全部优惠",
+    "destinations": "热门目的地",
+    "about": "关于我们",
+    "newsletter": "订阅资讯",
+    "subscribeFree": "免费订阅",
+    "searchPlaceholder": "搜索目的地、优惠..."
+  },
+  "home": {
+    "hero": {
+      "updated": "更新于 {time}",
+      "dealsLive": "{count} 个优惠正在进行",
+      "title": "今日最佳",
+      "titleHighlight": "旅行优惠",
+      "subtitle": "精选机票、酒店和套餐，配有价值评分。所有优惠平均节省 {savings}%。"
+    },
+    "stats": {
+      "activeDeals": "优惠数量",
+      "avgSavings": "平均节省",
+      "hotDeals": "热门优惠",
+      "errorFares": "错误票价"
+    },
+    "hotDeals": {
+      "title": "热门优惠",
+      "new": "{count} 个新优惠",
+      "subtitle": "超值价格，先到先得"
+    },
+    "popularDestinations": {
+      "title": "热门目的地",
+      "subtitle": "按城市浏览优惠",
+      "allCities": "所有城市"
+    },
+    "todaysDeals": {
+      "title": "今日优惠",
+      "subtitle": "每日更新的新鲜优惠",
+      "browseAll": "浏览全部优惠",
+      "all": "全部",
+      "flights": "机票",
+      "hotels": "酒店",
+      "packages": "套餐",
+      "hotDeals": "热门优惠",
+      "noDeals": "暂无优惠",
+      "noDealsSubtitle": "请稍后再来查看最新旅行优惠！",
+      "loadMore": "加载更多"
+    },
+    "valueScore": {
+      "title": "什么是价值评分？",
+      "subtitle": "我们专有的价值评分（0-100）将当前价格与历史数据进行比较，帮您识别真正超值的优惠——而不仅仅是『打折』价格。",
+      "incredible": "超值",
+      "incredibleDesc": "极其罕见的价格，立即预订。",
+      "greatValue": "很划算",
+      "greatValueDesc": "远低于正常价格，值得预订。",
+      "good": "不错",
+      "goodDesc": "有一定的节省空间。",
+      "learnMore": "了解更多关于价值评分"
+    }
+  },
+  "search": {
+    "from": "出发地",
+    "to": "目的地",
+    "fromPlaceholder": "您从哪里出发？",
+    "toPlaceholder": "您想去哪里？",
+    "searchDeals": "搜索优惠",
+    "swap": "交换出发地和目的地",
+    "anywhere": "任意地点",
+    "anyOrigin": "任意出发地",
+    "anyDestination": "任意目的地",
+    "popular": "热门：",
+    "westCoastAsia": "美西 → 亚洲",
+    "eastCoastEurope": "美东 → 欧洲",
+    "southeastAsia": "东南亚",
+    "caribbean": "加勒比",
+    "clearSearch": "清除搜索",
+    "dealsFound": "找到 {count} 个优惠"
+  },
+  "deals": {
+    "browseAll": "浏览全部优惠",
+    "showing": "显示",
+    "deals": "个优惠",
+    "for": "关于",
+    "noDeals": "未找到优惠",
+    "noDealsSubtitle": "请尝试调整筛选条件或搜索词",
+    "clearFilters": "清除所有筛选",
+    "type": {
+      "all": "全部优惠",
+      "flight": "机票",
+      "flights": "机票",
+      "hotel": "酒店",
+      "hotels": "酒店",
+      "package": "套餐",
+      "packages": "套餐",
+      "cruise": "邮轮"
+    },
+    "filters": {
+      "hotOnly": "仅显示热门",
+      "moreFilters": "更多筛选",
+      "hideFilters": "隐藏筛选",
+      "anyPrice": "不限价格",
+      "under": "${price} 以下",
+      "quickFilters": "快速筛选",
+      "destination": "目的地",
+      "origin": "出发地",
+      "anyDestination": "任意目的地",
+      "popularRoutes": "热门路线"
+    },
+    "sort": {
+      "label": "排序：",
+      "valueScore": "价值评分",
+      "priceLow": "价格：从低到高",
+      "priceHigh": "价格：从高到低",
+      "savings": "最大折扣",
+      "newest": "最新优先",
+      "popularity": "最受欢迎"
+    },
+    "card": {
+      "hot": "热门",
+      "historicLow": "历史最低",
+      "expiresSoon": "即将到期",
+      "via": "来源",
+      "save": "节省 ${amount}",
+      "off": "优惠 {percent}%",
+      "viewDeal": "查看优惠",
+      "bookNow": "立即预订"
+    },
+    "curated": "精选 {count} 个旅行优惠。",
+    "avgSavings": "所有优惠平均节省 {percent}%。",
+    "lastUpdated": "最后更新：{time}"
+  },
+  "regions": {
+    "usWest": "美西",
+    "usEast": "美东",
+    "usMidwest": "美中",
+    "canada": "加拿大",
+    "europeWest": "西欧",
+    "europeSouth": "南欧",
+    "europeCentral": "中欧",
+    "europeNorth": "北欧",
+    "asiaEast": "东亚",
+    "asiaSoutheast": "东南亚",
+    "asiaSouth": "南亚",
+    "oceania": "大洋洲",
+    "latinAmerica": "拉美",
+    "caribbean": "加勒比",
+    "middleEast": "中东",
+    "africa": "非洲",
+    "hawaii": "夏威夷"
+  },
+  "newsletter": {
+    "title": "抢先获取优惠信息",
+    "subtitle": "加入 {count}+ 精明旅行者的行列，每日接收优惠摘要。错误票价、限时特卖、独家优惠——直达您的邮箱。",
+    "emailPlaceholder": "输入您的邮箱",
+    "subscribe": "免费订阅",
+    "subscribing": "订阅中...",
+    "subscribed": "订阅成功！",
+    "subscribedSubtitle": "请查收欢迎邮件，内含今日最佳优惠。",
+    "noSpam": "绝无垃圾邮件，随时退订。",
+    "freeForever": "永久免费 • 随时退订",
+    "dailyAlerts": "每日优惠提醒",
+    "dailyAlertsDesc": "每天早晨将最佳旅行优惠发送到您的邮箱。",
+    "getDailyDeals": "获取每日优惠",
+    "page": {
+      "title": "抢先获得最佳优惠",
+      "titleHighlight": "领先一步",
+      "subtitle": "加入 {count}+ 精明旅行者的行列，每天醒来就能看到超值优惠。错误票价、限时特卖、独家发现——按您的时间表送达。",
+      "socialProof": {
+        "subscribers": "订阅者",
+        "rating": "读者评分",
+        "saved": "读者已节省"
+      },
+      "benefits": {
+        "title": "为什么要订阅？",
+        "hotFirst": "第一时间获取热门优惠",
+        "hotFirstDesc": "抢在售罄前第一时间了解错误票价和限时特卖",
+        "valueScore": "价值评分精选",
+        "valueScoreDesc": "我们只发送价值评分优秀的优惠——不发平庸的折扣",
+        "personalized": "个性化推荐",
+        "personalizedDesc": "设置您的出发机场和目的地，获取定制提醒",
+        "mobile": "移动端友好",
+        "mobileDesc": "简洁易读的邮件，方便随时预订"
+      },
+      "sample": {
+        "title": "您将收到什么",
+        "subtitle": "每日优惠摘要预览",
+        "topDeal": "今日最佳优惠",
+        "errorFare": "错误票价"
+      },
+      "testimonials": {
+        "title": "读者评价"
+      },
+      "faq": {
+        "title": "常见问题",
+        "q1": "我会多久收到一次邮件？",
+        "a1": "由您决定！可以选择热门优惠即时提醒、每日摘要或每周汇总。在偏好设置中自定义。",
+        "q2": "真的是免费的吗？",
+        "a2": "是的！我们的资讯完全免费，永久免费。我们通过您预订时的联盟佣金获利，不会增加您的费用。",
+        "q3": "可以随时退订吗？",
+        "a3": "当然可以。每封邮件都有一键退订链接。没有任何问题，不会纠缠。",
+        "q4": "你们会出售我的邮箱吗？",
+        "a4": "永远不会。我们和您一样讨厌垃圾邮件。您的邮箱只在我们这里使用。",
+        "q5": "可以按目的地筛选优惠吗？",
+        "a5": "可以！设置您偏好的出发地和目的地、最高价格、优惠类型等。只收到您真正关心的优惠。"
+      },
+      "finalCta": {
+        "title": "准备好省钱旅行了吗？",
+        "subtitle": "加入 {count}+ 精明旅行者，获取个性化优惠提醒。"
+      }
+    }
+  },
+  "about": {
+    "title": "助您旅行",
+    "titleHighlight": "更聪明",
+    "subtitle": "NomadSteals 是您每日精选旅行优惠的来源。我们用数据和经验寻找真正值得您关注的优惠。",
+    "stats": {
+      "dealsTracked": "已跟踪优惠",
+      "subscribers": "订阅者",
+      "avgSavings": "平均节省",
+      "monitoring": "全天候监控"
+    },
+    "story": {
+      "title": "我们的故事",
+      "p1": "NomadSteals 的诞生源于一个简单的困扰：找到好的旅行优惠太难了。市面上有太多平庸的『优惠』，需要筛选的噪音太多。",
+      "p2": "我们打造了 NomadSteals，希望它成为我们一直想要的旅行优惠网站。我们网站上的每个优惠都经过团队人工审核。我们分析价格数据，计算专有的价值评分——让您知道优惠是否真的超值，而不只是『打折』。",
+      "p3": "我们自己也是旅行者。我们曾经订到过飞往亚洲的错误票价，以经济价格住过豪华酒店，发现过小众目的地。现在我们将这些经验与您分享。"
+    },
+    "valueScore": {
+      "title": "价值评分的不同之处",
+      "subtitle": "并非所有『优惠』都一样好。已经涨价的商品打三折并不是真正的优惠。这就是我们创建价值评分的原因。",
+      "historical": "历史比较：",
+      "historicalDesc": "我们将当前价格与12个月以上的历史数据进行比较",
+      "seasonal": "季节调整：",
+      "seasonalDesc": "我们考虑旺季与淡季的价格差异",
+      "route": "路线分析：",
+      "routeDesc": "我们了解每条路线和目的地的正常价格",
+      "quality": "质量因素：",
+      "qualityDesc": "我们在评分中考虑航空公司/酒店的声誉"
+    },
+    "team": {
+      "title": "我们做什么",
+      "hunters": "优惠猎手",
+      "huntersDesc": "我们的团队全天候搜索网络上的最佳优惠",
+      "nerds": "数据极客",
+      "nerdsDesc": "我们分析历史价格来计算价值评分",
+      "travelers": "旅行爱好者",
+      "travelersDesc": "我们也是旅行者——我们懂你"
+    },
+    "money": {
+      "title": "我们如何盈利",
+      "intro": "透明度对我们很重要。以下是 NomadSteals 保持免费的方式：",
+      "affiliate": "联盟链接：",
+      "affiliateDesc": "当您通过我们的链接预订时，我们可能会获得小额佣金，不会增加您的费用。这不影响我们的优惠选择——我们根据价值评分而非佣金率来展示优惠。",
+      "premium": "高级订阅（即将推出）：",
+      "premiumDesc": "我们正在建设一个具有独家优惠和功能的高级层。我们的免费资讯将永远存在。",
+      "outro": "我们永远不会仅仅因为收取更多佣金就推荐某个优惠。我们的声誉取决于为您找到真正超值的优惠。"
+    },
+    "contact": {
+      "title": "联系我们",
+      "subtitle": "有优惠线索？发现了错误？想要合作？我们很乐意听取您的意见。",
+      "email": "发送邮件",
+      "twitter": "关注 X"
+    },
+    "cta": {
+      "title": "准备好发现超值优惠了吗？",
+      "subtitle": "加入 {count}+ 旅行者，每日接收优惠摘要。",
+      "browseDeals": "浏览优惠"
+    }
+  },
+  "footer": {
+    "description": "每日精选旅行优惠，配有价值评分，帮助您找到最佳机票、酒店和度假套餐。",
+    "dealTypes": "优惠类型",
+    "flightDeals": "机票优惠",
+    "hotelDeals": "酒店优惠",
+    "vacationPackages": "度假套餐",
+    "hotDeals": "热门优惠",
+    "popularDestinations": "热门目的地",
+    "dealsIn": "{city}优惠",
+    "company": "公司",
+    "aboutUs": "关于我们",
+    "valueScoreExplained": "价值评分说明",
+    "contact": "联系我们",
+    "copyright": "© {year} NomadSteals. 保留所有权利。",
+    "privacy": "隐私政策",
+    "terms": "服务条款"
+  },
+  "errors": {
+    "missingToken": "缺少验证令牌。请使用邮件中的链接。",
+    "invalidToken": "令牌无效或已过期。请重新订阅。",
+    "verificationFailed": "验证失败。请重试或联系支持。",
+    "alreadyUnsubscribed": "此邮箱已退订。",
+    "serverError": "出现错误。请稍后重试。"
+  },
+  "language": {
+    "select": "选择语言",
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "es": "Español",
+    "ja": "日本語",
+    "ko": "한국어"
+  }
+}

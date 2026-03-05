@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Logo } from "./Logo";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const t = useTranslations('nav');
 
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -17,13 +20,13 @@ export function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6 text-sm">
             <Link href="/deals" className="text-gray-600 hover:text-gray-900 transition font-medium">
-              All Deals
+              {t('allDeals')}
             </Link>
             <Link href="/cities" className="text-gray-600 hover:text-gray-900 transition font-medium">
-              Destinations
+              {t('destinations')}
             </Link>
             <Link href="/about" className="text-gray-600 hover:text-gray-900 transition font-medium">
-              About
+              {t('about')}
             </Link>
           </nav>
 
@@ -38,11 +41,14 @@ export function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </button>
+            
+            <LanguageSwitcher />
+            
             <Link 
               href="/newsletter"
               className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition shadow-md shadow-blue-500/20"
             >
-              Subscribe Free
+              {t('subscribeFree')}
             </Link>
           </div>
 
@@ -70,7 +76,7 @@ export function Header() {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search destinations, deals..."
+                placeholder={t('searchPlaceholder')}
                 className="w-full px-4 py-3 pl-10 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 autoFocus
               />
@@ -89,28 +95,34 @@ export function Header() {
               className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl font-medium"
               onClick={() => setMobileMenuOpen(false)}
             >
-              🎯 All Deals
+              🎯 {t('allDeals')}
             </Link>
             <Link 
               href="/cities" 
               className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl font-medium"
               onClick={() => setMobileMenuOpen(false)}
             >
-              🌆 Destinations
+              🌆 {t('destinations')}
             </Link>
             <Link 
               href="/about" 
               className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-xl font-medium"
               onClick={() => setMobileMenuOpen(false)}
             >
-              ℹ️ About
+              ℹ️ {t('about')}
             </Link>
+            
+            {/* Language Switcher for Mobile */}
+            <div className="px-4 py-3">
+              <LanguageSwitcher />
+            </div>
+            
             <Link 
               href="/newsletter" 
               className="block px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium text-center mt-4"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Subscribe Free →
+              {t('subscribeFree')} →
             </Link>
           </nav>
         )}

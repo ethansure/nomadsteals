@@ -1,0 +1,314 @@
+{
+  "common": {
+    "siteName": "NomadSteals",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "retry": "再試行",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "search": "検索",
+    "close": "閉じる",
+    "viewAll": "すべて見る",
+    "learnMore": "詳細を見る",
+    "backToHome": "ホームに戻る"
+  },
+  "nav": {
+    "allDeals": "すべてのセール",
+    "destinations": "目的地",
+    "about": "私たちについて",
+    "newsletter": "ニュースレター",
+    "subscribeFree": "無料で購読",
+    "searchPlaceholder": "目的地、セールを検索..."
+  },
+  "home": {
+    "hero": {
+      "updated": "{time}に更新",
+      "dealsLive": "{count}件のセール開催中",
+      "title": "今日のベスト",
+      "titleHighlight": "旅行セール",
+      "subtitle": "厳選されたフライト、ホテル、パッケージをバリュースコア付きでご紹介。全セールの平均節約率{savings}%。"
+    },
+    "stats": {
+      "activeDeals": "アクティブセール",
+      "avgSavings": "平均節約",
+      "hotDeals": "注目セール",
+      "errorFares": "エラー運賃"
+    },
+    "hotDeals": {
+      "title": "注目セール",
+      "new": "新着{count}件",
+      "subtitle": "お見逃しなく！限定価格"
+    },
+    "popularDestinations": {
+      "title": "人気の目的地",
+      "subtitle": "都市別にセールを探す",
+      "allCities": "すべての都市"
+    },
+    "todaysDeals": {
+      "title": "本日のセール",
+      "subtitle": "毎日更新される最新セール",
+      "browseAll": "すべてのセールを見る",
+      "all": "すべて",
+      "flights": "フライト",
+      "hotels": "ホテル",
+      "packages": "パッケージ",
+      "hotDeals": "注目セール",
+      "noDeals": "セールはまだありません",
+      "noDealsSubtitle": "最新の旅行セールをチェックしに戻ってきてください！",
+      "loadMore": "さらに読み込む"
+    },
+    "valueScore": {
+      "title": "バリュースコアとは？",
+      "subtitle": "独自のバリュースコア（0-100）は、現在の価格を過去のデータと比較して、単なる「セール」価格ではなく、本当にお得なセールを見つけます。",
+      "incredible": "超お得",
+      "incredibleDesc": "非常に珍しい価格。すぐに予約を。",
+      "greatValue": "お買い得",
+      "greatValueDesc": "通常価格より大幅に安い。予約の価値あり。",
+      "good": "良い",
+      "goodDesc": "堅実な節約の機会。",
+      "learnMore": "バリュースコアについて詳しく"
+    }
+  },
+  "search": {
+    "from": "出発地",
+    "to": "目的地",
+    "fromPlaceholder": "どこから出発しますか？",
+    "toPlaceholder": "どこに行きたいですか？",
+    "searchDeals": "セールを検索",
+    "swap": "出発地と目的地を入れ替え",
+    "anywhere": "どこでも",
+    "anyOrigin": "任意の出発地",
+    "anyDestination": "任意の目的地",
+    "popular": "人気：",
+    "westCoastAsia": "西海岸 → アジア",
+    "eastCoastEurope": "東海岸 → ヨーロッパ",
+    "southeastAsia": "東南アジア",
+    "caribbean": "カリブ海",
+    "clearSearch": "検索をクリア",
+    "dealsFound": "{count}件のセールが見つかりました"
+  },
+  "deals": {
+    "browseAll": "すべてのセールを見る",
+    "showing": "表示中",
+    "deals": "件のセール",
+    "for": "検索条件：",
+    "noDeals": "セールが見つかりません",
+    "noDealsSubtitle": "フィルターや検索条件を調整してみてください",
+    "clearFilters": "フィルターをクリア",
+    "type": {
+      "all": "すべてのセール",
+      "flight": "フライト",
+      "flights": "フライト",
+      "hotel": "ホテル",
+      "hotels": "ホテル",
+      "package": "パッケージ",
+      "packages": "パッケージ",
+      "cruise": "クルーズ"
+    },
+    "filters": {
+      "hotOnly": "注目セールのみ",
+      "moreFilters": "その他のフィルター",
+      "hideFilters": "フィルターを隠す",
+      "anyPrice": "価格指定なし",
+      "under": "${price}以下",
+      "quickFilters": "クイックフィルター",
+      "destination": "目的地",
+      "origin": "出発地",
+      "anyDestination": "任意の目的地",
+      "popularRoutes": "人気ルート"
+    },
+    "sort": {
+      "label": "並び替え：",
+      "valueScore": "バリュースコア",
+      "priceLow": "価格：安い順",
+      "priceHigh": "価格：高い順",
+      "savings": "最大割引",
+      "newest": "新着順",
+      "popularity": "人気順"
+    },
+    "card": {
+      "hot": "注目",
+      "historicLow": "過去最安値",
+      "expiresSoon": "まもなく終了",
+      "via": "経由",
+      "save": "${amount}お得",
+      "off": "{percent}%オフ",
+      "viewDeal": "セールを見る",
+      "bookNow": "今すぐ予約"
+    },
+    "curated": "{count}件の厳選旅行セール。",
+    "avgSavings": "全リスティングで平均{percent}%節約。",
+    "lastUpdated": "最終更新：{time}"
+  },
+  "regions": {
+    "usWest": "アメリカ西海岸",
+    "usEast": "アメリカ東海岸",
+    "usMidwest": "アメリカ中西部",
+    "canada": "カナダ",
+    "europeWest": "西ヨーロッパ",
+    "europeSouth": "南ヨーロッパ",
+    "europeCentral": "中央ヨーロッパ",
+    "europeNorth": "北ヨーロッパ",
+    "asiaEast": "東アジア",
+    "asiaSoutheast": "東南アジア",
+    "asiaSouth": "南アジア",
+    "oceania": "オセアニア",
+    "latinAmerica": "ラテンアメリカ",
+    "caribbean": "カリブ海",
+    "middleEast": "中東",
+    "africa": "アフリカ",
+    "hawaii": "ハワイ"
+  },
+  "newsletter": {
+    "title": "誰よりも早くセール情報をゲット",
+    "subtitle": "{count}人以上の賢い旅行者に参加して、毎日のセールダイジェストを受け取りましょう。エラー運賃、フラッシュセール、限定セール — 直接受信箱へ。",
+    "emailPlaceholder": "メールアドレスを入力",
+    "subscribe": "無料で購読",
+    "subscribing": "登録中...",
+    "subscribed": "登録完了！",
+    "subscribedSubtitle": "本日のベストセールを含むウェルカムメールをご確認ください。",
+    "noSpam": "スパムは一切なし。いつでも解除可能。",
+    "freeForever": "永久無料 • いつでも解除可能",
+    "dailyAlerts": "毎日のセールアラート",
+    "dailyAlertsDesc": "毎朝、最高の旅行セールを受信箱にお届け。",
+    "getDailyDeals": "毎日のセールを受け取る",
+    "page": {
+      "title": "ベストセールを",
+      "titleHighlight": "誰よりも早く",
+      "subtitle": "{count}人以上の賢い旅行者に参加して、毎朝素晴らしいセール情報で目覚めましょう。エラー運賃、フラッシュセール、限定発見 — あなたのスケジュールに合わせてお届け。",
+      "socialProof": {
+        "subscribers": "購読者",
+        "rating": "読者評価",
+        "saved": "読者の節約額"
+      },
+      "benefits": {
+        "title": "購読のメリット",
+        "hotFirst": "注目セールを最優先で",
+        "hotFirstDesc": "売り切れ前にエラー運賃やフラッシュセールを最初に知る",
+        "valueScore": "バリュースコア厳選",
+        "valueScoreDesc": "優れたバリュースコアのセールのみ — 平凡な割引は送りません",
+        "personalized": "パーソナライズ",
+        "personalizedDesc": "出発空港と行きたい目的地を設定してカスタムアラートを受け取る",
+        "mobile": "モバイル対応",
+        "mobileDesc": "クリーンで読みやすいメール、外出先での予約に最適化"
+      },
+      "sample": {
+        "title": "届くもの",
+        "subtitle": "毎日のセールダイジェストのプレビュー",
+        "topDeal": "本日のトップセール",
+        "errorFare": "エラー運賃"
+      },
+      "testimonials": {
+        "title": "読者の声"
+      },
+      "faq": {
+        "title": "よくある質問",
+        "q1": "メールはどのくらいの頻度で届きますか？",
+        "a1": "お好みで！注目セールの即時アラート、毎日のダイジェスト、週刊まとめから選べます。設定でカスタマイズ。",
+        "q2": "本当に無料ですか？",
+        "a2": "はい！ニュースレターは100%無料、永久に。予約時のアフィリエイト手数料で運営しており、お客様に追加費用はかかりません。",
+        "q3": "いつでも解除できますか？",
+        "a3": "もちろん。すべてのメールにワンクリック解除リンクがあります。質問なし、しつこさなし。",
+        "q4": "メールアドレスを売りますか？",
+        "a4": "絶対にありません。私たちもスパムが大嫌いです。あなたのメールは私たちだけのものです。",
+        "q5": "目的地でセールをフィルターできますか？",
+        "a5": "はい！希望の出発地、目的地、最高価格、セールタイプなどを設定。本当に気になるセールだけを受け取れます。"
+      },
+      "finalCta": {
+        "title": "旅行を節約する準備はできましたか？",
+        "subtitle": "{count}人以上の賢い旅行者に参加して、パーソナライズされたセールアラートを受け取りましょう。"
+      }
+    }
+  },
+  "about": {
+    "title": "よりスマートな旅を",
+    "titleHighlight": "お手伝いします",
+    "subtitle": "NomadStealsは、厳選された旅行セールの毎日の情報源です。データと経験を活用して、本当に価値のあるセールを見つけます。",
+    "stats": {
+      "dealsTracked": "追跡セール数",
+      "subscribers": "購読者数",
+      "avgSavings": "平均節約",
+      "monitoring": "セール監視"
+    },
+    "story": {
+      "title": "私たちのストーリー",
+      "p1": "NomadStealsは、シンプルな不満から生まれました：良い旅行セールを見つけるのが難しすぎたのです。平凡な「セール」が多すぎ、ノイズが多すぎました。",
+      "p2": "私たちは、ずっと欲しかった旅行セールサイトとしてNomadStealsを作りました。サイト上のすべてのセールはチームが手動でレビューしています。価格データを分析して独自のバリュースコアを計算 — セールが本当にお得なのか、単に「セール中」なのかがわかります。",
+      "p3": "私たち自身も旅行者です。アジアへのエラー運賃を予約し、予算価格で高級ホテルを手に入れ、隠れた名所を発見してきました。今、その知識をあなたと共有します。"
+    },
+    "valueScore": {
+      "title": "バリュースコアの違い",
+      "subtitle": "すべての「セール」が同じではありません。すでに高騰した価格から30%オフは本当のセールではありません。だからバリュースコアを作りました。",
+      "historical": "過去との比較：",
+      "historicalDesc": "現在の価格を12ヶ月以上の過去データと比較",
+      "seasonal": "季節調整：",
+      "seasonalDesc": "繁忙期とオフシーズンの価格を考慮",
+      "route": "ルート分析：",
+      "routeDesc": "各ルートと目的地の通常価格を把握",
+      "quality": "品質要因：",
+      "qualityDesc": "航空会社/ホテルの評判もスコアリングに考慮"
+    },
+    "team": {
+      "title": "私たちの仕事",
+      "hunters": "セールハンター",
+      "huntersDesc": "24時間体制でウェブ上の最高のセールを探索",
+      "nerds": "データオタク",
+      "nerdsDesc": "過去の価格を分析してバリュースコアを計算",
+      "travelers": "旅行好き",
+      "travelersDesc": "私たちも旅行者 — あなたの気持ちがわかります"
+    },
+    "money": {
+      "title": "収益の仕組み",
+      "intro": "透明性は私たちにとって大切です。NomadStealsが無料でいられる仕組み：",
+      "affiliate": "アフィリエイトリンク：",
+      "affiliateDesc": "私たちのリンクから予約すると、小額のコミッションをいただく場合があります。お客様に追加費用はかかりません。これはセール選択に影響しません — コミッション率ではなくバリュースコアでセールを掲載しています。",
+      "premium": "プレミアムニュースレター（近日公開）：",
+      "premiumDesc": "限定セールと機能を備えたプレミアム層を構築中。無料ニュースレターは永続します。",
+      "outro": "より多くのコミッションのためにセールを掲載することはありません。私たちの評判は、本当に素晴らしいセールを見つけることにかかっています。"
+    },
+    "contact": {
+      "title": "お問い合わせ",
+      "subtitle": "セール情報がありますか？エラーを見つけましたか？パートナーシップをお考えですか？ぜひご連絡ください。",
+      "email": "メールを送る",
+      "twitter": "Xでフォロー"
+    },
+    "cta": {
+      "title": "素晴らしいセールを見つける準備はできましたか？",
+      "subtitle": "{count}人以上の旅行者に参加して、毎日のセールダイジェストを受け取りましょう。",
+      "browseDeals": "セールを見る"
+    }
+  },
+  "footer": {
+    "description": "毎日厳選された旅行セールとバリュースコアで、最高のフライト、ホテル、バケーションパッケージを見つけるお手伝いをします。",
+    "dealTypes": "セールタイプ",
+    "flightDeals": "フライトセール",
+    "hotelDeals": "ホテルセール",
+    "vacationPackages": "バケーションパッケージ",
+    "hotDeals": "注目セール",
+    "popularDestinations": "人気の目的地",
+    "dealsIn": "{city}セール",
+    "company": "会社情報",
+    "aboutUs": "私たちについて",
+    "valueScoreExplained": "バリュースコアの説明",
+    "contact": "お問い合わせ",
+    "copyright": "© {year} NomadSteals. All rights reserved.",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約"
+  },
+  "errors": {
+    "missingToken": "確認トークンがありません。メールのリンクをご使用ください。",
+    "invalidToken": "無効または期限切れのトークンです。再度購読してください。",
+    "verificationFailed": "確認に失敗しました。もう一度お試しいただくか、サポートにお問い合わせください。",
+    "alreadyUnsubscribed": "このメールはすでに購読解除されています。",
+    "serverError": "問題が発生しました。後でもう一度お試しください。"
+  },
+  "language": {
+    "select": "言語を選択",
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "es": "Español",
+    "ja": "日本語",
+    "ko": "한국어"
+  }
+}
