@@ -1,11 +1,20 @@
 // Deals Storage Service
-// MVP: Uses JSON file storage (can be upgraded to Vercel KV / Upstash Redis later)
-// The file is stored in /data/deals.json
+// Uses in-memory cache with fallback to demo data
+// Note: Vercel serverless has read-only filesystem, so we can't persist to files
 
 import { Deal } from '../types';
 import { promises as fs } from 'fs';
 import path from 'path';
 
+// In-memory cache (persists within serverless function lifetime)
+let memoryCache: {
+  deals: Deal[];
+  lastUpdated: string;
+  fetchedSources: string[];
+  stats: StatsData;
+} | null = null;
+
+// Try file-based storage (works locally, fails gracefully on Vercel)
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DEALS_FILE = path.join(DATA_DIR, 'deals.json');
 const STATS_FILE = path.join(DATA_DIR, 'stats.json');
@@ -35,58 +44,117 @@ interface PriceHistoryData {
   }>;
 }
 
-// Ensure data directory exists
-async function ensureDataDir(): Promise<void> {
+// Check if we're in a writeable environment
+async function isWriteable(): Promise<boolean> {
   try {
     await fs.access(DATA_DIR);
+    return true;
   } catch {
-    await fs.mkdir(DATA_DIR, { recursive: true });
+    try {
+      await fs.mkdir(DATA_DIR, { recursive: true });
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 
-// Read deals from storage
+// Read deals from storage (memory first, then file)
 export async function getDeals(): Promise<Deal[]> {
-  try {
-    await ensureDataDir();
-    const data = await fs.readFile(DEALS_FILE, 'utf-8');
-    const parsed: DealsData = JSON.parse(data);
-    return parsed.deals;
-  } catch (error) {
-    // Return empty array if file doesn't exist
-    console.log('No existing deals file, returning empty array');
-    return [];
+  // Check memory cache first
+  if (memoryCache?.deals && memoryCache.deals.length > 0) {
+    return memoryCache.deals;
   }
+
+  // Try file storage
+  try {
+    if (await isWriteable()) {
+      const data = await fs.readFile(DEALS_FILE, 'utf-8');
+      const parsed: DealsData = JSON.parse(data);
+      // Update memory cache
+      memoryCache = {
+        deals: parsed.deals,
+        lastUpdated: parsed.lastUpdated,
+        fetchedSources: parsed.fetchedSources,
+        stats: calculateStats(parsed.deals),
+      };
+      return parsed.deals;
+    }
+  } catch {
+    // File doesn't exist or not readable
+  }
+
+  // Return empty array - aggregator will generate deals
+  return [];
 }
 
-// Write deals to storage
+// Write deals to storage (memory + file if possible)
 export async function saveDeals(deals: Deal[], sources: string[]): Promise<void> {
-  await ensureDataDir();
-  
   const data: DealsData = {
     deals,
     lastUpdated: new Date().toISOString(),
     fetchedSources: sources,
   };
-  
-  await fs.writeFile(DEALS_FILE, JSON.stringify(data, null, 2));
-  
-  // Update stats
-  await updateStats(deals);
+
+  // Always update memory cache
+  memoryCache = {
+    deals,
+    lastUpdated: data.lastUpdated,
+    fetchedSources: sources,
+    stats: calculateStats(deals),
+  };
+
+  // Try to write to file (works locally)
+  try {
+    if (await isWriteable()) {
+      await fs.writeFile(DEALS_FILE, JSON.stringify(data, null, 2));
+      await fs.writeFile(STATS_FILE, JSON.stringify(memoryCache.stats, null, 2));
+    }
+  } catch (error) {
+    // Ignore file write errors (expected on Vercel)
+    console.log('[DealsStore] File write skipped (read-only filesystem)');
+  }
+}
+
+// Calculate stats from deals
+function calculateStats(deals: Deal[]): StatsData {
+  return {
+    totalDeals: deals.length,
+    avgSavings: deals.length > 0 
+      ? Math.round(deals.reduce((acc, d) => acc + d.savingsPercent, 0) / deals.length)
+      : 0,
+    hotDeals: deals.filter(d => d.isHotDeal).length,
+    updatedAt: new Date().toISOString(),
+    sourceBreakdown: deals.reduce((acc, d) => {
+      acc[d.source] = (acc[d.source] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>),
+  };
 }
 
 // Get deals metadata
 export async function getDealsMetadata(): Promise<{ lastUpdated: string; fetchedSources: string[] } | null> {
-  try {
-    await ensureDataDir();
-    const data = await fs.readFile(DEALS_FILE, 'utf-8');
-    const parsed: DealsData = JSON.parse(data);
+  if (memoryCache) {
     return {
-      lastUpdated: parsed.lastUpdated,
-      fetchedSources: parsed.fetchedSources,
+      lastUpdated: memoryCache.lastUpdated,
+      fetchedSources: memoryCache.fetchedSources,
     };
-  } catch {
-    return null;
   }
+
+  try {
+    if (await isWriteable()) {
+      const data = await fs.readFile(DEALS_FILE, 'utf-8');
+      const parsed: DealsData = JSON.parse(data);
+      return {
+        lastUpdated: parsed.lastUpdated,
+        fetchedSources: parsed.fetchedSources,
+      };
+    }
+  } catch {
+    // File not available
+  }
+
+  return null;
 }
 
 // Filter deals
@@ -163,63 +231,58 @@ export async function getDealsForCity(citySlug: string): Promise<Deal[]> {
   );
 }
 
-// Update statistics
-async function updateStats(deals: Deal[]): Promise<void> {
-  const stats: StatsData = {
-    totalDeals: deals.length,
-    avgSavings: Math.round(
-      deals.reduce((acc, d) => acc + d.savingsPercent, 0) / deals.length
-    ),
-    hotDeals: deals.filter(d => d.isHotDeal).length,
-    updatedAt: new Date().toISOString(),
-    sourceBreakdown: deals.reduce((acc, d) => {
-      acc[d.source] = (acc[d.source] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>),
-  };
-  
-  await fs.writeFile(STATS_FILE, JSON.stringify(stats, null, 2));
-}
-
 // Get statistics
 export async function getStats(): Promise<StatsData> {
-  try {
-    await ensureDataDir();
-    const data = await fs.readFile(STATS_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return {
-      totalDeals: 0,
-      avgSavings: 0,
-      hotDeals: 0,
-      updatedAt: new Date().toISOString(),
-      sourceBreakdown: {},
-    };
+  if (memoryCache?.stats) {
+    return memoryCache.stats;
   }
+
+  try {
+    if (await isWriteable()) {
+      const data = await fs.readFile(STATS_FILE, 'utf-8');
+      return JSON.parse(data);
+    }
+  } catch {
+    // File not available
+  }
+
+  return {
+    totalDeals: 0,
+    avgSavings: 0,
+    hotDeals: 0,
+    updatedAt: new Date().toISOString(),
+    sourceBreakdown: {},
+  };
 }
 
 // Price history management
 export async function getAveragePrices(): Promise<Map<string, number>> {
   try {
-    await ensureDataDir();
-    const data = await fs.readFile(PRICE_HISTORY_FILE, 'utf-8');
-    const parsed: PriceHistoryData = JSON.parse(data);
-    const map = new Map<string, number>();
-    
-    for (const [route, info] of Object.entries(parsed.routes)) {
-      map.set(route, info.averagePrice);
+    if (await isWriteable()) {
+      const data = await fs.readFile(PRICE_HISTORY_FILE, 'utf-8');
+      const parsed: PriceHistoryData = JSON.parse(data);
+      const map = new Map<string, number>();
+      
+      for (const [route, info] of Object.entries(parsed.routes)) {
+        map.set(route, info.averagePrice);
+      }
+      
+      return map;
     }
-    
-    return map;
   } catch {
-    return getDefaultAveragePrices();
+    // File not available
   }
+
+  return getDefaultAveragePrices();
 }
 
 // Update price history with new deals
 export async function updatePriceHistory(deals: Deal[]): Promise<void> {
-  await ensureDataDir();
-  
+  // Skip on read-only filesystem
+  if (!(await isWriteable())) {
+    return;
+  }
+
   let history: PriceHistoryData;
   try {
     const data = await fs.readFile(PRICE_HISTORY_FILE, 'utf-8');
@@ -235,7 +298,6 @@ export async function updatePriceHistory(deals: Deal[]): Promise<void> {
     const existing = history.routes[routeKey];
     
     if (existing) {
-      // Update running average
       const newAvg = (existing.averagePrice * existing.dataPoints + deal.currentPrice) / (existing.dataPoints + 1);
       history.routes[routeKey] = {
         averagePrice: Math.round(newAvg),
@@ -255,82 +317,44 @@ export async function updatePriceHistory(deals: Deal[]): Promise<void> {
     }
   }
   
-  await fs.writeFile(PRICE_HISTORY_FILE, JSON.stringify(history, null, 2));
+  try {
+    await fs.writeFile(PRICE_HISTORY_FILE, JSON.stringify(history, null, 2));
+  } catch {
+    // Ignore write errors
+  }
 }
 
-// Default average prices for common routes (used when no history exists)
+// Default average prices for common routes
 function getDefaultAveragePrices(): Map<string, number> {
   return new Map([
-    // US to Europe
-    ['JFK-LHR', 800],
-    ['JFK-CDG', 850],
-    ['JFK-FCO', 900],
-    ['JFK-BCN', 750],
-    ['JFK-AMS', 700],
-    ['LAX-LHR', 900],
-    ['LAX-CDG', 950],
-    ['ORD-LHR', 750],
-    ['SFO-LHR', 850],
-    ['MIA-FCO', 800],
-    ['BOS-LHR', 650],
-    ['BOS-DUB', 500],
-    
-    // US to Asia
-    ['JFK-NRT', 1200],
-    ['JFK-HND', 1200],
-    ['LAX-NRT', 1000],
-    ['SFO-NRT', 950],
-    ['SFO-HKG', 900],
-    ['SFO-BKK', 850],
-    ['SEA-NRT', 900],
-    ['SEA-ICN', 850],
-    
-    // US to Caribbean/Mexico
-    ['JFK-CUN', 400],
-    ['LAX-CUN', 350],
-    ['MIA-CUN', 300],
-    ['JFK-SJU', 300],
-    ['MIA-NAS', 250],
-    
-    // US to Australia/Pacific
-    ['LAX-SYD', 1500],
-    ['SFO-SYD', 1400],
-    ['LAX-HNL', 500],
-    ['SFO-HNL', 450],
-    
-    // US Domestic
-    ['JFK-LAX', 350],
-    ['JFK-MIA', 250],
-    ['JFK-ORD', 200],
-    ['LAX-SFO', 150],
-    
-    // Default for unknown routes
+    ['JFK-LHR', 800], ['JFK-CDG', 850], ['JFK-FCO', 900], ['JFK-BCN', 750],
+    ['JFK-AMS', 700], ['LAX-LHR', 900], ['LAX-CDG', 950], ['ORD-LHR', 750],
+    ['SFO-LHR', 850], ['MIA-FCO', 800], ['BOS-LHR', 650], ['BOS-DUB', 500],
+    ['JFK-NRT', 1200], ['LAX-NRT', 1000], ['SFO-NRT', 950], ['SFO-HKG', 900],
+    ['SFO-BKK', 850], ['SEA-NRT', 900], ['SEA-ICN', 850],
+    ['JFK-CUN', 400], ['LAX-CUN', 350], ['MIA-CUN', 300], ['JFK-SJU', 300],
+    ['LAX-SYD', 1500], ['SFO-SYD', 1400], ['LAX-HNL', 500], ['SFO-HNL', 450],
     ['DEFAULT', 600],
   ]);
 }
 
-// Merge new deals with existing, avoiding duplicates
+// Merge new deals with existing
 export async function mergeDeals(newDeals: Deal[]): Promise<Deal[]> {
   const existingDeals = await getDeals();
   
-  // Create a map of existing deals by a composite key
   const existingMap = new Map<string, Deal>();
   for (const deal of existingDeals) {
     const key = createDealKey(deal);
     existingMap.set(key, deal);
   }
   
-  // Add new deals, updating if they already exist
   for (const deal of newDeals) {
     const key = createDealKey(deal);
     existingMap.set(key, deal);
   }
   
-  // Convert back to array and sort by value score
-  const merged = Array.from(existingMap.values())
+  return Array.from(existingMap.values())
     .sort((a, b) => b.valueScore - a.valueScore);
-  
-  return merged;
 }
 
 function createDealKey(deal: Deal): string {
