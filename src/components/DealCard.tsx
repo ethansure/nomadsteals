@@ -137,13 +137,17 @@ export function DealCard({ deal }: { deal: Deal }) {
               <span className="text-3xl font-bold text-[#2D3436]">
                 ${deal.currentPrice.toLocaleString()}
               </span>
-              <span className="text-sm text-[#2D3436]/40 line-through">
-                ${deal.originalPrice.toLocaleString()}
-              </span>
+              {savings > 0 && (
+                <span className="text-sm text-[#2D3436]/40 line-through">
+                  ${deal.originalPrice.toLocaleString()}
+                </span>
+              )}
             </div>
-            <div className="text-sm text-[#20B2AA] font-semibold mt-1">
-              Save ${savings.toLocaleString()} ({deal.savingsPercent}% off) 🎉
-            </div>
+            {savings > 0 && deal.savingsPercent > 0 && (
+              <div className="text-sm text-[#20B2AA] font-semibold mt-1">
+                Save ${savings.toLocaleString()} ({deal.savingsPercent}% off) 🎉
+              </div>
+            )}
           </div>
           
           <a

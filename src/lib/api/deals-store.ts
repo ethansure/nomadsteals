@@ -2,13 +2,14 @@
 // Uses in-memory cache with fallback to demo data
 // Note: Vercel serverless has read-only filesystem, so we can't persist to files
 
-import { Deal } from '../types';
+import { Deal, DealStatus } from '../types';
 import { promises as fs } from 'fs';
 import path from 'path';
 
 // In-memory cache (persists within serverless function lifetime)
 let memoryCache: {
   deals: Deal[];
+  archivedDeals: Deal[];
   lastUpdated: string;
   fetchedSources: string[];
   stats: StatsData;
@@ -17,6 +18,7 @@ let memoryCache: {
 // Try file-based storage (works locally, fails gracefully on Vercel)
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DEALS_FILE = path.join(DATA_DIR, 'deals.json');
+const ARCHIVED_DEALS_FILE = path.join(DATA_DIR, 'archived-deals.json');
 const STATS_FILE = path.join(DATA_DIR, 'stats.json');
 const PRICE_HISTORY_FILE = path.join(DATA_DIR, 'price-history.json');
 
@@ -26,10 +28,16 @@ interface DealsData {
   fetchedSources: string[];
 }
 
+interface ArchivedDealsData {
+  deals: Deal[];
+  lastUpdated: string;
+}
+
 interface StatsData {
   totalDeals: number;
   avgSavings: number;
   hotDeals: number;
+  archivedDeals: number;
   updatedAt: string;
   sourceBreakdown: Record<string, number>;
 }
@@ -59,11 +67,12 @@ async function isWriteable(): Promise<boolean> {
   }
 }
 
-// Read deals from storage (memory first, then file)
+// Read active deals from storage (memory first, then file)
 export async function getDeals(): Promise<Deal[]> {
   // Check memory cache first
   if (memoryCache?.deals && memoryCache.deals.length > 0) {
-    return memoryCache.deals;
+    // Filter to only return active deals
+    return memoryCache.deals.filter(d => d.status !== 'expired' && d.status !== 'archived');
   }
 
   // Try file storage
@@ -71,14 +80,18 @@ export async function getDeals(): Promise<Deal[]> {
     if (await isWriteable()) {
       const data = await fs.readFile(DEALS_FILE, 'utf-8');
       const parsed: DealsData = JSON.parse(data);
+      const archivedData = await getArchivedDealsFromFile();
+      
       // Update memory cache
       memoryCache = {
         deals: parsed.deals,
+        archivedDeals: archivedData,
         lastUpdated: parsed.lastUpdated,
         fetchedSources: parsed.fetchedSources,
-        stats: calculateStats(parsed.deals),
+        stats: calculateStats(parsed.deals, archivedData),
       };
-      return parsed.deals;
+      // Return only active deals
+      return parsed.deals.filter(d => d.status !== 'expired' && d.status !== 'archived');
     }
   } catch {
     // File doesn't exist or not readable
@@ -88,20 +101,58 @@ export async function getDeals(): Promise<Deal[]> {
   return [];
 }
 
+// Get archived deals from file
+async function getArchivedDealsFromFile(): Promise<Deal[]> {
+  try {
+    if (await isWriteable()) {
+      const data = await fs.readFile(ARCHIVED_DEALS_FILE, 'utf-8');
+      const parsed: ArchivedDealsData = JSON.parse(data);
+      return parsed.deals;
+    }
+  } catch {
+    // File doesn't exist
+  }
+  return [];
+}
+
+// Get all deals including archived
+export async function getAllDeals(): Promise<Deal[]> {
+  const activeDeals = await getDeals();
+  const archivedDeals = await getArchivedDeals();
+  return [...activeDeals, ...archivedDeals];
+}
+
+// Get archived/expired deals
+export async function getArchivedDeals(): Promise<Deal[]> {
+  if (memoryCache?.archivedDeals) {
+    return memoryCache.archivedDeals;
+  }
+  return getArchivedDealsFromFile();
+}
+
 // Write deals to storage (memory + file if possible)
 export async function saveDeals(deals: Deal[], sources: string[]): Promise<void> {
+  // Mark all deals as active if not already set
+  const dealsWithStatus = deals.map(d => ({
+    ...d,
+    status: d.status || 'active' as DealStatus,
+  }));
+
   const data: DealsData = {
-    deals,
+    deals: dealsWithStatus,
     lastUpdated: new Date().toISOString(),
     fetchedSources: sources,
   };
 
+  const archivedDeals = await getArchivedDealsFromFile();
+
   // Always update memory cache
   memoryCache = {
-    deals,
+    deals: dealsWithStatus,
+    archivedDeals,
     lastUpdated: data.lastUpdated,
     fetchedSources: sources,
-    stats: calculateStats(deals),
+    stats: calculateStats(dealsWithStatus, archivedDeals),
   };
 
   // Try to write to file (works locally)
@@ -116,16 +167,39 @@ export async function saveDeals(deals: Deal[], sources: string[]): Promise<void>
   }
 }
 
+// Save archived deals
+async function saveArchivedDeals(archivedDeals: Deal[]): Promise<void> {
+  const data: ArchivedDealsData = {
+    deals: archivedDeals,
+    lastUpdated: new Date().toISOString(),
+  };
+
+  // Update memory cache
+  if (memoryCache) {
+    memoryCache.archivedDeals = archivedDeals;
+  }
+
+  try {
+    if (await isWriteable()) {
+      await fs.writeFile(ARCHIVED_DEALS_FILE, JSON.stringify(data, null, 2));
+    }
+  } catch {
+    console.log('[DealsStore] Archived deals file write skipped');
+  }
+}
+
 // Calculate stats from deals
-function calculateStats(deals: Deal[]): StatsData {
+function calculateStats(deals: Deal[], archivedDeals: Deal[] = []): StatsData {
+  const activeDeals = deals.filter(d => d.status !== 'expired' && d.status !== 'archived');
   return {
-    totalDeals: deals.length,
-    avgSavings: deals.length > 0 
-      ? Math.round(deals.reduce((acc, d) => acc + d.savingsPercent, 0) / deals.length)
+    totalDeals: activeDeals.length,
+    avgSavings: activeDeals.length > 0 
+      ? Math.round(activeDeals.reduce((acc, d) => acc + d.savingsPercent, 0) / activeDeals.length)
       : 0,
-    hotDeals: deals.filter(d => d.isHotDeal).length,
+    hotDeals: activeDeals.filter(d => d.isHotDeal).length,
+    archivedDeals: archivedDeals.length,
     updatedAt: new Date().toISOString(),
-    sourceBreakdown: deals.reduce((acc, d) => {
+    sourceBreakdown: activeDeals.reduce((acc, d) => {
       acc[d.source] = (acc[d.source] || 0) + 1;
       return acc;
     }, {} as Record<string, number>),
@@ -165,10 +239,20 @@ export async function getFilteredDeals(filters: {
   maxPrice?: number;
   minValueScore?: number;
   isHotDeal?: boolean;
+  status?: DealStatus | 'all';
   limit?: number;
   offset?: number;
 }): Promise<{ deals: Deal[]; total: number }> {
-  let deals = await getDeals();
+  let deals: Deal[];
+  
+  // Get deals based on status filter
+  if (filters.status === 'expired' || filters.status === 'archived') {
+    deals = await getArchivedDeals();
+  } else if (filters.status === 'all') {
+    deals = await getAllDeals();
+  } else {
+    deals = await getDeals();
+  }
   
   // Apply filters
   if (filters.type) {
@@ -213,15 +297,100 @@ export async function getFilteredDeals(filters: {
   return { deals, total };
 }
 
-// Get single deal by ID
-export async function getDealById(id: string): Promise<Deal | null> {
-  const deals = await getDeals();
-  return deals.find(d => d.id === id) || null;
+// Get historical deals with filters
+export async function getHistoricalDeals(filters: {
+  destination?: string;
+  origin?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<{ deals: Deal[]; total: number }> {
+  let deals = await getArchivedDeals();
+  
+  // Sort by expiration date, most recent first
+  deals.sort((a, b) => {
+    const dateA = new Date(a.expiredAt || a.archivedAt || a.bookByDate);
+    const dateB = new Date(b.expiredAt || b.archivedAt || b.bookByDate);
+    return dateB.getTime() - dateA.getTime();
+  });
+  
+  // Apply filters
+  if (filters.destination) {
+    const dest = filters.destination.toLowerCase();
+    deals = deals.filter(d => 
+      d.destinationCity.toLowerCase().includes(dest) ||
+      d.destinationCode?.toLowerCase() === dest
+    );
+  }
+  
+  if (filters.origin) {
+    const orig = filters.origin.toLowerCase();
+    deals = deals.filter(d => 
+      d.originCity?.toLowerCase().includes(orig) ||
+      d.originCode?.toLowerCase() === orig
+    );
+  }
+  
+  if (filters.dateFrom) {
+    const fromDate = new Date(filters.dateFrom);
+    deals = deals.filter(d => {
+      const expDate = new Date(d.expiredAt || d.archivedAt || d.bookByDate);
+      return expDate >= fromDate;
+    });
+  }
+  
+  if (filters.dateTo) {
+    const toDate = new Date(filters.dateTo);
+    deals = deals.filter(d => {
+      const expDate = new Date(d.expiredAt || d.archivedAt || d.bookByDate);
+      return expDate <= toDate;
+    });
+  }
+  
+  const total = deals.length;
+  
+  // Apply pagination
+  const offset = filters.offset || 0;
+  const limit = filters.limit || 20;
+  deals = deals.slice(offset, offset + limit);
+  
+  return { deals, total };
 }
 
-// Get deals for a specific city
-export async function getDealsForCity(citySlug: string): Promise<Deal[]> {
-  const deals = await getDeals();
+// Get similar historical deals for a route
+export async function getSimilarHistoricalDeals(
+  originCode?: string,
+  destinationCode?: string,
+  destinationCity?: string,
+  limit: number = 5
+): Promise<Deal[]> {
+  const archivedDeals = await getArchivedDeals();
+  
+  const similar = archivedDeals.filter(d => {
+    // Match by destination code or city
+    if (destinationCode && d.destinationCode === destinationCode) return true;
+    if (destinationCity && d.destinationCity.toLowerCase().includes(destinationCity.toLowerCase())) return true;
+    // Match by origin if provided
+    if (originCode && d.originCode === originCode && destinationCode && d.destinationCode === destinationCode) return true;
+    return false;
+  });
+  
+  // Sort by value score and return top N
+  return similar
+    .sort((a, b) => b.valueScore - a.valueScore)
+    .slice(0, limit);
+}
+
+// Get single deal by ID (search both active and archived)
+export async function getDealById(id: string): Promise<Deal | null> {
+  const allDeals = await getAllDeals();
+  return allDeals.find(d => d.id === id) || null;
+}
+
+// Get deals for a specific city (active only by default)
+export async function getDealsForCity(citySlug: string, includeArchived: boolean = false): Promise<Deal[]> {
+  const deals = includeArchived ? await getAllDeals() : await getDeals();
   const slug = citySlug.toLowerCase().replace(/-/g, ' ');
   
   return deals.filter(d => 
@@ -250,6 +419,7 @@ export async function getStats(): Promise<StatsData> {
     totalDeals: 0,
     avgSavings: 0,
     hotDeals: 0,
+    archivedDeals: 0,
     updatedAt: new Date().toISOString(),
     sourceBreakdown: {},
   };
@@ -361,21 +531,55 @@ function createDealKey(deal: Deal): string {
   return `${deal.originCode || ''}-${deal.destinationCode}-${deal.currentPrice}-${deal.source}`;
 }
 
-// Remove expired deals
-export async function removeExpiredDeals(): Promise<number> {
+// Archive expired deals instead of removing them
+export async function archiveExpiredDeals(): Promise<number> {
   const deals = await getDeals();
   const now = new Date();
+  let archivedDeals = await getArchivedDeals();
   
-  const validDeals = deals.filter(deal => {
+  const activeDeals: Deal[] = [];
+  const newlyExpired: Deal[] = [];
+  
+  for (const deal of deals) {
     const bookByDate = new Date(deal.bookByDate);
-    return bookByDate >= now;
-  });
-  
-  const removedCount = deals.length - validDeals.length;
-  
-  if (removedCount > 0) {
-    await saveDeals(validDeals, ['cleanup']);
+    if (bookByDate < now) {
+      // Mark as expired and add to archive
+      newlyExpired.push({
+        ...deal,
+        status: 'expired' as DealStatus,
+        expiredAt: now.toISOString(),
+        archivedAt: now.toISOString(),
+      });
+    } else {
+      activeDeals.push({
+        ...deal,
+        status: 'active' as DealStatus,
+      });
+    }
   }
   
-  return removedCount;
+  const archivedCount = newlyExpired.length;
+  
+  if (archivedCount > 0) {
+    // Combine with existing archived deals
+    archivedDeals = [...newlyExpired, ...archivedDeals];
+    
+    // Keep only last 500 archived deals to prevent unbounded growth
+    if (archivedDeals.length > 500) {
+      archivedDeals = archivedDeals.slice(0, 500);
+    }
+    
+    // Save both active and archived
+    await saveDeals(activeDeals, ['cleanup']);
+    await saveArchivedDeals(archivedDeals);
+    
+    console.log(`[DealsStore] Archived ${archivedCount} expired deals`);
+  }
+  
+  return archivedCount;
+}
+
+// Legacy function - now archives instead of removes
+export async function removeExpiredDeals(): Promise<number> {
+  return archiveExpiredDeals();
 }

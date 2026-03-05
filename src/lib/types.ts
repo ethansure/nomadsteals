@@ -1,6 +1,7 @@
 // Travel Deals Type Definitions
 
 export type DealType = "flight" | "hotel" | "package" | "cruise";
+export type DealStatus = "active" | "expired" | "archived";
 
 export interface Deal {
   id: string;
@@ -54,6 +55,11 @@ export interface Deal {
   isHotDeal: boolean;
   isExpiringSoon: boolean;
   isHistoricLow: boolean;
+  
+  // Status & Archive
+  status?: DealStatus;
+  expiredAt?: string;
+  archivedAt?: string;
 }
 
 export interface City {

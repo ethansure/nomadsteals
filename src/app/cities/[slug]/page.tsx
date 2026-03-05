@@ -51,7 +51,9 @@ export default async function CityPage({ params }: CityPageProps) {
   // Get deals for this city from data store
   const response = await getServerCityDeals(slug);
   const cityDeals: Deal[] = response.deals;
+  // Show actual live deal count, or the sample data count with "+" to indicate there are usually more
   const dealCount = response.total > 0 ? response.total : city.dealCount;
+  const isLiveData = response.total > 0;
   
   // Get related cities (same region)
   const relatedCities = popularCities
@@ -123,16 +125,24 @@ export default async function CityPage({ params }: CityPageProps) {
           ) : (
             <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
               <div className="text-5xl mb-4">🔍</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No deals available yet</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Checking for new deals...</h3>
               <p className="text-gray-600 mb-6">
-                We don't have any current deals to {city.name}, but subscribe to get notified when new deals appear!
+                We're constantly finding amazing deals to {city.name}. Subscribe to get instant alerts when new deals drop!
               </p>
-              <Link
-                href="/newsletter"
-                className="inline-flex px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
-              >
-                Get Deal Alerts
-              </Link>
+              <div className="flex gap-4 justify-center">
+                <Link
+                  href="/newsletter"
+                  className="inline-flex px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
+                >
+                  Get Deal Alerts
+                </Link>
+                <Link
+                  href="/deals"
+                  className="inline-flex px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition"
+                >
+                  Browse All Deals
+                </Link>
+              </div>
             </div>
           )}
         </div>

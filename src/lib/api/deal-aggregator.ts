@@ -13,6 +13,9 @@ export interface AggregatorResult {
   stats: {
     secretflying: number;
     theflightdeal: number;
+    travelpirates: number;
+    airfarewatchdog: number;
+    skiplagged: number;
     totalDeals: number;
     avgValueScore: number;
     hotDeals: number;
@@ -51,6 +54,8 @@ export async function aggregateDeals(options: {
         case 'secretflying': return 'Secret Flying';
         case 'theflightdeal': return 'The Flight Deal';
         case 'travelpirates': return 'TravelPirates';
+        case 'airfarewatchdog': return 'Airfarewatchdog';
+        case 'skiplagged': return 'Skiplagged';
         default: return s;
       }
     });
@@ -75,6 +80,9 @@ export async function aggregateDeals(options: {
     stats: {
       secretflying: scrapeResult.stats.secretflying,
       theflightdeal: scrapeResult.stats.theflightdeal,
+      travelpirates: scrapeResult.stats.travelpirates,
+      airfarewatchdog: scrapeResult.stats.airfarewatchdog,
+      skiplagged: scrapeResult.stats.skiplagged,
       totalDeals: deals.length,
       avgValueScore: scrapeResult.stats.avgValueScore,
       hotDeals: scrapeResult.stats.hotDeals,

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { GlobalStructuredData } from '@/components/StructuredData';
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -74,6 +75,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        <GlobalStructuredData />
+      </head>
       <body className={inter.className}>
         <GoogleAnalytics />
         <NextIntlClientProvider messages={messages}>

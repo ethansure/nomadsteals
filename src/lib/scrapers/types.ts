@@ -1,6 +1,6 @@
 // Scraper types
 
-export type ScraperSource = 'secretflying' | 'theflightdeal' | 'travelpirates';
+export type ScraperSource = 'secretflying' | 'theflightdeal' | 'travelpirates' | 'airfarewatchdog' | 'skiplagged';
 
 export interface ScrapedDeal {
   id: string;

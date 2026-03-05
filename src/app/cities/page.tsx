@@ -85,7 +85,7 @@ export default function CitiesPage() {
                   <span className="text-4xl">{data.emoji}</span>
                   <h2 className="text-3xl font-bold text-[#2D3436]">{region}</h2>
                 </div>
-                <p className="text-[#2D3436]/60 mb-8 text-lg">{data.cities.length} destinations</p>
+                <p className="text-[#2D3436]/60 mb-8 text-lg">{data.cities.length} {data.cities.length === 1 ? 'destination' : 'destinations'}</p>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                   {data.cities.map(city => (
                     <CityCard key={city.code} city={city} />

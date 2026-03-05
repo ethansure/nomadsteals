@@ -2,6 +2,9 @@
 
 import { scrapeSecretFlying } from './secretflying';
 import { scrapeTheFlightDeal } from './theflightdeal';
+import { scrapeTravelPirates } from './travelpirates';
+import { scrapeAirfarewatchdog } from './airfarewatchdog';
+import { scrapeSkiplagged } from './skiplagged';
 import { ScrapedDeal, ScrapeResult, ScraperSource } from './types';
 import { Deal } from '../types';
 
@@ -20,6 +23,9 @@ export interface ScrapeAllResult {
   stats: {
     secretflying: number;
     theflightdeal: number;
+    travelpirates: number;
+    airfarewatchdog: number;
+    skiplagged: number;
     totalDeals: number;
     avgValueScore: number;
     hotDeals: number;
@@ -69,6 +75,48 @@ export async function scrapeAllSources(options: {
     console.error('[Scraper] TheFlightDeal failed:', errMsg);
   }
 
+  await sleep(delayBetweenSources);
+
+  // Scrape TravelPirates
+  try {
+    const tpDeals = await scrapeTravelPirates(maxDealsPerSource);
+    allDeals.push(...tpDeals);
+    sources.push('travelpirates');
+    console.log(`[Scraper] TravelPirates: ${tpDeals.length} deals`);
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    errors.push(`TravelPirates: ${errMsg}`);
+    console.error('[Scraper] TravelPirates failed:', errMsg);
+  }
+
+  await sleep(delayBetweenSources);
+
+  // Scrape Airfarewatchdog
+  try {
+    const afwDeals = await scrapeAirfarewatchdog(maxDealsPerSource);
+    allDeals.push(...afwDeals);
+    sources.push('airfarewatchdog');
+    console.log(`[Scraper] Airfarewatchdog: ${afwDeals.length} deals`);
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    errors.push(`Airfarewatchdog: ${errMsg}`);
+    console.error('[Scraper] Airfarewatchdog failed:', errMsg);
+  }
+
+  await sleep(delayBetweenSources);
+
+  // Scrape Skiplagged
+  try {
+    const skipDeals = await scrapeSkiplagged(maxDealsPerSource);
+    allDeals.push(...skipDeals);
+    sources.push('skiplagged');
+    console.log(`[Scraper] Skiplagged: ${skipDeals.length} deals`);
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    errors.push(`Skiplagged: ${errMsg}`);
+    console.error('[Scraper] Skiplagged failed:', errMsg);
+  }
+
   // Deduplicate deals
   const deduped = deduplicateDeals(allDeals);
   console.log(`[Scraper] After dedup: ${deduped.length} deals (from ${allDeals.length})`);
@@ -80,6 +128,9 @@ export async function scrapeAllSources(options: {
   const stats = {
     secretflying: deduped.filter(d => d.source === 'secretflying').length,
     theflightdeal: deduped.filter(d => d.source === 'theflightdeal').length,
+    travelpirates: deduped.filter(d => d.source === 'travelpirates').length,
+    airfarewatchdog: deduped.filter(d => d.source === 'airfarewatchdog').length,
+    skiplagged: deduped.filter(d => d.source === 'skiplagged').length,
     totalDeals: deduped.length,
     avgValueScore: deduped.length > 0 
       ? Math.round(deduped.reduce((acc, d) => acc + d.valueScore, 0) / deduped.length) 
@@ -140,6 +191,8 @@ export function scrapedDealToAppDeal(scraped: ScrapedDeal): Deal {
     'secretflying': 'Secret Flying',
     'theflightdeal': 'The Flight Deal',
     'travelpirates': 'TravelPirates',
+    'airfarewatchdog': 'Airfarewatchdog',
+    'skiplagged': 'Skiplagged',
   };
 
   return {
