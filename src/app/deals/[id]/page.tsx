@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { DealCard } from "@/components/DealCard";
 import { ValueScoreBadge, ValueScoreExplainer } from "@/components/ValueScoreBadge";
 import { NewsletterForm } from "@/components/Newsletter";
-import { getServerDeal, getServerDeals } from "@/lib/api/server";
+import { getServerDeal, getServerDeals, getServerHistoricalDeals } from "@/lib/api/server";
 import { getDealById as getSampleDealById, sampleDeals } from "@/lib/sample-data";
 import { formatPrice, formatDate, timeAgo, getValueScoreLabel } from "@/lib/utils";
 import { Deal } from "@/lib/types";
@@ -39,6 +39,16 @@ async function getSimilarDeals(deal: Deal): Promise<Deal[]> {
     .slice(0, 3);
 }
 
+async function getHistoricalDeals(deal: Deal): Promise<Deal[]> {
+  const response = await getServerHistoricalDeals(
+    deal.originCode,
+    deal.destinationCode,
+    deal.destinationCity,
+    5
+  );
+  return response.deals;
+}
+
 export async function generateMetadata({ params }: DealPageProps): Promise<Metadata> {
   const { id } = await params;
   const deal = await getDeal(id);
@@ -67,6 +77,7 @@ export default async function DealPage({ params }: DealPageProps) {
   }
   
   const similarDeals = await getSimilarDeals(deal);
+  const historicalDeals = await getHistoricalDeals(deal);
   
   const typeEmojis: Record<string, string> = {
     flight: "✈️",
@@ -339,6 +350,52 @@ export default async function DealPage({ params }: DealPageProps) {
               <div className="grid md:grid-cols-3 gap-6">
                 {similarDeals.map(d => (
                   <DealCard key={d.id} deal={d} />
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Historical Deals */}
+          {historicalDeals.length > 0 && (
+            <div className="mt-16">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">📚</span>
+                  <h2 className="text-2xl font-bold text-gray-900">Similar Deals in the Past</h2>
+                </div>
+                <Link
+                  href={`/deals/history?to=${encodeURIComponent(deal.destinationCity)}`}
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  View all history →
+                </Link>
+              </div>
+              <p className="text-gray-600 mb-6">
+                See how this route has been priced historically. Use this to gauge if the current deal is worth booking.
+              </p>
+              <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {historicalDeals.map(d => (
+                  <div key={d.id} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
+                        Expired
+                      </span>
+                    </div>
+                    <div className="font-semibold text-gray-900 text-sm mb-1 truncate" title={d.title}>
+                      {d.originCity || 'USA'} → {d.destinationCity}
+                    </div>
+                    <div className="text-xl font-bold text-gray-900">
+                      {formatPrice(d.currentPrice, d.currency)}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      {d.savingsPercent}% off • Score: {d.valueScore}
+                    </div>
+                    {d.expiredAt && (
+                      <div className="text-xs text-gray-400 mt-2">
+                        Expired {timeAgo(d.expiredAt)}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>

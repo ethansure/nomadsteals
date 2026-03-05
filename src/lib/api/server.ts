@@ -1,7 +1,7 @@
 // Server-side data access (for server components)
 // Scrapes fresh data if no cached deals exist
 
-import { getDeals, getDealById, getDealsForCity, getStats, getDealsMetadata, getFilteredDeals } from './deals-store';
+import { getDeals, getDealById, getDealsForCity, getStats, getDealsMetadata, getFilteredDeals, getSimilarHistoricalDeals } from './deals-store';
 import { aggregateDeals } from './deal-aggregator';
 import { Deal } from '../types';
 
@@ -166,6 +166,27 @@ export async function getServerStats(): Promise<ServerStatsResponse> {
         sources: [],
       },
     };
+  }
+}
+
+// Server-side: Get similar historical deals for a route
+export async function getServerHistoricalDeals(
+  originCode?: string,
+  destinationCode?: string,
+  destinationCity?: string,
+  limit: number = 5
+): Promise<{ success: boolean; deals: Deal[] }> {
+  try {
+    const deals = await getSimilarHistoricalDeals(
+      originCode,
+      destinationCode,
+      destinationCity,
+      limit
+    );
+    return { success: true, deals };
+  } catch (error) {
+    console.error('Error in getServerHistoricalDeals:', error);
+    return { success: true, deals: [] };
   }
 }
 

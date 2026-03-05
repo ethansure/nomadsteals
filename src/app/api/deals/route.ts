@@ -24,6 +24,13 @@ export async function GET(request: NextRequest) {
       console.log(`[API] Scraped ${result.deals.length} deals`);
     }
     
+    const statusParam = searchParams.get('status');
+    const validStatuses = ['active', 'expired', 'archived', 'all'] as const;
+    type ValidStatus = typeof validStatuses[number];
+    const status: ValidStatus | undefined = validStatuses.includes(statusParam as ValidStatus) 
+      ? (statusParam as ValidStatus) 
+      : undefined;
+    
     const filters = {
       type: searchParams.get('type') || undefined,
       destination: searchParams.get('destination') || searchParams.get('to') || undefined,
@@ -33,6 +40,7 @@ export async function GET(request: NextRequest) {
       maxPrice: searchParams.get('maxPrice') ? parseInt(searchParams.get('maxPrice')!) : undefined,
       minValueScore: searchParams.get('minValueScore') ? parseInt(searchParams.get('minValueScore')!) : undefined,
       isHotDeal: searchParams.get('hot') === 'true' ? true : undefined,
+      status,
       limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 20,
       offset: searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : 0,
     };
