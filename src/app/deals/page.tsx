@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -53,7 +53,8 @@ function formatRelativeTime(dateString: string): string {
   return date.toLocaleDateString();
 }
 
-export default function DealsPage() {
+// Inner component that uses useSearchParams (needs Suspense boundary)
+function DealsPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
@@ -441,5 +442,46 @@ export default function DealsPage() {
       
       <Footer />
     </main>
+  );
+}
+
+// Loading fallback for Suspense
+function DealsPageSkeleton() {
+  return (
+    <main className="min-h-screen bg-gray-50">
+      <Header />
+      <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="h-12 bg-white/20 rounded-xl w-64 mb-4 animate-pulse" />
+          <div className="h-6 bg-white/20 rounded-xl w-96 animate-pulse" />
+        </div>
+      </section>
+      <section className="py-8 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
+                <div className="h-48 bg-gray-200" />
+                <div className="p-4 space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-3/4" />
+                  <div className="h-4 bg-gray-200 rounded w-1/2" />
+                  <div className="h-8 bg-gray-200 rounded w-1/3" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      <Footer />
+    </main>
+  );
+}
+
+// Main export wrapped in Suspense for useSearchParams
+export default function DealsPage() {
+  return (
+    <Suspense fallback={<DealsPageSkeleton />}>
+      <DealsPageContent />
+    </Suspense>
   );
 }
