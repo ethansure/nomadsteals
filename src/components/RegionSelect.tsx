@@ -146,7 +146,7 @@ export function RegionSelect({
                       <div className="flex-1">
                         <div className="font-medium text-gray-900">{region.name}</div>
                         <div className="text-xs text-gray-500">
-                          {region.nameZh} • {region.cities.filter(c => !/^[A-Z]{3}$/.test(c)).slice(0, 4).join(', ')}...
+                          {region.cities.filter(c => !/^[A-Z]{3}$/.test(c)).slice(0, 4).join(', ')}...
                         </div>
                       </div>
                     </button>

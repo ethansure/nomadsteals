@@ -100,7 +100,7 @@ export function LanguageSwitcherCompact() {
     <select
       value={locale}
       onChange={(e) => handleLocaleChange(e.target.value)}
-      className="px-3 py-2 text-sm bg-gray-100 border-none rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+      className="px-3 py-2 text-sm bg-gray-800 text-gray-200 border border-gray-700 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
       aria-label="Select language"
     >
       {locales.map((loc) => (
