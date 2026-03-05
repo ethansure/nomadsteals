@@ -73,6 +73,11 @@ CRON_SECRET=your_random_secret_here
 | `/api/cities/[slug]/deals` | GET | Get deals for a specific city |
 | `/api/stats` | GET | Get deal statistics |
 | `/api/cron/refresh` | GET | Daily cron job endpoint |
+| `/api/subscribe` | POST | Create new subscription |
+| `/api/subscribe` | GET | Get subscription preferences |
+| `/api/subscribe` | PUT | Update subscription preferences |
+| `/api/subscribe/verify` | GET | Verify email address |
+| `/api/subscribe/unsubscribe` | GET/POST | Unsubscribe from emails |
 
 ### Query Parameters for `/api/deals`
 
@@ -100,6 +105,41 @@ CRON_SECRET=your_random_secret_here
 ### Demo Data
 When no API keys are configured, the app falls back to demo data with 20 realistic deals.
 
+## Email Subscription System
+
+NomadSteals includes a personalized email subscription system for deal alerts.
+
+### Features
+- 📧 **Email verification** - Confirm subscriptions before sending deals
+- ⚙️ **Personalized preferences** - Filter by origin, destination, deal type, price
+- ⏰ **Flexible frequency** - Instant, daily, or weekly digest options
+- 🔥 **Hot deals only** - Option to receive only exceptional deals (Value Score 90+)
+- 🚫 **Easy unsubscribe** - One-click unsubscribe in every email
+
+### Setup Email Service (Resend)
+
+1. Sign up at [resend.com](https://resend.com) (Free tier: 3000 emails/month)
+2. Get your API key from the dashboard
+3. Add to environment variables:
+
+```bash
+RESEND_API_KEY=re_xxxxx
+NEXT_PUBLIC_BASE_URL=https://your-domain.vercel.app
+```
+
+4. (Optional) Verify your domain in Resend to use custom sender address
+
+### Subscription Preferences
+
+Users can customize:
+- **Origin regions/cities** - Where they fly from
+- **Destination regions/cities** - Where they want to go
+- **Deal types** - Flights, hotels, packages
+- **Max price** - Budget limit
+- **Min value score** - Quality threshold
+- **Frequency** - Instant / Daily / Weekly
+- **Hot deals only** - Only exceptional deals
+
 ## Cron Job
 
 A daily cron job runs at 6 AM UTC to:
@@ -107,6 +147,7 @@ A daily cron job runs at 6 AM UTC to:
 2. Fetch new deals from configured sources
 3. Calculate Value Scores
 4. Update the data store
+5. Send email alerts to matching subscribers
 
 The cron is configured in `vercel.json`:
 
@@ -135,10 +176,12 @@ The GitHub integration will automatically deploy on push.
 ### Environment Variables in Vercel
 
 Add these in your Vercel project settings:
-- `KIWI_API_KEY`
-- `AMADEUS_CLIENT_ID`
-- `AMADEUS_CLIENT_SECRET`
-- `CRON_SECRET`
+- `KIWI_API_KEY` - Kiwi.com API key
+- `AMADEUS_CLIENT_ID` - Amadeus client ID
+- `AMADEUS_CLIENT_SECRET` - Amadeus client secret
+- `CRON_SECRET` - Secret for protecting cron endpoints
+- `RESEND_API_KEY` - Resend.com API key for email delivery
+- `NEXT_PUBLIC_BASE_URL` - Your deployed URL (for email links)
 
 ## Development
 

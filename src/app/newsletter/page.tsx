@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { NewsletterForm } from "@/components/Newsletter";
+import { SubscriptionForm } from "@/components/SubscriptionForm";
 
 export const metadata: Metadata = {
-  title: "Newsletter",
+  title: "Newsletter - Subscribe to Travel Deals",
   description: "Join 50,000+ travelers who get daily deal alerts from NomadSteals. Free forever, unsubscribe anytime.",
   openGraph: {
     title: "Get Daily Travel Deals - NomadSteals Newsletter",
@@ -12,7 +12,31 @@ export const metadata: Metadata = {
   },
 };
 
-export default function NewsletterPage() {
+function ErrorBanner({ error }: { error?: string }) {
+  if (!error) return null;
+  
+  const messages: Record<string, string> = {
+    "missing-token": "Missing verification token. Please use the link from your email.",
+    "invalid-token": "Invalid or expired token. Please subscribe again.",
+    "verification-failed": "Verification failed. Please try again or contact support.",
+    "already-unsubscribed": "This email has already been unsubscribed.",
+    "server-error": "Something went wrong. Please try again later.",
+  };
+  
+  return (
+    <div className="max-w-3xl mx-auto px-6 pt-6">
+      <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">
+        ⚠️ {messages[error] || error}
+      </div>
+    </div>
+  );
+}
+
+export default function NewsletterPage({
+  searchParams,
+}: {
+  searchParams: { error?: string };
+}) {
   const benefits = [
     {
       emoji: "🔥",
@@ -27,7 +51,7 @@ export default function NewsletterPage() {
     {
       emoji: "📍",
       title: "Personalized",
-      desc: "Tell us your home airport and we'll prioritize deals you can actually use",
+      desc: "Set your home airport and dream destinations for tailored alerts",
     },
     {
       emoji: "📱",
@@ -57,7 +81,7 @@ export default function NewsletterPage() {
   const faqs = [
     {
       q: "How often will I receive emails?",
-      a: "We send one daily digest with the day's best deals. You can also opt into instant alerts for exceptional deals (Value Score 90+).",
+      a: "You choose! Get instant alerts for hot deals, a daily digest, or a weekly roundup. Customize it in your preferences.",
     },
     {
       q: "Is it really free?",
@@ -71,11 +95,17 @@ export default function NewsletterPage() {
       q: "Will you sell my email?",
       a: "Never. We hate spam as much as you do. Your email stays with us, period.",
     },
+    {
+      q: "Can I filter deals by destination?",
+      a: "Yes! Set your preferred origins and destinations, max price, deal types, and more. Only get deals you actually care about.",
+    },
   ];
 
   return (
     <main className="min-h-screen bg-gray-50">
       <Header />
+      
+      <ErrorBanner error={searchParams.error} />
       
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-20 px-6">
@@ -87,16 +117,17 @@ export default function NewsletterPage() {
           </h1>
           <p className="text-xl text-blue-100 mb-10 max-w-xl mx-auto">
             Join 50,000+ savvy travelers who wake up to incredible deals in their inbox. 
-            Error fares, flash sales, and exclusive finds — delivered daily.
+            Error fares, flash sales, and exclusive finds — delivered on your schedule.
           </p>
           
           {/* Signup Form */}
-          <div className="max-w-md mx-auto">
-            <NewsletterForm variant="inline" className="flex-col sm:flex-row" />
-            <p className="text-sm text-blue-200 mt-4">
-              🔒 Free forever • No spam • Unsubscribe anytime
-            </p>
+          <div className="max-w-md mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+            <SubscriptionForm />
           </div>
+          
+          <p className="text-sm text-blue-200 mt-4">
+            🔒 Free forever • No spam • Unsubscribe anytime
+          </p>
         </div>
       </section>
       
@@ -212,7 +243,21 @@ export default function NewsletterPage() {
       </section>
       
       {/* Final CTA */}
-      <NewsletterForm variant="hero" />
+      <section className="py-16 px-6 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="text-5xl mb-4">✈️</div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Save on Travel?</h2>
+          <p className="text-blue-100 mb-8 text-lg">
+            Join 50,000+ savvy travelers who get our personalized deal alerts.
+          </p>
+          <div className="max-w-md mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+            <SubscriptionForm />
+          </div>
+          <p className="text-sm text-blue-200 mt-4">
+            🔒 No spam, ever. Unsubscribe anytime.
+          </p>
+        </div>
+      </section>
       
       <Footer />
     </main>
