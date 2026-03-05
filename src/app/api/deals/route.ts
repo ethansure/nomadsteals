@@ -31,6 +31,11 @@ export async function GET(request: NextRequest) {
       ? (statusParam as ValidStatus) 
       : undefined;
     
+    // Parse days parameter for freshness filter (default: 7 days)
+    // Use days=0 to get all deals regardless of age
+    const daysParam = searchParams.get('days');
+    const days = daysParam !== null ? parseInt(daysParam) : undefined;
+    
     const filters = {
       type: searchParams.get('type') || undefined,
       destination: searchParams.get('destination') || searchParams.get('to') || undefined,
@@ -41,6 +46,8 @@ export async function GET(request: NextRequest) {
       minValueScore: searchParams.get('minValueScore') ? parseInt(searchParams.get('minValueScore')!) : undefined,
       isHotDeal: searchParams.get('hot') === 'true' ? true : undefined,
       status,
+      days, // freshness filter (default: 7 days, use 0 to disable)
+      includeInactive: searchParams.get('includeInactive') === 'true',
       limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 20,
       offset: searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : 0,
     };

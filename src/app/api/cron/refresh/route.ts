@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { aggregateDeals } from '@/lib/api/deal-aggregator';
-import { removeExpiredDeals } from '@/lib/api/deals-store';
+import { removeExpiredDeals, markStaleDealsInactive } from '@/lib/api/deals-store';
 import { processAlerts, sendWeeklyDigest, isWeeklyDigestDay } from '@/lib/email/send-alerts';
 
 export const runtime = 'nodejs';
@@ -29,11 +29,15 @@ export async function GET(request: NextRequest) {
     console.log('[Cron] Starting daily deal refresh...');
     const startTime = Date.now();
     
-    // First, remove expired deals
+    // First, archive expired deals
     const removedCount = await removeExpiredDeals();
-    console.log(`[Cron] Removed ${removedCount} expired deals`);
+    console.log(`[Cron] Archived ${removedCount} expired deals`);
     
-    // Then, fetch new deals
+    // Mark stale deals as inactive (not seen in last 24h)
+    const staleCount = await markStaleDealsInactive();
+    console.log(`[Cron] Marked ${staleCount} stale deals as inactive`);
+    
+    // Then, fetch new deals (will append/update, not overwrite)
     const result = await aggregateDeals({
       maxDealsPerSource: 40,
     });
@@ -67,7 +71,8 @@ export async function GET(request: NextRequest) {
       message: 'Daily refresh completed',
       stats: {
         ...result.stats,
-        removedExpired: removedCount,
+        archivedExpired: removedCount,
+        markedStale: staleCount,
         durationMs: duration,
       },
       emailStats,

@@ -209,6 +209,9 @@ function generateDemoDeals(count: number = 50): Deal[] {
     const bookByDate = new Date(now);
     bookByDate.setDate(bookByDate.getDate() + 7 + Math.floor(Math.random() * 14));
 
+    // Create posted time within last 3 days for freshness
+    const postedAt = new Date(now.getTime() - Math.random() * 3 * 24 * 60 * 60 * 1000).toISOString();
+    
     const deal: Deal = {
       id: `ns-${Date.now()}-${i}`,
       type: 'flight',
@@ -233,7 +236,7 @@ function generateDemoDeals(count: number = 50): Deal[] {
       imageUrl: cityImages[route.to] || 'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800',
       bookingUrl: `https://www.google.com/travel/flights?q=flights+from+${route.fromCode}+to+${route.toCode}`,
       source: 'NomadSteals Picks',
-      postedAt: new Date(now.getTime() - Math.random() * 3 * 24 * 60 * 60 * 1000).toISOString(),
+      postedAt,
       updatedAt: now.toISOString(),
       views: Math.floor(Math.random() * 5000) + 500,
       saves: Math.floor(Math.random() * 500) + 50,
@@ -242,6 +245,11 @@ function generateDemoDeals(count: number = 50): Deal[] {
       isExpiringSoon: (bookByDate.getTime() - now.getTime()) < 7 * 24 * 60 * 60 * 1000,
       isHistoricLow: savingsPercent >= 40,
       status: 'active',
+      // Freshness tracking
+      scrapedAt: postedAt,
+      firstSeenAt: postedAt,
+      lastSeenAt: now.toISOString(),
+      isActive: true,
     };
 
     deals.push(deal);

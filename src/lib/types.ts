@@ -60,6 +60,13 @@ export interface Deal {
   status?: DealStatus;
   expiredAt?: string;
   archivedAt?: string;
+  
+  // Freshness tracking
+  scrapedAt?: string;      // when we found it (ISO timestamp)
+  firstSeenAt?: string;    // first time we saw this deal
+  lastSeenAt?: string;     // last time it appeared in scrape
+  isActive?: boolean;      // still showing in source (not stale)
+  dealSignature?: string;  // unique signature for deduplication
 }
 
 export interface City {

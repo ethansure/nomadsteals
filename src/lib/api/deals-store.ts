@@ -1,10 +1,21 @@
 // Deals Storage Service
 // Uses in-memory cache with fallback to demo data
 // Note: Vercel serverless has read-only filesystem, so we can't persist to files
+//
+// FRESHNESS & STORAGE LOGIC:
+// - Only show deals from last 7 days by default (configurable via days param)
+// - Never delete deals, just mark inactive
+// - Append new deals with deduplication
+// - Track scrapedAt, firstSeenAt, lastSeenAt timestamps
 
 import { Deal, DealStatus } from '../types';
 import { promises as fs } from 'fs';
 import path from 'path';
+
+// Default freshness window in days
+const DEFAULT_FRESHNESS_DAYS = 7;
+// Stale threshold: mark inactive after this many hours without seeing
+const STALE_THRESHOLD_HOURS = 24;
 
 // In-memory cache (persists within serverless function lifetime)
 let memoryCache: {
@@ -130,17 +141,70 @@ export async function getArchivedDeals(): Promise<Deal[]> {
   return getArchivedDealsFromFile();
 }
 
-// Write deals to storage (memory + file if possible)
+// Write deals to storage (APPEND mode with deduplication)
+// Never overwrites - merges new deals with existing, updates timestamps
 export async function saveDeals(deals: Deal[], sources: string[]): Promise<void> {
-  // Mark all deals as active if not already set
-  const dealsWithStatus = deals.map(d => ({
+  const now = new Date().toISOString();
+  
+  // Get existing deals for deduplication
+  const existingDeals = await getAllStoredDeals();
+  
+  // Build signature map from existing deals
+  const signatureMap = new Map<string, Deal>();
+  for (const deal of existingDeals) {
+    const signature = deal.dealSignature || createDealSignature(deal);
+    signatureMap.set(signature, deal);
+  }
+  
+  // Process incoming deals
+  const seenSignatures = new Set<string>();
+  for (const deal of deals) {
+    const signature = createDealSignature(deal);
+    seenSignatures.add(signature);
+    
+    const existing = signatureMap.get(signature);
+    if (existing) {
+      // Deal exists - update lastSeenAt and mark as active
+      signatureMap.set(signature, {
+        ...existing,
+        lastSeenAt: now,
+        isActive: true,
+        // Update any changed fields (like price, dates)
+        currentPrice: deal.currentPrice,
+        originalPrice: deal.originalPrice,
+        savingsPercent: deal.savingsPercent,
+        valueScore: deal.valueScore,
+        bookByDate: deal.bookByDate,
+        updatedAt: now,
+      });
+    } else {
+      // New deal - add with full timestamps
+      signatureMap.set(signature, {
+        ...deal,
+        dealSignature: signature,
+        scrapedAt: now,
+        firstSeenAt: now,
+        lastSeenAt: now,
+        isActive: true,
+        status: deal.status || 'active' as DealStatus,
+      });
+    }
+  }
+  
+  // Mark deals not seen in this scrape (but don't mark as inactive yet - that's done by markStaleDealsInactive)
+  // Just ensure all deals have proper status
+  const allDeals = Array.from(signatureMap.values()).map(d => ({
     ...d,
     status: d.status || 'active' as DealStatus,
+    dealSignature: d.dealSignature || createDealSignature(d),
   }));
+  
+  // Sort by value score
+  allDeals.sort((a, b) => b.valueScore - a.valueScore);
 
   const data: DealsData = {
-    deals: dealsWithStatus,
-    lastUpdated: new Date().toISOString(),
+    deals: allDeals,
+    lastUpdated: now,
     fetchedSources: sources,
   };
 
@@ -148,11 +212,11 @@ export async function saveDeals(deals: Deal[], sources: string[]): Promise<void>
 
   // Always update memory cache
   memoryCache = {
-    deals: dealsWithStatus,
+    deals: allDeals,
     archivedDeals,
     lastUpdated: data.lastUpdated,
     fetchedSources: sources,
-    stats: calculateStats(dealsWithStatus, archivedDeals),
+    stats: calculateStats(allDeals, archivedDeals),
   };
 
   // Try to write to file (works locally)
@@ -165,6 +229,8 @@ export async function saveDeals(deals: Deal[], sources: string[]): Promise<void>
     // Ignore file write errors (expected on Vercel)
     console.log('[DealsStore] File write skipped (read-only filesystem)');
   }
+  
+  console.log(`[DealsStore] Saved ${allDeals.length} deals (${deals.length} from scrape, ${existingDeals.length} existing)`);
 }
 
 // Save archived deals
@@ -240,6 +306,8 @@ export async function getFilteredDeals(filters: {
   minValueScore?: number;
   isHotDeal?: boolean;
   status?: DealStatus | 'all';
+  days?: number;  // freshness filter: only show deals from last N days (default: 7)
+  includeInactive?: boolean; // include deals marked as inactive (no longer appearing in source)
   limit?: number;
   offset?: number;
 }): Promise<{ deals: Deal[]; total: number }> {
@@ -252,6 +320,18 @@ export async function getFilteredDeals(filters: {
     deals = await getAllDeals();
   } else {
     deals = await getDeals();
+  }
+  
+  // Apply freshness filter (default: 7 days)
+  // Use days=0 to disable freshness filtering
+  const freshnessFilter = filters.days ?? DEFAULT_FRESHNESS_DAYS;
+  if (freshnessFilter > 0) {
+    deals = deals.filter(deal => isDealFresh(deal, freshnessFilter));
+  }
+  
+  // Filter out inactive deals unless explicitly requested
+  if (!filters.includeInactive) {
+    deals = deals.filter(deal => deal.isActive !== false);
   }
   
   // Apply filters
@@ -529,6 +609,113 @@ export async function mergeDeals(newDeals: Deal[]): Promise<Deal[]> {
 
 function createDealKey(deal: Deal): string {
   return `${deal.originCode || ''}-${deal.destinationCode}-${deal.currentPrice}-${deal.source}`;
+}
+
+// Create a unique signature for deal deduplication
+// Uses bookingUrl first (most unique), then falls back to route+price+source
+export function createDealSignature(deal: Deal): string {
+  if (deal.bookingUrl && !deal.bookingUrl.includes('google.com/travel')) {
+    // Use URL as primary signature (most reliable)
+    return `url:${deal.bookingUrl}`;
+  }
+  // Fallback: origin-destination-price-source
+  return `route:${deal.originCode || deal.originCity || ''}-${deal.destinationCode || deal.destinationCity}-${deal.currentPrice}-${deal.source}`;
+}
+
+// Check if a deal is within the freshness window
+export function isDealFresh(deal: Deal, days: number = DEFAULT_FRESHNESS_DAYS): boolean {
+  const scrapedAt = deal.scrapedAt ? new Date(deal.scrapedAt) : (deal.postedAt ? new Date(deal.postedAt) : null);
+  if (!scrapedAt) return true; // If no timestamp, assume fresh
+  
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+  
+  return scrapedAt >= cutoffDate;
+}
+
+// Check if a deal is stale (hasn't been seen in recent scrapes)
+export function isDealStale(deal: Deal, hours: number = STALE_THRESHOLD_HOURS): boolean {
+  const lastSeenAt = deal.lastSeenAt ? new Date(deal.lastSeenAt) : null;
+  if (!lastSeenAt) return false; // If never tracked, not stale yet
+  
+  const cutoffTime = new Date();
+  cutoffTime.setHours(cutoffTime.getHours() - hours);
+  
+  return lastSeenAt < cutoffTime;
+}
+
+// Get deals filtered by freshness (days)
+export async function getFreshDeals(days: number = DEFAULT_FRESHNESS_DAYS): Promise<Deal[]> {
+  const allDeals = await getDeals();
+  return allDeals.filter(deal => isDealFresh(deal, days));
+}
+
+// Mark stale deals as inactive (not seen in recent scrapes)
+export async function markStaleDealsInactive(): Promise<number> {
+  const deals = await getAllStoredDeals();
+  let markedCount = 0;
+  
+  const updatedDeals = deals.map(deal => {
+    if (deal.isActive !== false && isDealStale(deal)) {
+      markedCount++;
+      return { ...deal, isActive: false };
+    }
+    return deal;
+  });
+  
+  if (markedCount > 0) {
+    await saveDealsRaw(updatedDeals, ['stale-check']);
+    console.log(`[DealsStore] Marked ${markedCount} stale deals as inactive`);
+  }
+  
+  return markedCount;
+}
+
+// Get ALL stored deals (including old ones, for internal use)
+async function getAllStoredDeals(): Promise<Deal[]> {
+  if (memoryCache?.deals && memoryCache.deals.length > 0) {
+    return memoryCache.deals;
+  }
+  
+  try {
+    if (await isWriteable()) {
+      const data = await fs.readFile(DEALS_FILE, 'utf-8');
+      const parsed: DealsData = JSON.parse(data);
+      return parsed.deals;
+    }
+  } catch {
+    // File doesn't exist
+  }
+  
+  return [];
+}
+
+// Raw save without any processing (internal use)
+async function saveDealsRaw(deals: Deal[], sources: string[]): Promise<void> {
+  const data: DealsData = {
+    deals,
+    lastUpdated: new Date().toISOString(),
+    fetchedSources: sources,
+  };
+  
+  const archivedDeals = await getArchivedDealsFromFile();
+  
+  memoryCache = {
+    deals,
+    archivedDeals,
+    lastUpdated: data.lastUpdated,
+    fetchedSources: sources,
+    stats: calculateStats(deals, archivedDeals),
+  };
+  
+  try {
+    if (await isWriteable()) {
+      await fs.writeFile(DEALS_FILE, JSON.stringify(data, null, 2));
+      await fs.writeFile(STATS_FILE, JSON.stringify(memoryCache.stats, null, 2));
+    }
+  } catch (error) {
+    console.log('[DealsStore] File write skipped (read-only filesystem)');
+  }
 }
 
 // Archive expired deals instead of removing them
