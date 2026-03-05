@@ -5,8 +5,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getFilteredDeals, getStats, getDealsMetadata, getDeals, saveDeals } from '@/lib/api/deals-store';
 import { aggregateDeals } from '@/lib/api/deal-aggregator';
 
-// Cache control: revalidate every 5 minutes
-export const revalidate = 300;
+// Force dynamic rendering (don't cache at build time)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   try {
