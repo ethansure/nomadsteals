@@ -129,6 +129,19 @@ export function Header() {
               </div>
             </Link>
             <Link 
+              href="/deals/history" 
+              className="flex items-center gap-3 px-4 py-3.5 text-[#2D3436] hover:bg-[#6B5B95]/5 rounded-2xl font-medium transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <div className="w-10 h-10 bg-gradient-to-br from-[#6B5B95] to-[#8B78A9] rounded-xl flex items-center justify-center">
+                <History className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <div>Deal History</div>
+                <div className="text-xs text-[#2D3436]/50">Browse past deals</div>
+              </div>
+            </Link>
+            <Link 
               href="/about" 
               className="flex items-center gap-3 px-4 py-3.5 text-[#2D3436] hover:bg-[#F5DEB3]/30 rounded-2xl font-medium transition-colors"
               onClick={() => setMobileMenuOpen(false)}
