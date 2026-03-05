@@ -1,13 +1,26 @@
 // GET /api/deals - List all deals with optional filters
-// POST /api/deals - Manual refresh (protected)
+// Scrapes fresh data if no cached deals exist (serverless-friendly)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getFilteredDeals, getStats, getDealsMetadata } from '@/lib/api/deals-store';
+import { getFilteredDeals, getStats, getDealsMetadata, getDeals, saveDeals } from '@/lib/api/deals-store';
 import { aggregateDeals } from '@/lib/api/deal-aggregator';
+
+// Cache control: revalidate every 5 minutes
+export const revalidate = 300;
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
+    
+    // Check if we have cached deals
+    let existingDeals = await getDeals();
+    
+    // If no deals exist, scrape fresh data
+    if (existingDeals.length === 0) {
+      console.log('[API] No cached deals, scraping fresh data...');
+      const result = await aggregateDeals({ maxDealsPerSource: 25 });
+      console.log(`[API] Scraped ${result.deals.length} deals`);
+    }
     
     const filters = {
       type: searchParams.get('type') || undefined,
