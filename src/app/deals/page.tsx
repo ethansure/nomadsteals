@@ -161,10 +161,12 @@ function DealsPageContent() {
       <Header />
       
       {/* Page Header - Warm Gradient */}
-      <section className="bg-gradient-to-br from-[#FF6B6B] via-[#FFA07A] to-[#FFD93D] text-white py-16 px-6 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-[#FF6B6B] via-[#FFA07A] to-[#FFD93D] text-white py-16 px-6 relative">
         {/* Background Decorations */}
-        <div className="absolute top-10 right-20 text-6xl opacity-10">🌴</div>
-        <div className="absolute bottom-10 left-20 text-5xl opacity-10">✈️</div>
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-10 right-20 text-6xl opacity-10">🌴</div>
+          <div className="absolute bottom-10 left-20 text-5xl opacity-10">✈️</div>
+        </div>
         
         <div className="max-w-7xl mx-auto relative">
           <div className="flex items-center gap-3 mb-4">

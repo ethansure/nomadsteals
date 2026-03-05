@@ -105,7 +105,7 @@ export function RegionSelect({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden max-h-[400px] flex flex-col">
+        <div className="absolute z-[100] w-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden max-h-[400px] flex flex-col">
           {/* Tabs */}
           <div className="flex border-b border-gray-100 bg-gray-50">
             <button
@@ -287,7 +287,7 @@ export function RegionSelectCompact({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 left-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+        <div className="absolute z-[100] left-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
           <div className="max-h-[350px] overflow-y-auto p-2">
             {/* Anywhere option */}
             <button

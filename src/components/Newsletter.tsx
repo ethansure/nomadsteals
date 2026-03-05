@@ -44,11 +44,13 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
 
   if (variant === "hero") {
     return (
-      <section className={`py-20 px-6 bg-gradient-to-br from-[#FF6B6B] via-[#FFA07A] to-[#FFD93D] text-white relative overflow-hidden ${className}`}>
+      <section className={`py-20 px-6 bg-gradient-to-br from-[#FF6B6B] via-[#FFA07A] to-[#FFD93D] text-white relative ${className}`}>
         {/* Background Decorations */}
-        <div className="absolute top-10 left-10 text-6xl opacity-10">🌴</div>
-        <div className="absolute bottom-10 right-10 text-6xl opacity-10">✈️</div>
-        <div className="absolute top-1/2 right-1/4 text-4xl opacity-5">🌺</div>
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-10 left-10 text-6xl opacity-10">🌴</div>
+          <div className="absolute bottom-10 right-10 text-6xl opacity-10">✈️</div>
+          <div className="absolute top-1/2 right-1/4 text-4xl opacity-5">🌺</div>
+        </div>
         
         <div className="max-w-3xl mx-auto text-center relative">
           <div className="flex justify-center mb-6">

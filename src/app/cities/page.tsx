@@ -29,14 +29,16 @@ export default function CitiesPage() {
       <Header />
       
       {/* Hero Section - Tropical Vibe */}
-      <section className="bg-gradient-to-br from-[#20B2AA] via-[#48D1CC] to-[#20B2AA] text-white py-20 px-6 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-[#20B2AA] via-[#48D1CC] to-[#20B2AA] text-white py-20 px-6 relative">
         {/* Background Decorations */}
-        <div className="absolute top-10 right-20 text-7xl opacity-10">🌴</div>
-        <div className="absolute bottom-10 left-20 text-6xl opacity-10">🌺</div>
-        <div className="absolute top-1/2 left-1/3 text-4xl opacity-5">✈️</div>
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-10 right-20 text-7xl opacity-10">🌴</div>
+          <div className="absolute bottom-10 left-20 text-6xl opacity-10">🌺</div>
+          <div className="absolute top-1/2 left-1/3 text-4xl opacity-5">✈️</div>
+        </div>
         
         {/* Wave at bottom */}
-        <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
           <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-16 fill-[#FFFAF5]">
             <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V120H0Z" />
           </svg>

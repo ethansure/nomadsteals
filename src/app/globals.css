@@ -5,6 +5,12 @@
    ======================================== */
 
 :root {
+  /* Z-index Scale */
+  --z-dropdown: 100;
+  --z-sticky: 50;
+  --z-modal: 200;
+  --z-tooltip: 300;
+  
   /* Primary - Warm Sunset Orange/Coral */
   --color-coral: #FF6B6B;
   --color-coral-light: #FFA07A;

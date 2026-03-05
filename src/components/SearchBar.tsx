@@ -213,7 +213,7 @@ export function SearchBar({
 
       {/* Quick Links */}
       <div className="mt-5 flex flex-wrap items-center gap-2 px-1">
-        <span className="text-sm text-white/80 font-medium">Popular:</span>
+        <span className="text-sm text-[#2D3436]/60 font-medium">Popular:</span>
         {[
           { from: 'us-west', to: 'asia-east', label: '🌴 West Coast → Asia' },
           { from: 'us-east', to: 'europe-west', label: '🗽 East Coast → Europe' },
