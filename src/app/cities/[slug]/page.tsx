@@ -5,11 +5,15 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { DealCard } from "@/components/DealCard";
 import { NewsletterForm } from "@/components/Newsletter";
-import { getCityBySlug, getDealsByCity, sampleDeals, popularCities } from "@/lib/sample-data";
+import { getCityBySlug, popularCities } from "@/lib/sample-data";
+import { getServerCityDeals } from "@/lib/api/server";
+import { Deal } from "@/lib/types";
 
 interface CityPageProps {
   params: Promise<{ slug: string }>;
 }
+
+export const revalidate = 300; // Revalidate every 5 minutes
 
 export async function generateMetadata({ params }: CityPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -44,13 +48,10 @@ export default async function CityPage({ params }: CityPageProps) {
     notFound();
   }
   
-  // Get deals for this city
-  let cityDeals = getDealsByCity(slug);
-  
-  // If no specific deals, show some sample deals for demo purposes
-  if (cityDeals.length === 0) {
-    cityDeals = sampleDeals.slice(0, 6);
-  }
+  // Get deals for this city from data store
+  const response = await getServerCityDeals(slug);
+  const cityDeals: Deal[] = response.deals;
+  const dealCount = response.total > 0 ? response.total : city.dealCount;
   
   // Get related cities (same region)
   const relatedCities = popularCities
@@ -85,7 +86,7 @@ export default async function CityPage({ params }: CityPageProps) {
             {/* Stats */}
             <div className="flex flex-wrap gap-4">
               <div className="px-4 py-2 bg-white/10 backdrop-blur rounded-xl text-white">
-                <span className="font-bold text-2xl">{city.dealCount}</span>
+                <span className="font-bold text-2xl">{dealCount}</span>
                 <span className="text-white/80 ml-2">active deals</span>
               </div>
               <div className="px-4 py-2 bg-green-500/80 backdrop-blur rounded-xl text-white">
@@ -122,7 +123,7 @@ export default async function CityPage({ params }: CityPageProps) {
           ) : (
             <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
               <div className="text-5xl mb-4">🔍</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No deals available</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">No deals available yet</h3>
               <p className="text-gray-600 mb-6">
                 We don't have any current deals to {city.name}, but subscribe to get notified when new deals appear!
               </p>
@@ -167,7 +168,7 @@ export default async function CityPage({ params }: CityPageProps) {
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="text-xl">🎯</span>
-                  <span><strong>Active Deals:</strong> {city.dealCount}</span>
+                  <span><strong>Active Deals:</strong> {dealCount}</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="text-xl">💰</span>

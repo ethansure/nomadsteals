@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { DealCard } from "@/components/DealCard";
 import { ValueScoreExplainer } from "@/components/ValueScoreBadge";
 import { NewsletterForm } from "@/components/Newsletter";
-import { sampleDeals, dealStats } from "@/lib/sample-data";
 import { filterDeals, sortDeals, searchDeals } from "@/lib/utils";
-import { DealType, SortOption } from "@/lib/types";
+import { Deal, DealType, SortOption } from "@/lib/types";
 
 const dealTypes: { value: DealType | "all"; label: string; emoji: string }[] = [
   { value: "all", label: "All Deals", emoji: "🎯" },
@@ -34,7 +33,28 @@ const priceRanges = [
   { value: "5000", label: "Under $5,000" },
 ];
 
+function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  
+  if (diffMins < 1) return 'just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  
+  return date.toLocaleDateString();
+}
+
 export default function DealsPage() {
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState({ totalDeals: 0, avgSavings: 42, updatedAt: '' });
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<DealType | "all">("all");
   const [sortBy, setSortBy] = useState<SortOption>("value-score");
@@ -42,34 +62,63 @@ export default function DealsPage() {
   const [showHotOnly, setShowHotOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
+  // Fetch deals from API
+  useEffect(() => {
+    async function fetchDeals() {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/deals?limit=100');
+        const data = await response.json();
+        
+        if (data.success) {
+          setDeals(data.deals);
+          setStats({
+            totalDeals: data.pagination.total,
+            avgSavings: data.meta.stats.avgSavings || 42,
+            updatedAt: data.meta.lastUpdated,
+          });
+        } else {
+          setError('Failed to load deals');
+        }
+      } catch (err) {
+        console.error('Error fetching deals:', err);
+        setError('Failed to load deals. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchDeals();
+  }, []);
+
   const filteredDeals = useMemo(() => {
-    let deals = sampleDeals;
+    let filtered = [...deals];
     
     // Search
     if (searchQuery) {
-      deals = searchDeals(deals, searchQuery);
+      filtered = searchDeals(filtered, searchQuery);
     }
     
     // Filter by type
     if (selectedType !== "all") {
-      deals = filterDeals(deals, { types: [selectedType] });
+      filtered = filterDeals(filtered, { types: [selectedType] });
     }
     
     // Filter by price
     if (maxPrice !== "all") {
-      deals = deals.filter(d => d.currentPrice <= parseInt(maxPrice));
+      filtered = filtered.filter(d => d.currentPrice <= parseInt(maxPrice));
     }
     
     // Filter hot deals only
     if (showHotOnly) {
-      deals = deals.filter(d => d.isHotDeal);
+      filtered = filtered.filter(d => d.isHotDeal);
     }
     
     // Sort
-    deals = sortDeals(deals, sortBy);
+    filtered = sortDeals(filtered, sortBy);
     
-    return deals;
-  }, [searchQuery, selectedType, sortBy, maxPrice, showHotOnly]);
+    return filtered;
+  }, [deals, searchQuery, selectedType, sortBy, maxPrice, showHotOnly]);
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -80,8 +129,19 @@ export default function DealsPage() {
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Browse All Deals</h1>
           <p className="text-blue-100 text-lg max-w-2xl">
-            {dealStats.totalDeals.toLocaleString()} curated travel deals updated daily. 
-            Average savings of {dealStats.avgSavings}% across all listings.
+            {stats.totalDeals > 0 ? (
+              <>
+                {stats.totalDeals.toLocaleString()} curated travel deals.
+                Average savings of {stats.avgSavings}% across all listings.
+                {stats.updatedAt && (
+                  <span className="block mt-1 text-sm text-blue-200">
+                    Last updated: {formatRelativeTime(stats.updatedAt)}
+                  </span>
+                )}
+              </>
+            ) : (
+              'Loading the best travel deals for you...'
+            )}
           </p>
           
           {/* Search Bar */}
@@ -202,8 +262,14 @@ export default function DealsPage() {
           {/* Results Header */}
           <div className="flex items-center justify-between mb-6">
             <p className="text-gray-600">
-              Showing <span className="font-semibold text-gray-900">{filteredDeals.length}</span> deals
-              {searchQuery && <span> for "{searchQuery}"</span>}
+              {loading ? (
+                'Loading deals...'
+              ) : (
+                <>
+                  Showing <span className="font-semibold text-gray-900">{filteredDeals.length}</span> deals
+                  {searchQuery && <span> for "{searchQuery}"</span>}
+                </>
+              )}
             </p>
           </div>
           
@@ -211,7 +277,33 @@ export default function DealsPage() {
           <div className="grid lg:grid-cols-4 gap-8">
             {/* Deals List */}
             <div className="lg:col-span-3">
-              {filteredDeals.length > 0 ? (
+              {loading ? (
+                // Loading skeleton
+                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {[1, 2, 3, 4, 5, 6].map(i => (
+                    <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
+                      <div className="h-48 bg-gray-200" />
+                      <div className="p-4 space-y-3">
+                        <div className="h-4 bg-gray-200 rounded w-3/4" />
+                        <div className="h-4 bg-gray-200 rounded w-1/2" />
+                        <div className="h-8 bg-gray-200 rounded w-1/3" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : error ? (
+                <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
+                  <div className="text-5xl mb-4">😕</div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Oops!</h3>
+                  <p className="text-gray-600 mb-6">{error}</p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              ) : filteredDeals.length > 0 ? (
                 <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {filteredDeals.map(deal => (
                     <DealCard key={deal.id} deal={deal} />

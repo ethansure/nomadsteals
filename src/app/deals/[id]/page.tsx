@@ -6,16 +6,42 @@ import { Footer } from "@/components/Footer";
 import { DealCard } from "@/components/DealCard";
 import { ValueScoreBadge, ValueScoreExplainer } from "@/components/ValueScoreBadge";
 import { NewsletterForm } from "@/components/Newsletter";
-import { getDealById, sampleDeals } from "@/lib/sample-data";
+import { getServerDeal, getServerDeals } from "@/lib/api/server";
+import { getDealById as getSampleDealById, sampleDeals } from "@/lib/sample-data";
 import { formatPrice, formatDate, timeAgo, getValueScoreLabel } from "@/lib/utils";
+import { Deal } from "@/lib/types";
 
 interface DealPageProps {
   params: Promise<{ id: string }>;
 }
 
+export const revalidate = 300; // Revalidate every 5 minutes
+
+async function getDeal(id: string): Promise<Deal | null> {
+  const response = await getServerDeal(id);
+  if (response.success && response.deal) {
+    return response.deal;
+  }
+  // Fall back to sample data
+  return getSampleDealById(id) || null;
+}
+
+async function getSimilarDeals(deal: Deal): Promise<Deal[]> {
+  const response = await getServerDeals({ limit: 10 });
+  if (response.success) {
+    return response.deals
+      .filter((d: Deal) => d.id !== deal.id && (d.type === deal.type || d.destinationCity === deal.destinationCity))
+      .slice(0, 3);
+  }
+  // Fall back to sample data
+  return sampleDeals
+    .filter(d => d.id !== deal.id && (d.type === deal.type || d.destinationCity === deal.destinationCity))
+    .slice(0, 3);
+}
+
 export async function generateMetadata({ params }: DealPageProps): Promise<Metadata> {
   const { id } = await params;
-  const deal = getDealById(id);
+  const deal = await getDeal(id);
   
   if (!deal) {
     return { title: "Deal Not Found" };
@@ -34,18 +60,15 @@ export async function generateMetadata({ params }: DealPageProps): Promise<Metad
 
 export default async function DealPage({ params }: DealPageProps) {
   const { id } = await params;
-  const deal = getDealById(id);
+  const deal = await getDeal(id);
   
   if (!deal) {
     notFound();
   }
   
-  // Get similar deals (same type or destination)
-  const similarDeals = sampleDeals
-    .filter(d => d.id !== deal.id && (d.type === deal.type || d.destinationCity === deal.destinationCity))
-    .slice(0, 3);
+  const similarDeals = await getSimilarDeals(deal);
   
-  const typeEmojis = {
+  const typeEmojis: Record<string, string> = {
     flight: "✈️",
     hotel: "🏨",
     package: "📦",
@@ -102,7 +125,7 @@ export default async function DealPage({ params }: DealPageProps) {
               {/* Header */}
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div className="flex items-start gap-4 mb-4">
-                  <span className="text-3xl">{typeEmojis[deal.type]}</span>
+                  <span className="text-3xl">{typeEmojis[deal.type] || "🎯"}</span>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full capitalize">
@@ -129,8 +152,8 @@ export default async function DealPage({ params }: DealPageProps) {
                 
                 {/* Meta Info */}
                 <div className="flex flex-wrap gap-4 mt-6 pt-6 border-t border-gray-100 text-sm text-gray-500">
-                  <span>👁 {deal.views.toLocaleString()} views</span>
-                  <span>❤️ {deal.saves.toLocaleString()} saves</span>
+                  <span>👁 {(deal.views || 0).toLocaleString()} views</span>
+                  <span>❤️ {(deal.saves || 0).toLocaleString()} saves</span>
                   <span>Posted {timeAgo(deal.postedAt)}</span>
                   <span>via {deal.source}</span>
                 </div>
@@ -250,17 +273,19 @@ export default async function DealPage({ params }: DealPageProps) {
               )}
               
               {/* Tags */}
-              <div className="flex flex-wrap gap-2">
-                {deal.tags.map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/deals?tag=${tag}`}
-                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition"
-                  >
-                    #{tag}
-                  </Link>
-                ))}
-              </div>
+              {deal.tags && deal.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {deal.tags.map((tag) => (
+                    <Link
+                      key={tag}
+                      href={`/deals?tag=${tag}`}
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition"
+                    >
+                      #{tag}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
             
             {/* Sidebar */}

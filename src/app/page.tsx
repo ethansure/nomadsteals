@@ -4,11 +4,29 @@ import { Footer } from "@/components/Footer";
 import { DealCard } from "@/components/DealCard";
 import { CityCard } from "@/components/CityCard";
 import { NewsletterForm } from "@/components/Newsletter";
-import { sampleDeals, popularCities, dealStats } from "@/lib/sample-data";
+import { getServerDeals, getServerStats, formatRelativeTime } from "@/lib/api/server";
+import { popularCities } from "@/lib/sample-data";
+import { Deal } from "@/lib/types";
 
-export default function Home() {
-  const hotDeals = sampleDeals.filter(d => d.isHotDeal);
-  const todayDeals = sampleDeals.slice(0, 6);
+export const revalidate = 300; // Revalidate every 5 minutes
+
+export default async function Home() {
+  // Fetch real deals from data store
+  const [dealsResponse, statsResponse] = await Promise.all([
+    getServerDeals({ limit: 12 }),
+    getServerStats(),
+  ]);
+  
+  const deals: Deal[] = dealsResponse.deals;
+  const stats = {
+    totalDeals: statsResponse.stats.totalDeals || dealsResponse.pagination.total,
+    avgSavings: statsResponse.stats.avgSavings || 42,
+    hotDeals: statsResponse.stats.hotDeals || deals.filter((d: Deal) => d.isHotDeal).length,
+    updatedAt: statsResponse.stats.updatedAt || new Date().toISOString(),
+  };
+
+  const hotDeals = deals.filter((d) => d.isHotDeal);
+  const todayDeals = deals.slice(0, 6);
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -25,9 +43,9 @@ export default function Home() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur rounded-full text-sm mb-6">
               <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span>Updated {new Date(dealStats.updatedAt).toLocaleTimeString()}</span>
+              <span>Updated {formatRelativeTime(stats.updatedAt)}</span>
               <span className="mx-2">•</span>
-              <span>{dealStats.totalDeals.toLocaleString()} deals live</span>
+              <span>{stats.totalDeals.toLocaleString()} deals live</span>
             </div>
 
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
@@ -38,7 +56,7 @@ export default function Home() {
 
             <p className="text-xl text-blue-100 mb-8 max-w-xl">
               Hand-picked flights, hotels & packages with Value Scores. 
-              Average savings of {dealStats.avgSavings}% across all deals.
+              Average savings of {stats.avgSavings}% across all deals.
             </p>
 
             {/* Search/Filter Bar */}
@@ -71,10 +89,10 @@ export default function Home() {
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
             {[
-              { label: "Active Deals", value: dealStats.totalDeals, icon: "🎯" },
-              { label: "Avg Savings", value: `${dealStats.avgSavings}%`, icon: "💰" },
-              { label: "Hot Deals", value: dealStats.hotDeals, icon: "🔥" },
-              { label: "Error Fares", value: 5, icon: "⚡" },
+              { label: "Active Deals", value: stats.totalDeals, icon: "🎯" },
+              { label: "Avg Savings", value: `${stats.avgSavings}%`, icon: "💰" },
+              { label: "Hot Deals", value: stats.hotDeals, icon: "🔥" },
+              { label: "Error Fares", value: deals.filter((d) => d.isHistoricLow).length, icon: "⚡" },
             ].map((stat, i) => (
               <div key={i} className="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
                 <div className="text-2xl mb-1">{stat.icon}</div>
@@ -87,30 +105,32 @@ export default function Home() {
       </section>
 
       {/* Hot Deals Section */}
-      <section className="py-16 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                🔥 Hot Deals
-                <span className="px-3 py-1 bg-red-100 text-red-600 text-sm font-medium rounded-full">
-                  {hotDeals.length} new
-                </span>
-              </h2>
-              <p className="text-gray-600 mt-1">Incredible prices that won't last long</p>
+      {hotDeals.length > 0 && (
+        <section className="py-16 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                  🔥 Hot Deals
+                  <span className="px-3 py-1 bg-red-100 text-red-600 text-sm font-medium rounded-full">
+                    {hotDeals.length} new
+                  </span>
+                </h2>
+                <p className="text-gray-600 mt-1">Incredible prices that won't last long</p>
+              </div>
+              <Link href="/deals?hot=true" className="text-blue-600 font-medium hover:text-blue-700 transition">
+                View all →
+              </Link>
             </div>
-            <Link href="/deals?hot=true" className="text-blue-600 font-medium hover:text-blue-700 transition">
-              View all →
-            </Link>
-          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {hotDeals.slice(0, 3).map(deal => (
-              <DealCard key={deal.id} deal={deal} />
-            ))}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {hotDeals.slice(0, 3).map((deal) => (
+                <DealCard key={deal.id} deal={deal} />
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Popular Cities */}
       <section className="py-16 px-6 bg-white">
@@ -168,20 +188,30 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {todayDeals.map(deal => (
-              <DealCard key={deal.id} deal={deal} />
-            ))}
-          </div>
+          {todayDeals.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {todayDeals.map((deal) => (
+                <DealCard key={deal.id} deal={deal} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+              <div className="text-4xl mb-4">✈️</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No deals available yet</h3>
+              <p className="text-gray-600 mb-4">Check back soon for the latest travel deals!</p>
+            </div>
+          )}
 
-          <div className="text-center mt-12">
-            <Link 
-              href="/deals"
-              className="px-8 py-4 bg-white border border-gray-200 rounded-2xl font-medium text-gray-700 hover:bg-gray-50 transition inline-block"
-            >
-              Load More Deals
-            </Link>
-          </div>
+          {todayDeals.length > 0 && (
+            <div className="text-center mt-12">
+              <Link 
+                href="/deals"
+                className="px-8 py-4 bg-white border border-gray-200 rounded-2xl font-medium text-gray-700 hover:bg-gray-50 transition inline-block"
+              >
+                Load More Deals
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
