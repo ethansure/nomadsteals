@@ -1,65 +1,229 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { DealCard } from "@/components/DealCard";
+import { CityCard } from "@/components/CityCard";
+import { NewsletterForm } from "@/components/Newsletter";
+import { sampleDeals, popularCities, dealStats } from "@/lib/sample-data";
 
 export default function Home() {
+  const hotDeals = sampleDeals.filter(d => d.isHotDeal);
+  const todayDeals = sampleDeals.slice(0, 6);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main className="min-h-screen bg-gray-50">
+      <Header />
+
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxIDAgNiAyLjY5IDYgNnMtMi42OSA2LTYgNi02LTIuNjktNi02IDIuNjktNiA2LTZ6IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjwvZz48L3N2Zz4=')]" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 py-20 relative">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur rounded-full text-sm mb-6">
+              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <span>Updated {new Date(dealStats.updatedAt).toLocaleTimeString()}</span>
+              <span className="mx-2">•</span>
+              <span>{dealStats.totalDeals.toLocaleString()} deals live</span>
+            </div>
+
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              Today's Best
+              <br />
+              <span className="text-yellow-300">Travel Deals</span>
+            </h1>
+
+            <p className="text-xl text-blue-100 mb-8 max-w-xl">
+              Hand-picked flights, hotels & packages with Value Scores. 
+              Average savings of {dealStats.avgSavings}% across all deals.
+            </p>
+
+            {/* Search/Filter Bar */}
+            <div className="bg-white rounded-2xl p-2 flex flex-col md:flex-row gap-2 shadow-xl">
+              <div className="flex-1 flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
+                <span className="text-gray-400">🔍</span>
+                <input 
+                  type="text" 
+                  placeholder="Where do you want to go?"
+                  className="flex-1 bg-transparent outline-none text-gray-900 placeholder-gray-400"
+                />
+              </div>
+              <div className="flex gap-2">
+                <select className="px-4 py-3 bg-gray-50 rounded-xl text-gray-700 outline-none">
+                  <option>All Types</option>
+                  <option>✈️ Flights</option>
+                  <option>🏨 Hotels</option>
+                  <option>📦 Packages</option>
+                </select>
+                <Link 
+                  href="/deals"
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition"
+                >
+                  Search
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+            {[
+              { label: "Active Deals", value: dealStats.totalDeals, icon: "🎯" },
+              { label: "Avg Savings", value: `${dealStats.avgSavings}%`, icon: "💰" },
+              { label: "Hot Deals", value: dealStats.hotDeals, icon: "🔥" },
+              { label: "Error Fares", value: 5, icon: "⚡" },
+            ].map((stat, i) => (
+              <div key={i} className="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
+                <div className="text-2xl mb-1">{stat.icon}</div>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <div className="text-sm text-blue-200">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Hot Deals Section */}
+      <section className="py-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                🔥 Hot Deals
+                <span className="px-3 py-1 bg-red-100 text-red-600 text-sm font-medium rounded-full">
+                  {hotDeals.length} new
+                </span>
+              </h2>
+              <p className="text-gray-600 mt-1">Incredible prices that won't last long</p>
+            </div>
+            <Link href="/deals?hot=true" className="text-blue-600 font-medium hover:text-blue-700 transition">
+              View all →
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {hotDeals.slice(0, 3).map(deal => (
+              <DealCard key={deal.id} deal={deal} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Cities */}
+      <section className="py-16 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">🌆 Popular Destinations</h2>
+              <p className="text-gray-600 mt-1">Browse deals by city</p>
+            </div>
+            <Link href="/cities" className="text-blue-600 font-medium hover:text-blue-700 transition">
+              All cities →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {popularCities.slice(0, 8).map(city => (
+              <CityCard key={city.code} city={city} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Today's Deals */}
+      <section className="py-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">📅 Today's Deals</h2>
+              <p className="text-gray-600 mt-1">Fresh deals updated daily</p>
+            </div>
+            
+            {/* Sort Options */}
+            <Link 
+              href="/deals" 
+              className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Browse All Deals →
+            </Link>
+          </div>
+
+          {/* Filter Tags */}
+          <div className="flex flex-wrap gap-2 mb-8">
+            {["All", "✈️ Flights", "🏨 Hotels", "📦 Packages", "🔥 Hot Deals"].map((tag, i) => (
+              <Link 
+                key={tag}
+                href={i === 0 ? "/deals" : `/deals?type=${tag.split(" ")[1]?.toLowerCase() || ""}`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                  i === 0 
+                    ? "bg-blue-600 text-white" 
+                    : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
+                }`}
+              >
+                {tag}
+              </Link>
+            ))}
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {todayDeals.map(deal => (
+              <DealCard key={deal.id} deal={deal} />
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link 
+              href="/deals"
+              className="px-8 py-4 bg-white border border-gray-200 rounded-2xl font-medium text-gray-700 hover:bg-gray-50 transition inline-block"
             >
-              Learning
-            </a>{" "}
-            center.
+              Load More Deals
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Value Score Explainer */}
+      <section className="py-16 px-6 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="text-4xl mb-4">⚡</div>
+          <h2 className="text-3xl font-bold mb-4">What's a Value Score?</h2>
+          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+            Our proprietary Value Score (0-100) compares current prices to historical data 
+            to identify truly exceptional deals — not just "on sale" prices.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <div className="grid md:grid-cols-3 gap-6 text-left">
+            <div className="bg-white/5 backdrop-blur rounded-xl p-6">
+              <div className="text-green-400 font-bold text-2xl mb-2">90+</div>
+              <div className="font-semibold mb-1">Incredible</div>
+              <p className="text-gray-400 text-sm">Extremely rare pricing. Book immediately.</p>
+            </div>
+            <div className="bg-white/5 backdrop-blur rounded-xl p-6">
+              <div className="text-lime-400 font-bold text-2xl mb-2">70-89</div>
+              <div className="font-semibold mb-1">Great Value</div>
+              <p className="text-gray-400 text-sm">Well below typical prices. Worth booking.</p>
+            </div>
+            <div className="bg-white/5 backdrop-blur rounded-xl p-6">
+              <div className="text-amber-400 font-bold text-2xl mb-2">50-69</div>
+              <div className="font-semibold mb-1">Good</div>
+              <p className="text-gray-400 text-sm">Solid savings opportunity.</p>
+            </div>
+          </div>
+          <Link 
+            href="/about#value-score"
+            className="inline-block mt-8 text-blue-400 font-medium hover:text-blue-300 transition"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Learn more about Value Scores →
+          </Link>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Newsletter */}
+      <NewsletterForm variant="hero" />
+
+      <Footer />
+    </main>
   );
 }
