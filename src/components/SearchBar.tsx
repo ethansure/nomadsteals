@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { RegionSelect } from './RegionSelect';
 import { formatSearchTitle } from '@/lib/regions';
+import { ArrowLeftRight, X } from "lucide-react";
 
 interface SearchBarProps {
   variant?: 'hero' | 'compact' | 'inline';
@@ -100,7 +101,7 @@ export function SearchBar({
           className="p-2 hover:bg-gray-100 rounded-lg transition"
           title="Swap origin and destination"
         >
-          ⇄
+          <ArrowLeftRight className="w-4 h-4 text-gray-500" />
         </button>
         <RegionSelect
           value={to}
@@ -134,7 +135,7 @@ export function SearchBar({
           onClick={handleSwap}
           className="p-1 hover:bg-gray-100 rounded transition text-gray-400"
         >
-          ⇄
+          <ArrowLeftRight className="w-4 h-4" />
         </button>
         <div className="flex items-center gap-1 text-sm">
           <span className="text-gray-500">To:</span>
@@ -290,9 +291,10 @@ export function SearchResultsHeader({
       </div>
       <button
         onClick={onClear}
-        className="px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-white rounded-lg transition"
+        className="px-4 py-2 text-sm text-gray-600 hover:text-red-600 hover:bg-white rounded-lg transition flex items-center gap-1.5"
       >
-        ✕ Clear search
+        <X className="w-4 h-4" />
+        Clear search
       </button>
     </div>
   );

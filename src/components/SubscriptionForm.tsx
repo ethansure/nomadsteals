@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { getRegionOptions, getAllCities, getPopularCities } from "@/lib/regions";
 import { SubscriptionPreferences, DEFAULT_PREFERENCES, EmailFrequency } from "@/lib/subscriptions/types";
 import { DealType } from "@/lib/types";
+import { Plane, Building2, Package, Mail, Tag, PlaneTakeoff, PlaneLanding, Wallet, Zap, Flame, PartyPopper, Lock } from "lucide-react";
 
 interface SubscriptionFormProps {
   initialEmail?: string;
@@ -13,10 +14,10 @@ interface SubscriptionFormProps {
   onSuccess?: () => void;
 }
 
-const DEAL_TYPES: { value: DealType; label: string; emoji: string }[] = [
-  { value: "flight", label: "Flights", emoji: "✈️" },
-  { value: "hotel", label: "Hotels", emoji: "🏨" },
-  { value: "package", label: "Packages", emoji: "📦" },
+const DEAL_TYPES: { value: DealType; label: string; Icon: typeof Plane }[] = [
+  { value: "flight", label: "Flights", Icon: Plane },
+  { value: "hotel", label: "Hotels", Icon: Building2 },
+  { value: "package", label: "Packages", Icon: Package },
 ];
 
 const FREQUENCIES: { value: EmailFrequency; label: string; desc: string }[] = [
@@ -98,7 +99,9 @@ export function SubscriptionForm({
   if (status === "success") {
     return (
       <div className="text-center p-8 bg-green-50 rounded-2xl border border-green-200">
-        <div className="text-5xl mb-4">🎉</div>
+        <div className="flex justify-center mb-4">
+          <PartyPopper className="w-14 h-14 text-green-600" />
+        </div>
         <h3 className="font-bold text-green-800 text-xl mb-2">
           {mode === "edit" ? "Preferences Updated!" : "Almost There!"}
         </h3>
@@ -147,8 +150,9 @@ export function SubscriptionForm({
         <div className="space-y-6 bg-gray-50 p-6 rounded-xl">
           {/* Email Frequency */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              📬 Email Frequency
+            <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+              <Mail className="w-4 h-4 text-blue-600" />
+              Email Frequency
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {FREQUENCIES.map((freq) => (
@@ -171,8 +175,9 @@ export function SubscriptionForm({
 
           {/* Deal Types */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              🎫 Deal Types
+            <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+              <Tag className="w-4 h-4 text-blue-600" />
+              Deal Types
             </label>
             <div className="flex flex-wrap gap-2">
               {DEAL_TYPES.map((type) => (
@@ -183,13 +188,14 @@ export function SubscriptionForm({
                     ...preferences, 
                     dealTypes: toggleArrayValue(preferences.dealTypes, type.value) 
                   })}
-                  className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition ${
+                  className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition flex items-center gap-1.5 ${
                     preferences.dealTypes.includes(type.value)
                       ? "border-blue-500 bg-blue-50 text-blue-700"
                       : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
                   }`}
                 >
-                  {type.emoji} {type.label}
+                  <type.Icon className="w-4 h-4" />
+                  {type.label}
                 </button>
               ))}
             </div>
@@ -197,8 +203,9 @@ export function SubscriptionForm({
 
           {/* Origin Preferences */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              🛫 Where are you flying from?
+            <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+              <PlaneTakeoff className="w-4 h-4 text-blue-600" />
+              Where are you flying from?
             </label>
             <div className="space-y-3">
               <label className="flex items-center gap-3 cursor-pointer">
@@ -264,8 +271,9 @@ export function SubscriptionForm({
 
           {/* Destination Preferences */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              🛬 Where do you want to go?
+            <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+              <PlaneLanding className="w-4 h-4 text-blue-600" />
+              Where do you want to go?
             </label>
             <div className="space-y-3">
               <label className="flex items-center gap-3 cursor-pointer">
@@ -337,8 +345,9 @@ export function SubscriptionForm({
           {/* Price & Quality Filters */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                💰 Max Price (optional)
+              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                <Wallet className="w-4 h-4 text-blue-600" />
+                Max Price (optional)
               </label>
               <div className="flex items-center gap-2">
                 <span className="text-gray-500">$</span>
@@ -358,8 +367,9 @@ export function SubscriptionForm({
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                ⚡ Min Value Score (optional)
+              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                <Zap className="w-4 h-4 text-blue-600" />
+                Min Value Score (optional)
               </label>
               <input
                 type="number"
@@ -385,7 +395,10 @@ export function SubscriptionForm({
               className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <div>
-              <span className="text-gray-900 font-medium">🔥 Hot Deals Only</span>
+              <span className="text-gray-900 font-medium flex items-center gap-1.5">
+                <Flame className="w-4 h-4 text-red-500" />
+                Hot Deals Only
+              </span>
               <p className="text-xs text-gray-500">Only receive alerts for exceptional, time-sensitive deals</p>
             </div>
           </label>
@@ -413,8 +426,9 @@ export function SubscriptionForm({
       </button>
 
       {mode === "subscribe" && (
-        <p className="text-xs text-gray-500 text-center">
-          🔒 We respect your inbox. No spam, ever. Unsubscribe anytime.
+        <p className="text-xs text-gray-500 text-center flex items-center justify-center gap-1.5">
+          <Lock className="w-3.5 h-3.5" />
+          We respect your inbox. No spam, ever. Unsubscribe anytime.
         </p>
       )}
     </form>

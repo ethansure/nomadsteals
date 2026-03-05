@@ -1,8 +1,51 @@
 @import "tailwindcss";
 
+/* ========================================
+   NomadSteals - Chill Vacation Vibe Theme
+   ======================================== */
+
+:root {
+  /* Primary - Warm Sunset Orange/Coral */
+  --color-coral: #FF6B6B;
+  --color-coral-light: #FFA07A;
+  --color-coral-dark: #E85555;
+  
+  /* Secondary - Ocean Teal/Turquoise */
+  --color-ocean: #20B2AA;
+  --color-ocean-light: #48D1CC;
+  --color-ocean-dark: #178F89;
+  
+  /* Accent - Sandy Beige */
+  --color-sand: #F5DEB3;
+  --color-sand-dark: #DEB887;
+  
+  /* Backgrounds - Soft Cream */
+  --color-cream: #FFF8F0;
+  --color-cream-light: #FFFAF5;
+  --color-cream-dark: #FFF0E0;
+  
+  /* Dark Accents - Warm Charcoal */
+  --color-charcoal: #2D3436;
+  --color-charcoal-light: #4A5154;
+  
+  /* Gradients */
+  --gradient-sunset: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 50%, #FFD93D 100%);
+  --gradient-ocean: linear-gradient(135deg, #20B2AA 0%, #48D1CC 100%);
+  --gradient-tropical: linear-gradient(135deg, #FF6B6B 0%, #20B2AA 100%);
+  --gradient-warm: linear-gradient(135deg, #FFA07A 0%, #FF6B6B 50%, #E85555 100%);
+  --gradient-dreamy: linear-gradient(180deg, #FFD93D 0%, #FF6B6B 40%, #20B2AA 100%);
+}
+
 @layer base {
   body {
     @apply antialiased;
+    background-color: var(--color-cream-light);
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.01em;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
   }
 }
 
@@ -13,4 +56,148 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  
+  /* Vacation Gradients */
+  .bg-sunset {
+    background: var(--gradient-sunset);
+  }
+  
+  .bg-ocean {
+    background: var(--gradient-ocean);
+  }
+  
+  .bg-tropical {
+    background: var(--gradient-tropical);
+  }
+  
+  .bg-warm {
+    background: var(--gradient-warm);
+  }
+  
+  .bg-dreamy {
+    background: var(--gradient-dreamy);
+  }
+  
+  /* Text Gradients */
+  .text-sunset {
+    background: var(--gradient-sunset);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-ocean {
+    background: var(--gradient-ocean);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Soft Shadows */
+  .shadow-soft {
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.08), 
+                0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  
+  .shadow-soft-lg {
+    box-shadow: 0 8px 30px rgba(255, 107, 107, 0.12), 
+                0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+  
+  .shadow-warm {
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.15);
+  }
+  
+  .shadow-ocean {
+    box-shadow: 0 4px 20px rgba(32, 178, 170, 0.15);
+  }
+  
+  /* Wave Pattern */
+  .wave-border-top {
+    position: relative;
+  }
+  
+  .wave-border-top::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 30' preserveAspectRatio='none'%3E%3Cpath d='M0,30 C300,0 600,30 900,15 C1050,7.5 1200,22.5 1200,30 L1200,30 L0,30 Z' fill='%232D3436'/%3E%3C/svg%3E") repeat-x;
+    background-size: 1200px 30px;
+  }
+  
+  /* Palm Leaf Decoration */
+  .palm-decoration {
+    position: relative;
+  }
+  
+  .palm-decoration::after {
+    content: '🌴';
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.1;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  /* Hover Lift Effect */
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(255, 107, 107, 0.15);
+  }
+  
+  /* Relaxed Button Style */
+  .btn-chill {
+    @apply px-6 py-3 rounded-full font-semibold transition-all duration-300;
+    background: var(--gradient-warm);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  }
+  
+  .btn-chill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  }
+  
+  .btn-ocean {
+    @apply px-6 py-3 rounded-full font-semibold transition-all duration-300;
+    background: var(--gradient-ocean);
+    color: white;
+    box-shadow: 0 4px 15px rgba(32, 178, 170, 0.3);
+  }
+  
+  .btn-ocean:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(32, 178, 170, 0.4);
+  }
+}
+
+/* Subtle Background Pattern */
+.bg-pattern-tropical {
+  background-color: var(--color-cream-light);
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FF6B6B' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection Color */
+::selection {
+  background: rgba(255, 107, 107, 0.2);
+  color: var(--color-charcoal);
+}
+
+/* Focus States */
+:focus-visible {
+  outline: 2px solid var(--color-ocean);
+  outline-offset: 2px;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { getValueScoreColor, getValueScoreLabel } from "@/lib/utils";
+import { Lightbulb } from "lucide-react";
 
 interface ValueScoreBadgeProps {
   score: number;
@@ -73,8 +74,9 @@ export function ValueScoreExplainer() {
         ))}
       </div>
       
-      <p className="text-xs text-gray-500 mt-4">
-        💡 Tip: Look for deals with scores above 80 for the best value
+      <p className="text-xs text-gray-500 mt-4 flex items-center gap-1.5">
+        <Lightbulb className="w-3.5 h-3.5" />
+        Tip: Look for deals with scores above 80 for the best value
       </p>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { regions, getAllCities, getPopularCities, getRegionForCity } from '@/lib/regions';
+import { Globe, Building } from "lucide-react";
 
 interface RegionSelectProps {
   value: string;
@@ -109,23 +110,25 @@ export function RegionSelect({
           <div className="flex border-b border-gray-100 bg-gray-50">
             <button
               onClick={() => setActiveTab('regions')}
-              className={`flex-1 px-4 py-2.5 text-sm font-medium transition ${
+              className={`flex-1 px-4 py-2.5 text-sm font-medium transition flex items-center justify-center gap-1.5 ${
                 activeTab === 'regions'
                   ? 'text-blue-600 border-b-2 border-blue-600 bg-white'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              🌍 Regions
+              <Globe className="w-4 h-4" />
+              Regions
             </button>
             <button
               onClick={() => setActiveTab('cities')}
-              className={`flex-1 px-4 py-2.5 text-sm font-medium transition ${
+              className={`flex-1 px-4 py-2.5 text-sm font-medium transition flex items-center justify-center gap-1.5 ${
                 activeTab === 'cities'
                   ? 'text-blue-600 border-b-2 border-blue-600 bg-white'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              🏙️ Cities
+              <Building className="w-4 h-4" />
+              Cities
             </button>
           </div>
 
@@ -220,9 +223,12 @@ export function RegionSelect({
                   onChange('', 'city');
                   setIsOpen(false);
                 }}
-                className="w-full px-3 py-2 text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
+                className="w-full px-3 py-2 text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition flex items-center justify-center gap-1.5"
               >
-                ✕ Clear selection
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Clear selection
               </button>
             </div>
           )}

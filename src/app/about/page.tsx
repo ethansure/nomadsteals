@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { ValueScoreExplainer } from "@/components/ValueScoreBadge";
 import { NewsletterForm } from "@/components/Newsletter";
 import { dealStats } from "@/lib/sample-data";
+import { Search, BarChart3, Plane, Mail, Check } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -17,9 +18,9 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   const teamMembers = [
-    { name: "Deal Hunters", emoji: "🔍", desc: "Our team scours the web 24/7 for the best deals" },
-    { name: "Data Nerds", emoji: "📊", desc: "We analyze historical pricing to calculate Value Scores" },
-    { name: "Travel Lovers", emoji: "✈️", desc: "We're travelers too — we get it" },
+    { name: "Deal Hunters", Icon: Search, desc: "Our team scours the web 24/7 for the best deals" },
+    { name: "Data Nerds", Icon: BarChart3, desc: "We analyze historical pricing to calculate Value Scores" },
+    { name: "Travel Lovers", Icon: Plane, desc: "We're travelers too — we get it" },
   ];
 
   const stats = [
@@ -96,19 +97,19 @@ export default function AboutPage() {
               </p>
               <ul className="space-y-4 text-gray-700">
                 <li className="flex items-start gap-3">
-                  <span className="text-green-500 font-bold">✓</span>
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                   <span><strong>Historical Comparison:</strong> We compare current prices to 12+ months of historical data</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-green-500 font-bold">✓</span>
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                   <span><strong>Seasonal Adjustment:</strong> We account for peak vs. off-peak pricing</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-green-500 font-bold">✓</span>
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                   <span><strong>Route Analysis:</strong> We know what's typical for each route and destination</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-green-500 font-bold">✓</span>
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                   <span><strong>Quality Factor:</strong> We consider the airline/hotel reputation in our scoring</span>
                 </li>
               </ul>
@@ -127,7 +128,11 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-3 gap-6">
             {teamMembers.map((member, i) => (
               <div key={i} className="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100">
-                <div className="text-5xl mb-4">{member.emoji}</div>
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                    <member.Icon className="w-8 h-8 text-white" />
+                  </div>
+                </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
                 <p className="text-gray-600">{member.desc}</p>
               </div>
@@ -173,9 +178,10 @@ export default function AboutPage() {
           <div className="flex flex-wrap justify-center gap-4">
             <a 
               href="mailto:hello@nomadsteals.com"
-              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition"
+              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition flex items-center gap-2"
             >
-              📧 Email Us
+              <Mail className="w-5 h-5" />
+              Email Us
             </a>
             <a 
               href="https://twitter.com/nomadsteals"

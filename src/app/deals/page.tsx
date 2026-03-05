@@ -12,12 +12,20 @@ import { RegionSelectCompact } from "@/components/RegionSelect";
 import { filterDeals, sortDeals, searchDeals } from "@/lib/utils";
 import { formatSearchTitle, getRegion } from "@/lib/regions";
 import { Deal, DealType, SortOption } from "@/lib/types";
+import { Target, Plane, Building2, Package, Flame, Globe, Search, Frown, Palmtree, MapPin, Umbrella } from "lucide-react";
 
-const dealTypes: { value: DealType | "all"; label: string; emoji: string }[] = [
-  { value: "all", label: "All Deals", emoji: "🎯" },
-  { value: "flight", label: "Flights", emoji: "✈️" },
-  { value: "hotel", label: "Hotels", emoji: "🏨" },
-  { value: "package", label: "Packages", emoji: "📦" },
+const DealTypeIcons = {
+  all: Target,
+  flight: Plane,
+  hotel: Building2,
+  package: Package,
+};
+
+const dealTypes: { value: DealType | "all"; label: string; Icon: typeof Target }[] = [
+  { value: "all", label: "All Deals", Icon: Target },
+  { value: "flight", label: "Flights", Icon: Plane },
+  { value: "hotel", label: "Hotels", Icon: Building2 },
+  { value: "package", label: "Packages", Icon: Package },
 ];
 
 const sortOptions: { value: SortOption; label: string }[] = [
@@ -209,13 +217,14 @@ function DealsPageContent() {
                   <button
                     key={type.value}
                     onClick={() => setSelectedType(type.value)}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-1.5 ${
                       selectedType === type.value
                         ? "bg-blue-600 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                   >
-                    {type.emoji} {type.label}
+                    <type.Icon className="w-4 h-4" />
+                    {type.label}
                   </button>
                 ))}
               </div>
@@ -225,13 +234,14 @@ function DealsPageContent() {
               {/* Hot Deals Toggle */}
               <button
                 onClick={() => setShowHotOnly(!showHotOnly)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition flex items-center gap-1.5 ${
                   showHotOnly
                     ? "bg-red-500 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                🔥 Hot Deals Only
+                <Flame className="w-4 h-4" />
+                Hot Deals Only
               </button>
               
               {/* More Filters Toggle (Mobile) */}
@@ -328,7 +338,9 @@ function DealsPageContent() {
                 </div>
               ) : error ? (
                 <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-                  <div className="text-5xl mb-4">😕</div>
+                  <div className="flex justify-center mb-4">
+                    <Frown className="w-14 h-14 text-gray-400" />
+                  </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Oops!</h3>
                   <p className="text-gray-600 mb-6">{error}</p>
                   <button
@@ -346,7 +358,9 @@ function DealsPageContent() {
                 </div>
               ) : (
                 <div className="text-center py-16 bg-white rounded-2xl border border-gray-100">
-                  <div className="text-5xl mb-4">🔍</div>
+                  <div className="flex justify-center mb-4">
+                    <Search className="w-14 h-14 text-gray-400" />
+                  </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">No deals found</h3>
                   <p className="text-gray-600 mb-6">Try adjusting your filters or search terms</p>
                   <button
@@ -368,7 +382,10 @@ function DealsPageContent() {
             <div className="hidden lg:block space-y-6">
               {/* Region Quick Filters */}
               <div className="bg-white rounded-2xl p-5 border border-gray-100">
-                <h3 className="font-semibold text-gray-900 mb-4">🌍 Quick Filters</h3>
+                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-blue-600" />
+                  Quick Filters
+                </h3>
                 
                 <div className="space-y-3">
                   <div>
@@ -411,10 +428,10 @@ function DealsPageContent() {
                   <div className="text-xs font-medium text-gray-500 mb-2">Popular Routes</div>
                   <div className="space-y-1">
                     {[
-                      { label: '🌴 West Coast → Asia', from: 'us-west', to: 'asia-east' },
-                      { label: '🗽 East Coast → Europe', from: 'us-east', to: 'europe-west' },
-                      { label: '🏝️ US → Caribbean', from: '', to: 'caribbean' },
-                      { label: '🌺 US → Hawaii', from: '', to: 'hawaii' },
+                      { label: 'West Coast → Asia', from: 'us-west', to: 'asia-east', Icon: Palmtree },
+                      { label: 'East Coast → Europe', from: 'us-east', to: 'europe-west', Icon: Building2 },
+                      { label: 'US → Caribbean', from: '', to: 'caribbean', Icon: Umbrella },
+                      { label: 'US → Hawaii', from: '', to: 'hawaii', Icon: MapPin },
                     ].map((route, i) => (
                       <button
                         key={i}
@@ -424,8 +441,9 @@ function DealsPageContent() {
                           if (route.to) params.set('toRegion', route.to);
                           router.push(`/deals?${params.toString()}`);
                         }}
-                        className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 rounded-lg transition"
+                        className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 hover:text-blue-700 rounded-lg transition flex items-center gap-2"
                       >
+                        <route.Icon className="w-4 h-4 text-gray-400" />
                         {route.label}
                       </button>
                     ))}

@@ -8,6 +8,7 @@ import { SearchBar } from "@/components/SearchBar";
 import { getServerDeals, getServerStats, formatRelativeTime } from "@/lib/api/server";
 import { popularCities } from "@/lib/sample-data";
 import { Deal } from "@/lib/types";
+import { Target, Wallet, Flame, Zap, Building, Calendar, Plane, Building2, Package } from "lucide-react";
 
 // Force dynamic rendering to always get fresh scraped deals
 export const dynamic = 'force-dynamic';
@@ -69,13 +70,15 @@ export default async function Home() {
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
             {[
-              { label: "Active Deals", value: stats.totalDeals, icon: "🎯" },
-              { label: "Avg Savings", value: `${stats.avgSavings}%`, icon: "💰" },
-              { label: "Hot Deals", value: stats.hotDeals, icon: "🔥" },
-              { label: "Error Fares", value: deals.filter((d) => d.isHistoricLow).length, icon: "⚡" },
+              { label: "Active Deals", value: stats.totalDeals, Icon: Target },
+              { label: "Avg Savings", value: `${stats.avgSavings}%`, Icon: Wallet },
+              { label: "Hot Deals", value: stats.hotDeals, Icon: Flame },
+              { label: "Error Fares", value: deals.filter((d) => d.isHistoricLow).length, Icon: Zap },
             ].map((stat, i) => (
               <div key={i} className="bg-white/10 backdrop-blur rounded-xl p-4 text-center">
-                <div className="text-2xl mb-1">{stat.icon}</div>
+                <div className="flex justify-center mb-1">
+                  <stat.Icon className="w-6 h-6" />
+                </div>
                 <div className="text-2xl font-bold">{stat.value}</div>
                 <div className="text-sm text-blue-200">{stat.label}</div>
               </div>
@@ -91,7 +94,8 @@ export default async function Home() {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                  🔥 Hot Deals
+                  <Flame className="w-8 h-8 text-red-500" />
+                  Hot Deals
                   <span className="px-3 py-1 bg-red-100 text-red-600 text-sm font-medium rounded-full">
                     {hotDeals.length} new
                   </span>
@@ -117,7 +121,10 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">🌆 Popular Destinations</h2>
+              <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <Building className="w-8 h-8 text-indigo-500" />
+                Popular Destinations
+              </h2>
               <p className="text-gray-600 mt-1">Browse deals by city</p>
             </div>
             <Link href="/cities" className="text-blue-600 font-medium hover:text-blue-700 transition">
@@ -138,7 +145,10 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">📅 Today's Deals</h2>
+              <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                <Calendar className="w-8 h-8 text-blue-500" />
+                Today's Deals
+              </h2>
               <p className="text-gray-600 mt-1">Fresh deals updated daily</p>
             </div>
             
@@ -153,17 +163,24 @@ export default async function Home() {
 
           {/* Filter Tags */}
           <div className="flex flex-wrap gap-2 mb-8">
-            {["All", "✈️ Flights", "🏨 Hotels", "📦 Packages", "🔥 Hot Deals"].map((tag, i) => (
+            {[
+              { label: "All", href: "/deals", Icon: null },
+              { label: "Flights", href: "/deals?type=flight", Icon: Plane },
+              { label: "Hotels", href: "/deals?type=hotel", Icon: Building2 },
+              { label: "Packages", href: "/deals?type=package", Icon: Package },
+              { label: "Hot Deals", href: "/deals?hot=true", Icon: Flame },
+            ].map((tag, i) => (
               <Link 
-                key={tag}
-                href={i === 0 ? "/deals" : `/deals?type=${tag.split(" ")[1]?.toLowerCase() || ""}`}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                key={tag.label}
+                href={tag.href}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition flex items-center gap-1.5 ${
                   i === 0 
                     ? "bg-blue-600 text-white" 
                     : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
                 }`}
               >
-                {tag}
+                {tag.Icon && <tag.Icon className="w-4 h-4" />}
+                {tag.label}
               </Link>
             ))}
           </div>
@@ -176,7 +193,9 @@ export default async function Home() {
             </div>
           ) : (
             <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-              <div className="text-4xl mb-4">✈️</div>
+              <div className="flex justify-center mb-4">
+                <Plane className="w-12 h-12 text-gray-400" />
+              </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">No deals available yet</h3>
               <p className="text-gray-600 mb-4">Check back soon for the latest travel deals!</p>
             </div>
@@ -198,7 +217,9 @@ export default async function Home() {
       {/* Value Score Explainer */}
       <section className="py-16 px-6 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="text-4xl mb-4">⚡</div>
+          <div className="flex justify-center mb-4">
+            <Zap className="w-12 h-12 text-yellow-400" />
+          </div>
           <h2 className="text-3xl font-bold mb-4">What's a Value Score?</h2>
           <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
             Our proprietary Value Score (0-100) compares current prices to historical data 
