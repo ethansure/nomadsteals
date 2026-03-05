@@ -8,7 +8,9 @@ import { getServerDeals, getServerStats, formatRelativeTime } from "@/lib/api/se
 import { popularCities } from "@/lib/sample-data";
 import { Deal } from "@/lib/types";
 
-export const revalidate = 300; // Revalidate every 5 minutes
+// Force dynamic rendering to always get fresh scraped deals
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function Home() {
   // Fetch real deals from data store

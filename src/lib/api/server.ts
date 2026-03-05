@@ -1,9 +1,9 @@
-// Server-side data access (for server components and build time)
-// Uses the file-based data store directly without HTTP requests
+// Server-side data access (for server components)
+// Scrapes fresh data if no cached deals exist
 
 import { getDeals, getDealById, getDealsForCity, getStats, getDealsMetadata, getFilteredDeals } from './deals-store';
+import { aggregateDeals } from './deal-aggregator';
 import { Deal } from '../types';
-import { sampleDeals } from '../sample-data';
 
 export interface ServerDealsResponse {
   success: boolean;
@@ -36,6 +36,19 @@ export interface ServerStatsResponse {
   };
 }
 
+// Ensure we have deals - scrape if empty
+async function ensureDeals(): Promise<void> {
+  const existingDeals = await getDeals();
+  if (existingDeals.length === 0) {
+    console.log('[Server] No cached deals, scraping fresh data...');
+    try {
+      await aggregateDeals({ maxDealsPerSource: 25 });
+    } catch (error) {
+      console.error('[Server] Scraping failed:', error);
+    }
+  }
+}
+
 // Server-side: Get all deals
 export async function getServerDeals(options: {
   limit?: number;
@@ -44,6 +57,9 @@ export async function getServerDeals(options: {
   destination?: string;
 } = {}): Promise<ServerDealsResponse> {
   try {
+    // Ensure we have deals (will scrape if empty)
+    await ensureDeals();
+    
     const { deals, total } = await getFilteredDeals({
       type: options.type,
       destination: options.destination,
@@ -75,23 +91,23 @@ export async function getServerDeals(options: {
     };
   } catch (error) {
     console.error('Error in getServerDeals:', error);
-    // Fall back to sample data
+    // Return empty on error - let the aggregator handle fallback
     return {
-      success: true,
-      deals: sampleDeals.slice(0, options.limit || 20),
+      success: false,
+      deals: [],
       pagination: {
-        total: sampleDeals.length,
+        total: 0,
         limit: options.limit || 20,
         offset: options.offset || 0,
         hasMore: false,
       },
       meta: {
         lastUpdated: new Date().toISOString(),
-        sources: ['Sample Data'],
+        sources: [],
         stats: {
-          totalDeals: sampleDeals.length,
-          avgSavings: 42,
-          hotDeals: sampleDeals.filter(d => d.isHotDeal).length,
+          totalDeals: 0,
+          avgSavings: 0,
+          hotDeals: 0,
         },
       },
     };
@@ -101,27 +117,23 @@ export async function getServerDeals(options: {
 // Server-side: Get single deal
 export async function getServerDeal(id: string): Promise<{ success: boolean; deal: Deal | null }> {
   try {
+    await ensureDeals();
     const deal = await getDealById(id);
-    if (deal) {
-      return { success: true, deal };
-    }
+    return { success: !!deal, deal: deal || null };
   } catch (error) {
     console.error('Error in getServerDeal:', error);
+    return { success: false, deal: null };
   }
-  
-  // Fall back to sample data
-  const sampleDeal = sampleDeals.find(d => d.id === id);
-  return { success: !!sampleDeal, deal: sampleDeal || null };
 }
 
 // Server-side: Get deals for a city
 export async function getServerCityDeals(slug: string): Promise<{ success: boolean; deals: Deal[]; total: number }> {
   try {
+    await ensureDeals();
     const deals = await getDealsForCity(slug);
     return { success: true, deals, total: deals.length };
   } catch (error) {
     console.error('Error in getServerCityDeals:', error);
-    // Return empty array on error
     return { success: true, deals: [], total: 0 };
   }
 }
