@@ -1,6 +1,6 @@
 // Deals Storage Service
-// Uses in-memory cache with fallback to demo data
-// Note: Vercel serverless has read-only filesystem, so we can't persist to files
+// Uses Vercel Blob Storage for persistence in production
+// Falls back to file storage for local development
 //
 // FRESHNESS & STORAGE LOGIC:
 // - Only show deals from last 7 days by default (configurable via days param)
@@ -11,6 +11,20 @@
 import { Deal, DealStatus } from '../types';
 import { promises as fs } from 'fs';
 import path from 'path';
+import {
+  getDealsFromBlob,
+  getAllDealsFromBlob,
+  getArchivedDealsFromBlob,
+  saveDealsToBlob,
+  getStatsFromBlob,
+  archiveExpiredDealsInBlob,
+  markStaleDealsInactiveInBlob,
+} from './blob-store';
+
+// Check if Blob storage is configured
+function useBlobStorage(): boolean {
+  return !!process.env.BLOB_READ_WRITE_TOKEN;
+}
 
 // Default freshness window in days
 const DEFAULT_FRESHNESS_DAYS = 7;
@@ -78,15 +92,20 @@ async function isWriteable(): Promise<boolean> {
   }
 }
 
-// Read active deals from storage (memory first, then file)
+// Read active deals from storage (Blob first, then memory, then file)
 export async function getDeals(): Promise<Deal[]> {
+  // Use Blob storage if configured (production)
+  if (useBlobStorage()) {
+    return getDealsFromBlob();
+  }
+
   // Check memory cache first
   if (memoryCache?.deals && memoryCache.deals.length > 0) {
     // Filter to only return active deals
     return memoryCache.deals.filter(d => d.status !== 'expired' && d.status !== 'archived');
   }
 
-  // Try file storage
+  // Try file storage (local development)
   try {
     if (await isWriteable()) {
       const data = await fs.readFile(DEALS_FILE, 'utf-8');
@@ -128,6 +147,9 @@ async function getArchivedDealsFromFile(): Promise<Deal[]> {
 
 // Get all deals including archived
 export async function getAllDeals(): Promise<Deal[]> {
+  if (useBlobStorage()) {
+    return getAllDealsFromBlob();
+  }
   const activeDeals = await getDeals();
   const archivedDeals = await getArchivedDeals();
   return [...activeDeals, ...archivedDeals];
@@ -135,6 +157,9 @@ export async function getAllDeals(): Promise<Deal[]> {
 
 // Get archived/expired deals
 export async function getArchivedDeals(): Promise<Deal[]> {
+  if (useBlobStorage()) {
+    return getArchivedDealsFromBlob();
+  }
   if (memoryCache?.archivedDeals) {
     return memoryCache.archivedDeals;
   }
@@ -144,9 +169,14 @@ export async function getArchivedDeals(): Promise<Deal[]> {
 // Write deals to storage (APPEND mode with deduplication)
 // Never overwrites - merges new deals with existing, updates timestamps
 export async function saveDeals(deals: Deal[], sources: string[]): Promise<void> {
+  // Use Blob storage if configured (production)
+  if (useBlobStorage()) {
+    return saveDealsToBlob(deals, sources);
+  }
+
   const now = new Date().toISOString();
   
-  // Get existing deals for deduplication
+  // Get existing deals for deduplication (local file storage)
   const existingDeals = await getAllStoredDeals();
   
   // Build signature map from existing deals
@@ -482,6 +512,11 @@ export async function getDealsForCity(citySlug: string, includeArchived: boolean
 
 // Get statistics
 export async function getStats(): Promise<StatsData> {
+  if (useBlobStorage()) {
+    const blobStats = await getStatsFromBlob();
+    if (blobStats) return blobStats;
+  }
+
   if (memoryCache?.stats) {
     return memoryCache.stats;
   }
@@ -652,6 +687,10 @@ export async function getFreshDeals(days: number = DEFAULT_FRESHNESS_DAYS): Prom
 
 // Mark stale deals as inactive (not seen in recent scrapes)
 export async function markStaleDealsInactive(): Promise<number> {
+  if (useBlobStorage()) {
+    return markStaleDealsInactiveInBlob();
+  }
+  
   const deals = await getAllStoredDeals();
   let markedCount = 0;
   
@@ -768,5 +807,8 @@ export async function archiveExpiredDeals(): Promise<number> {
 
 // Legacy function - now archives instead of removes
 export async function removeExpiredDeals(): Promise<number> {
+  if (useBlobStorage()) {
+    return archiveExpiredDealsInBlob();
+  }
   return archiveExpiredDeals();
 }
