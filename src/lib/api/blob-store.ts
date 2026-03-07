@@ -178,7 +178,7 @@ export async function saveDealsToBlob(newDeals: Deal[], sources: string[]): Prom
 
     // Save new blob
     await put(DEALS_BLOB_NAME, JSON.stringify(data), {
-      access: 'public',
+      access: 'private',
       contentType: 'application/json',
     });
 
@@ -224,7 +224,7 @@ async function saveStatsToBlob(deals: Deal[]): Promise<void> {
   }
 
   await put(STATS_BLOB_NAME, JSON.stringify(stats), {
-    access: 'public',
+    access: 'private',
     contentType: 'application/json',
   });
 }
@@ -293,7 +293,7 @@ export async function archiveExpiredDealsInBlob(): Promise<number> {
       }
       
       await put(ARCHIVED_BLOB_NAME, JSON.stringify({ deals: archivedDeals, lastUpdated: now.toISOString() }), {
-        access: 'public',
+        access: 'private',
         contentType: 'application/json',
       });
       
@@ -352,7 +352,7 @@ export async function markStaleDealsInactiveInBlob(): Promise<number> {
       }
       
       await put(DEALS_BLOB_NAME, JSON.stringify(newData), {
-        access: 'public',
+        access: 'private',
         contentType: 'application/json',
       });
       
