@@ -66,7 +66,7 @@ export function Header() {
               href="/newsletter"
               className="px-5 py-2.5 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-[#FF6B6B]/25 transition-all duration-300 hover:-translate-y-0.5"
             >
-              {t('subscribeFree')} ✨
+              {t('subscribeFree')}
             </Link>
           </div>
 
@@ -165,7 +165,7 @@ export function Header() {
               className="block mx-4 px-4 py-4 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white rounded-2xl font-semibold text-center mt-4 shadow-lg shadow-[#FF6B6B]/20"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Join the Adventure ✈️
+              Join the Adventure
             </Link>
           </nav>
         )}

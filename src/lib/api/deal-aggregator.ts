@@ -51,16 +51,28 @@ export async function aggregateDeals(options: {
     }
   });
   
-  // Ensure we have at least 50 deals by supplementing with demo data
+  // Log if we have fewer deals than expected, but DO NOT add demo data
+  // Ethan's requirement: only show verified real deals, no uncertain info
   const MIN_DEALS = 50;
   if (deals.length < MIN_DEALS) {
-    console.log(`[Aggregator] Only ${deals.length} deals, supplementing with demo data to reach ${MIN_DEALS}`);
-    const demoDeals = generateDemoDeals(MIN_DEALS - deals.length);
-    deals = [...deals, ...demoDeals];
-    if (!sources.includes('NomadSteals Picks')) {
-      sources.push('NomadSteals Picks');
-    }
+    console.log(`[Aggregator] Only ${deals.length} deals (below ${MIN_DEALS} target). NOT adding demo data - showing only verified deals.`);
   }
+
+  // Filter out any deals with generic Google Flights links (not real deals)
+  deals = deals.filter(deal => {
+    if (!deal.bookingUrl) return false;
+    try {
+      const url = new URL(deal.bookingUrl);
+      // Reject generic Google Flights search links
+      if (url.hostname === 'www.google.com' && url.pathname.includes('/travel/flights')) {
+        console.log(`[Aggregator] Filtered out generic link: ${deal.title}`);
+        return false;
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  });
 
   // Sort by value score
   deals.sort((a, b) => b.valueScore - a.valueScore);

@@ -132,7 +132,7 @@ export function Footer() {
                     href={`/cities/${city.code.toLowerCase()}`} 
                     className="hover:text-[#48D1CC] transition-colors duration-300 flex items-center gap-2"
                   >
-                    <span className="text-base">{city.name === 'Tokyo' ? '🗼' : city.name === 'Paris' ? '🗼' : city.name === 'Bali' ? '🏝️' : city.name === 'New York' ? '🗽' : '✈️'}</span>
+                    <Plane className="w-4 h-4 text-white/40" />
                     {city.name}
                   </Link>
                 </li>
