@@ -33,7 +33,7 @@ import {
 
 // Check if hybrid storage (Postgres) is configured
 function useHybridStorage(): boolean {
-  return !!process.env.POSTGRES_URL;
+  return !!(process.env.DATABASE_URL || process.env.POSTGRES_URL);
 }
 
 // Check if Blob storage is configured

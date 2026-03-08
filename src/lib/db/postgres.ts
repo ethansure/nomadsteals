@@ -1,6 +1,26 @@
-// Vercel Postgres client
-import { sql } from '@vercel/postgres';
+// Postgres client (works with Supabase, Neon, Vercel Postgres, etc.)
+import { Pool } from 'pg';
 import { Deal, DealStatus } from '../types';
+
+// Create connection pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+});
+
+// Helper to run queries
+async function query(text: string, params?: any[]) {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(text, params);
+    return result;
+  } finally {
+    client.release();
+  }
+}
 
 // Convert database row to Deal object
 function rowToDeal(row: any): Deal {
@@ -47,9 +67,9 @@ function rowToDeal(row: any): Deal {
   };
 }
 
-// Check if Postgres is configured
+// Check if Postgres is configured (Supabase, Vercel, Neon, etc.)
 export function isPostgresConfigured(): boolean {
-  return !!process.env.POSTGRES_URL;
+  return !!(process.env.DATABASE_URL || process.env.POSTGRES_URL);
 }
 
 // Get all active deals with optional filters
@@ -98,11 +118,11 @@ export async function getDealsFromPostgres(options: {
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
     // Get total count
-    const countResult = await sql.query(`SELECT COUNT(*) as count FROM deals ${whereClause}`);
+    const countResult = await query(`SELECT COUNT(*) as count FROM deals ${whereClause}`);
     const total = parseInt(countResult.rows[0].count);
 
     // Get deals
-    const result = await sql.query(`
+    const result = await query(`
       SELECT * FROM deals 
       ${whereClause}
       ORDER BY value_score DESC, scraped_at DESC
@@ -122,7 +142,7 @@ export async function getHotDealsFromPostgres(limit: number = 50): Promise<Deal[
   if (!isPostgresConfigured()) return [];
 
   try {
-    const result = await sql.query(`
+    const result = await query(`
       SELECT * FROM deals 
       WHERE is_active = true AND status = 'active'
       ORDER BY value_score DESC, is_hot_deal DESC
@@ -140,7 +160,7 @@ export async function getDealByIdFromPostgres(id: string): Promise<Deal | null> 
   if (!isPostgresConfigured()) return null;
 
   try {
-    const result = await sql.query(`SELECT * FROM deals WHERE id = $1`, [id]);
+    const result = await query(`SELECT * FROM deals WHERE id = $1`, [id]);
     if (result.rows.length === 0) return null;
     return rowToDeal(result.rows[0]);
   } catch (error) {
@@ -160,7 +180,7 @@ export async function saveDealsToPostgres(deals: Deal[]): Promise<number> {
     for (const deal of deals) {
       const signature = deal.dealSignature || createDealSignature(deal);
       
-      await sql.query(`
+      await query(`
         INSERT INTO deals (
           id, deal_signature, type, title, description,
           original_price, current_price, currency, savings_percent, value_score,
@@ -221,7 +241,7 @@ export async function markStaleDealsInPostgres(hoursThreshold: number = 24): Pro
   if (!isPostgresConfigured()) return 0;
 
   try {
-    const result = await sql.query(`
+    const result = await query(`
       UPDATE deals 
       SET is_active = false, status = 'archived', archived_at = NOW()
       WHERE is_active = true 
@@ -245,7 +265,7 @@ export async function archiveExpiredDealsInPostgres(): Promise<number> {
   if (!isPostgresConfigured()) return 0;
 
   try {
-    const result = await sql.query(`
+    const result = await query(`
       UPDATE deals 
       SET status = 'expired', expired_at = NOW()
       WHERE status = 'active' AND book_by_date < CURRENT_DATE
@@ -276,7 +296,7 @@ export async function getStatsFromPostgres(): Promise<{
   }
 
   try {
-    const result = await sql.query(`
+    const result = await query(`
       SELECT 
         COUNT(*) as total_deals,
         COUNT(*) FILTER (WHERE is_active = true AND status = 'active') as active_deals,
@@ -285,7 +305,7 @@ export async function getStatsFromPostgres(): Promise<{
       FROM deals
     `);
 
-    const sourceResult = await sql.query(`
+    const sourceResult = await query(`
       SELECT source, COUNT(*) as count 
       FROM deals 
       WHERE is_active = true AND status = 'active'
@@ -315,7 +335,7 @@ export async function getStatsFromPostgres(): Promise<{
 async function updateStatsInPostgres(): Promise<void> {
   try {
     const stats = await getStatsFromPostgres();
-    await sql.query(`
+    await query(`
       UPDATE deal_stats SET
         total_deals = $1,
         active_deals = $2,
@@ -350,7 +370,7 @@ export async function initializePostgres(): Promise<boolean> {
 
   try {
     // Run schema SQL
-    await sql.query(`
+    await query(`
       CREATE TABLE IF NOT EXISTS deals (
         id VARCHAR(255) PRIMARY KEY,
         deal_signature VARCHAR(512) UNIQUE,
@@ -395,7 +415,7 @@ export async function initializePostgres(): Promise<boolean> {
       )
     `);
 
-    await sql.query(`
+    await query(`
       CREATE TABLE IF NOT EXISTS deal_stats (
         id SERIAL PRIMARY KEY,
         total_deals INTEGER DEFAULT 0,
@@ -407,14 +427,14 @@ export async function initializePostgres(): Promise<boolean> {
       )
     `);
 
-    await sql.query(`
+    await query(`
       INSERT INTO deal_stats (id, total_deals) VALUES (1, 0) ON CONFLICT (id) DO NOTHING
     `);
 
     // Create indexes
-    await sql.query(`CREATE INDEX IF NOT EXISTS idx_deals_value_score ON deals(value_score DESC)`);
-    await sql.query(`CREATE INDEX IF NOT EXISTS idx_deals_is_active ON deals(is_active)`);
-    await sql.query(`CREATE INDEX IF NOT EXISTS idx_deals_status ON deals(status)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_deals_value_score ON deals(value_score DESC)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_deals_is_active ON deals(is_active)`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_deals_status ON deals(status)`);
 
     console.log('[Postgres] Database initialized');
     return true;
