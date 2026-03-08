@@ -13,9 +13,17 @@ function getPool(): Pool {
     if (!connectionString) {
       throw new Error('POSTGRES_URL or DATABASE_URL not configured');
     }
+    
+    // Supabase requires SSL but we need to accept their cert
+    const sslConfig = connectionString.includes('supabase') 
+      ? { rejectUnauthorized: false }
+      : process.env.NODE_ENV === 'production' 
+        ? { rejectUnauthorized: false }
+        : false;
+    
     pool = new Pool({
       connectionString,
-      ssl: { rejectUnauthorized: false },
+      ssl: sslConfig,
       max: 10,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 10000,
