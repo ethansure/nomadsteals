@@ -120,10 +120,10 @@ function HistoryPageContent() {
             <h1 className="text-4xl md:text-5xl font-bold">Deal History</h1>
           </div>
           <p className="text-white/90 text-lg max-w-2xl">
-            Browse past deals to see price trends and historical offers.
+            Browse all deals we've discovered. Track price trends and see what's still available.
             {totalArchived > 0 && (
               <span className="block mt-2">
-                <span className="font-bold">{totalArchived.toLocaleString()}</span> deals in our archive.
+                <span className="font-bold">{totalArchived.toLocaleString()}</span> deals tracked.
               </span>
             )}
           </p>
@@ -234,10 +234,10 @@ function HistoryPageContent() {
           <div className="flex items-center justify-between mb-8">
             <p className="text-[#2D3436]/60">
               {loading ? (
-                'Loading historical deals...'
+                'Loading deals...'
               ) : (
                 <>
-                  Found <span className="font-bold text-[#2D3436]">{total}</span> expired deals
+                  Found <span className="font-bold text-[#2D3436]">{total}</span> deals
                   {hasFilters && ' matching your filters'}
                 </>
               )}
@@ -280,16 +280,24 @@ function HistoryPageContent() {
           ) : deals.length > 0 ? (
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {deals.map(deal => (
-                  <div key={deal.id} className="relative">
-                    {/* Expired Badge */}
-                    <div className="absolute top-3 left-3 z-10 px-3 py-1 bg-[#6B5B95]/90 text-white text-xs font-semibold rounded-full flex items-center gap-1">
-                      <History className="w-3 h-3" />
-                      Expired {formatRelativeTime(deal.expiredAt || deal.bookByDate)}
+                {deals.map(deal => {
+                  const isExpired = new Date(deal.bookByDate) < new Date();
+                  return (
+                    <div key={deal.id} className="relative">
+                      {/* Status Badge */}
+                      <div className={`absolute top-3 left-3 z-10 px-3 py-1 text-white text-xs font-semibold rounded-full flex items-center gap-1 ${
+                        isExpired ? 'bg-[#6B5B95]/90' : 'bg-green-500/90'
+                      }`}>
+                        <History className="w-3 h-3" />
+                        {isExpired 
+                          ? `Expired ${formatRelativeTime(deal.bookByDate)}`
+                          : `Active · Book by ${new Date(deal.bookByDate).toLocaleDateString()}`
+                        }
+                      </div>
+                      <DealCard deal={deal} />
                     </div>
-                    <DealCard deal={deal} />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               
               {/* Pagination */}
@@ -347,11 +355,11 @@ function HistoryPageContent() {
           ) : (
             <div className="text-center py-20 bg-white rounded-3xl border border-[#6B5B95]/10 shadow-soft">
               <div className="text-6xl mb-4">📭</div>
-              <h3 className="text-xl font-bold text-[#2D3436] mb-2">No historical deals found</h3>
+              <h3 className="text-xl font-bold text-[#2D3436] mb-2">No deals found</h3>
               <p className="text-[#2D3436]/60 mb-6">
                 {hasFilters 
                   ? 'Try adjusting your filters to see more results'
-                  : 'Deal history will appear here as deals expire'
+                  : 'Deals will appear here as we discover them'
                 }
               </p>
               {hasFilters && (

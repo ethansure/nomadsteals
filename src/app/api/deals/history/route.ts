@@ -66,22 +66,30 @@ export async function GET(request: NextRequest) {
       });
     }
     
-    // Standard history query (archived/expired deals)
+    // Return ALL deals we've ever discovered (active + expired)
+    // This shows the complete history of deals found
     const filters = {
       destination: searchParams.get('destination') || searchParams.get('to') || undefined,
       origin: searchParams.get('origin') || searchParams.get('from') || undefined,
-      dateFrom: searchParams.get('dateFrom') || searchParams.get('from_date') || undefined,
-      dateTo: searchParams.get('dateTo') || searchParams.get('to_date') || undefined,
+      days: 0, // No freshness limit - show all deals ever found
+      includeInactive: true, // Include deals no longer being tracked
       limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 20,
       offset: searchParams.get('offset') ? parseInt(searchParams.get('offset')!) : 0,
     };
     
-    const { deals, total } = await getHistoricalDeals(filters);
+    const { deals, total } = await getFilteredDeals(filters);
     const stats = await getStats();
+    
+    // Sort by discovery date (most recent first)
+    const sortedDeals = deals.sort((a, b) => {
+      const dateA = new Date(a.scrapedAt || a.firstSeenAt || a.postedAt || 0);
+      const dateB = new Date(b.scrapedAt || b.firstSeenAt || b.postedAt || 0);
+      return dateB.getTime() - dateA.getTime();
+    });
     
     return NextResponse.json({
       success: true,
-      deals,
+      deals: sortedDeals,
       pagination: {
         total,
         limit: filters.limit,
@@ -89,7 +97,7 @@ export async function GET(request: NextRequest) {
         hasMore: (filters.offset || 0) + deals.length < total,
       },
       meta: {
-        totalArchived: stats.archivedDeals || 0,
+        totalArchived: total, // Total deals tracked
       },
     });
   } catch (error) {
