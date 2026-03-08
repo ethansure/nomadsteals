@@ -1,6 +1,11 @@
 // Deals Storage Service
-// Uses Vercel Blob Storage for persistence in production
-// Falls back to file storage for local development
+// Uses hybrid storage (Postgres + KV) when configured
+// Falls back to Vercel Blob Storage or file storage
+//
+// Storage priority:
+// 1. Postgres + KV (hybrid) - best for production
+// 2. Vercel Blob - simpler but limited
+// 3. File storage - local development only
 //
 // FRESHNESS & STORAGE LOGIC:
 // - Only show deals from last 7 days by default (configurable via days param)
@@ -11,6 +16,11 @@
 import { Deal, DealStatus } from '../types';
 import { promises as fs } from 'fs';
 import path from 'path';
+
+// Import hybrid store (Postgres + KV)
+import * as hybridStore from '../db/hybrid-store';
+
+// Import blob store as fallback
 import {
   getDealsFromBlob,
   getAllDealsFromBlob,
@@ -20,6 +30,11 @@ import {
   archiveExpiredDealsInBlob,
   markStaleDealsInactiveInBlob,
 } from './blob-store';
+
+// Check if hybrid storage (Postgres) is configured
+function useHybridStorage(): boolean {
+  return !!process.env.POSTGRES_URL;
+}
 
 // Check if Blob storage is configured
 function useBlobStorage(): boolean {
@@ -92,9 +107,14 @@ async function isWriteable(): Promise<boolean> {
   }
 }
 
-// Read active deals from storage (Blob first, then memory, then file)
+// Read active deals from storage (Hybrid > Blob > memory > file)
 export async function getDeals(): Promise<Deal[]> {
-  // Use Blob storage if configured (production)
+  // Use hybrid storage if Postgres is configured (best for production)
+  if (useHybridStorage()) {
+    return hybridStore.getDeals();
+  }
+  
+  // Use Blob storage if configured
   if (useBlobStorage()) {
     return getDealsFromBlob();
   }
@@ -169,6 +189,11 @@ export async function getArchivedDeals(): Promise<Deal[]> {
 // Write deals to storage (APPEND mode with deduplication)
 // Never overwrites - merges new deals with existing, updates timestamps
 export async function saveDeals(deals: Deal[], sources: string[]): Promise<void> {
+  // Use hybrid storage if Postgres is configured
+  if (useHybridStorage()) {
+    return hybridStore.saveDeals(deals, sources);
+  }
+  
   // Use Blob storage if configured (production)
   if (useBlobStorage()) {
     return saveDealsToBlob(deals, sources);
@@ -341,6 +366,11 @@ export async function getFilteredDeals(filters: {
   limit?: number;
   offset?: number;
 }): Promise<{ deals: Deal[]; total: number }> {
+  // Use hybrid storage for filtered queries (Postgres handles filtering efficiently)
+  if (useHybridStorage()) {
+    return hybridStore.getFilteredDeals(filters);
+  }
+  
   let deals: Deal[];
   
   // Get deals based on status filter
@@ -512,6 +542,11 @@ export async function getDealsForCity(citySlug: string, includeArchived: boolean
 
 // Get statistics
 export async function getStats(): Promise<StatsData> {
+  // Use hybrid storage if configured
+  if (useHybridStorage()) {
+    return hybridStore.getStats();
+  }
+  
   if (useBlobStorage()) {
     const blobStats = await getStatsFromBlob();
     if (blobStats) return blobStats;
@@ -687,6 +722,11 @@ export async function getFreshDeals(days: number = DEFAULT_FRESHNESS_DAYS): Prom
 
 // Mark stale deals as inactive (not seen in recent scrapes)
 export async function markStaleDealsInactive(): Promise<number> {
+  // Use hybrid storage if configured
+  if (useHybridStorage()) {
+    return hybridStore.markStaleDealsInactive();
+  }
+  
   if (useBlobStorage()) {
     return markStaleDealsInactiveInBlob();
   }
@@ -807,6 +847,11 @@ export async function archiveExpiredDeals(): Promise<number> {
 
 // Legacy function - now archives instead of removes
 export async function removeExpiredDeals(): Promise<number> {
+  // Use hybrid storage if configured
+  if (useHybridStorage()) {
+    return hybridStore.removeExpiredDeals();
+  }
+  
   if (useBlobStorage()) {
     return archiveExpiredDealsInBlob();
   }
