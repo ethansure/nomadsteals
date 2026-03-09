@@ -222,6 +222,19 @@ export async function getFilteredDeals(filters: {
   };
 }
 
+// Helper to safely convert any date to ISO string or null
+function toISODate(value: unknown): string | null {
+  if (!value) return null;
+  try {
+    const dateStr = String(value);
+    const parsed = new Date(dateStr);
+    if (isNaN(parsed.getTime())) return null;
+    return parsed.toISOString().split('T')[0]; // YYYY-MM-DD for DATE type
+  } catch {
+    return null;
+  }
+}
+
 // Upsert deals (insert or update)
 export async function upsertDeals(deals: Deal[]): Promise<number> {
   if (deals.length === 0) return 0;
@@ -231,8 +244,21 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
 
   for (const deal of deals) {
     try {
+      // Skip deals missing required fields
+      if (!deal.id || !deal.title || !deal.destinationCity || !deal.source || !deal.bookingUrl || typeof deal.currentPrice !== 'number') {
+        console.error(`[Postgres] Skipping deal - missing required fields:`, {
+          id: deal.id || '(missing)', 
+          title: !!deal.title, 
+          destinationCity: !!deal.destinationCity,
+          source: !!deal.source, 
+          bookingUrl: !!deal.bookingUrl,
+          currentPrice: deal.currentPrice
+        });
+        continue;
+      }
+      
       // Ensure dates are valid or null
-      const bookByDate = deal.bookByDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const bookByDate = toISODate(deal.bookByDate) || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
       
       await sql`
         INSERT INTO deals (
