@@ -296,6 +296,13 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
       upsertedCount++;
     } catch (error) {
       console.error(`[Postgres] Failed to upsert deal ${deal.id}:`, error);
+      console.error(`[Postgres] Deal data:`, JSON.stringify({
+        id: deal.id,
+        title: deal.title?.substring(0, 50),
+        bookByDate: deal.bookByDate,
+        currentPrice: deal.currentPrice,
+        destinationCity: deal.destinationCity,
+      }));
     }
   }
 
