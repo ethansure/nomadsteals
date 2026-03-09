@@ -44,11 +44,13 @@ export async function getServerDeals(options: {
 } = {}): Promise<ServerDealsResponse> {
   try {
     // Read from storage only - scraping done by cron
+    // Filter to today's deals only (discovered in last 24 hours)
     const { deals, total } = await getFilteredDeals({
       type: options.type,
       destination: options.destination,
       limit: options.limit || 20,
       offset: options.offset || 0,
+      days: 1, // Only show deals from last 24 hours
     });
     
     const stats = await getStats();
