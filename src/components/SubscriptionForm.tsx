@@ -1,10 +1,123 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getRegionOptions, getAllCities, getPopularCities } from "@/lib/regions";
 import { SubscriptionPreferences, DEFAULT_PREFERENCES, EmailFrequency } from "@/lib/subscriptions/types";
 import { DealType } from "@/lib/types";
-import { Plane, Building2, Package, Mail, Tag, PlaneTakeoff, PlaneLanding, Wallet, Zap, Flame, PartyPopper, Lock } from "lucide-react";
+import { Plane, Building2, Package, Mail, Tag, PlaneTakeoff, PlaneLanding, Wallet, Zap, Flame, PartyPopper, Lock, Search, X, Check } from "lucide-react";
+
+// Searchable City Selector Component
+function CitySelector({ 
+  selected, 
+  onChange, 
+  placeholder = "Search cities..." 
+}: { 
+  selected: string[]; 
+  onChange: (cities: string[]) => void;
+  placeholder?: string;
+}) {
+  const [search, setSearch] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const allCities = getAllCities();
+  
+  // Filter cities based on search
+  const filteredCities = search 
+    ? allCities.filter(city => city.toLowerCase().includes(search.toLowerCase()))
+    : allCities;
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleCity = (city: string) => {
+    if (selected.includes(city)) {
+      onChange(selected.filter(c => c !== city));
+    } else {
+      onChange([...selected, city]);
+    }
+  };
+
+  const removeCity = (city: string) => {
+    onChange(selected.filter(c => c !== city));
+  };
+
+  return (
+    <div ref={ref} className="relative">
+      {/* Selected cities tags */}
+      {selected.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-2">
+          {selected.map(city => (
+            <span 
+              key={city} 
+              className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+            >
+              {city}
+              <button 
+                type="button" 
+                onClick={() => removeCity(city)}
+                className="hover:text-blue-600"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+      
+      {/* Search input */}
+      <div className="relative">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setIsOpen(true);
+          }}
+          onFocus={() => setIsOpen(true)}
+          placeholder={placeholder}
+          className="w-full px-4 py-3 pl-10 border border-gray-200 rounded-xl text-gray-900 bg-white outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+      </div>
+      
+      {/* Dropdown */}
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+          {filteredCities.length === 0 ? (
+            <div className="px-4 py-3 text-gray-500 text-sm">No cities found</div>
+          ) : (
+            filteredCities.slice(0, 100).map(city => (
+              <button
+                key={city}
+                type="button"
+                onClick={() => toggleCity(city)}
+                className={`w-full px-4 py-2.5 text-left text-sm hover:bg-gray-50 flex items-center justify-between ${
+                  selected.includes(city) ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
+                }`}
+              >
+                {city}
+                {selected.includes(city) && <Check className="w-4 h-4 text-blue-600" />}
+              </button>
+            ))
+          )}
+          {filteredCities.length > 100 && (
+            <div className="px-4 py-2 text-gray-400 text-xs border-t">
+              Type to search more cities...
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 interface SubscriptionFormProps {
   initialEmail?: string;
@@ -248,21 +361,15 @@ export function SubscriptionForm({
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-500 mb-2">Or specific cities:</div>
-                    <select
-                      multiple
-                      value={preferences.originCities}
-                      onChange={(e) => setPreferences({
+                    <div className="text-xs text-gray-500 mb-2">Or search for specific cities:</div>
+                    <CitySelector
+                      selected={preferences.originCities}
+                      onChange={(cities) => setPreferences({
                         ...preferences,
-                        originCities: Array.from(e.target.selectedOptions, opt => opt.value)
+                        originCities: cities
                       })}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm h-24 text-gray-900 bg-white"
-                    >
-                      {allCities.slice(0, 30).map(city => (
-                        <option key={city} value={city} className="text-gray-900 py-1">{city}</option>
-                      ))}
-                    </select>
-                    <div className="text-xs text-gray-400 mt-1">Hold Ctrl/Cmd to select multiple</div>
+                      placeholder="Search origin cities..."
+                    />
                   </div>
                 </>
               )}
@@ -317,7 +424,7 @@ export function SubscriptionForm({
                   </div>
                   <div>
                     <div className="text-xs text-gray-500 mb-2">Popular destinations:</div>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 mb-3">
                       {popularCities.map((city) => (
                         <button
                           key={city.city}
@@ -336,6 +443,15 @@ export function SubscriptionForm({
                         </button>
                       ))}
                     </div>
+                    <div className="text-xs text-gray-500 mb-2">Or search for any city:</div>
+                    <CitySelector
+                      selected={preferences.destinationCities}
+                      onChange={(cities) => setPreferences({
+                        ...preferences,
+                        destinationCities: cities
+                      })}
+                      placeholder="Search destination cities..."
+                    />
                   </div>
                 </>
               )}
