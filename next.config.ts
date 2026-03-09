@@ -15,6 +15,22 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '**.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.theflightdeal.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'theflightdeal.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.secretflying.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'secretflying.com',
+      },
     ],
     // Optimize image formats
     formats: ['image/avif', 'image/webp'],
