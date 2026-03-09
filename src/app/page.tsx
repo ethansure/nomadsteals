@@ -95,68 +95,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Hot Deals Section */}
-      {hotDeals.length > 0 && (
-        <section className="py-20 px-6 bg-[#FFFAF5]">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-10">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-[#2D3436] flex items-center gap-3">
-                  <span className="text-4xl">🔥</span>
-                  Hot Deals
-                  <span className="px-4 py-1.5 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white text-sm font-semibold rounded-full shadow-lg shadow-[#FF6B6B]/20">
-                    {hotDeals.length} new
-                  </span>
-                </h2>
-                <p className="text-[#2D3436]/60 mt-2 text-lg">Incredible prices that won't last long</p>
-              </div>
-              <Link 
-                href="/deals?hot=true" 
-                className="hidden md:flex items-center gap-2 text-[#FF6B6B] font-semibold hover:text-[#E85555] transition-colors"
-              >
-                View all
-                <span>→</span>
-              </Link>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {hotDeals.slice(0, 3).map((deal) => (
-                <DealCard key={deal.id} deal={deal} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Popular Cities */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-10">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#2D3436] flex items-center gap-3">
-                <span className="text-4xl">🌴</span>
-                Popular Destinations
-              </h2>
-              <p className="text-[#2D3436]/60 mt-2 text-lg">Browse deals by city</p>
-            </div>
-            <Link 
-              href="/cities" 
-              className="hidden md:flex items-center gap-2 text-[#20B2AA] font-semibold hover:text-[#178F89] transition-colors"
-            >
-              All cities
-              <span>→</span>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {popularCities.slice(0, 8).map(city => (
-              <CityCard key={city.code} city={city} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Today's Deals */}
+      {/* Today's Deals - First */}
       <section className="py-20 px-6 bg-[#FFFAF5]">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-10">
@@ -224,6 +163,67 @@ export default async function Home() {
               </Link>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Hot Deals Section - Second */}
+      {hotDeals.length > 0 && (
+        <section className="py-20 px-6 bg-white">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-[#2D3436] flex items-center gap-3">
+                  <span className="text-4xl">🔥</span>
+                  Hot Deals
+                  <span className="px-4 py-1.5 bg-gradient-to-r from-[#FF6B6B] to-[#FFA07A] text-white text-sm font-semibold rounded-full shadow-lg shadow-[#FF6B6B]/20">
+                    {hotDeals.length} new
+                  </span>
+                </h2>
+                <p className="text-[#2D3436]/60 mt-2 text-lg">Incredible prices that won't last long</p>
+              </div>
+              <Link 
+                href="/deals?hot=true" 
+                className="hidden md:flex items-center gap-2 text-[#FF6B6B] font-semibold hover:text-[#E85555] transition-colors"
+              >
+                View all
+                <span>→</span>
+              </Link>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {hotDeals.slice(0, 3).map((deal) => (
+                <DealCard key={deal.id} deal={deal} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Popular Cities - Third */}
+      <section className="py-20 px-6 bg-[#FFFAF5]">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#2D3436] flex items-center gap-3">
+                <span className="text-4xl">🌴</span>
+                Popular Destinations
+              </h2>
+              <p className="text-[#2D3436]/60 mt-2 text-lg">Browse deals by city</p>
+            </div>
+            <Link 
+              href="/cities" 
+              className="hidden md:flex items-center gap-2 text-[#20B2AA] font-semibold hover:text-[#178F89] transition-colors"
+            >
+              All cities
+              <span>→</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            {popularCities.slice(0, 8).map(city => (
+              <CityCard key={city.code} city={city} />
+            ))}
+          </div>
         </div>
       </section>
 
