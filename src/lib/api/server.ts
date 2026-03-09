@@ -1,8 +1,7 @@
 // Server-side data access (for server components)
-// Scrapes fresh data if no cached deals exist
+// Reads from storage only - scraping is done by cron job
 
 import { getDeals, getDealById, getDealsForCity, getStats, getDealsMetadata, getFilteredDeals, getSimilarHistoricalDeals } from './deals-store';
-import { aggregateDeals } from './deal-aggregator';
 import { Deal } from '../types';
 
 export interface ServerDealsResponse {
@@ -36,19 +35,6 @@ export interface ServerStatsResponse {
   };
 }
 
-// Ensure we have deals - scrape if empty
-async function ensureDeals(): Promise<void> {
-  const existingDeals = await getDeals();
-  if (existingDeals.length === 0) {
-    console.log('[Server] No cached deals, scraping fresh data...');
-    try {
-      await aggregateDeals({ maxDealsPerSource: 25 });
-    } catch (error) {
-      console.error('[Server] Scraping failed:', error);
-    }
-  }
-}
-
 // Server-side: Get all deals
 export async function getServerDeals(options: {
   limit?: number;
@@ -57,9 +43,7 @@ export async function getServerDeals(options: {
   destination?: string;
 } = {}): Promise<ServerDealsResponse> {
   try {
-    // Ensure we have deals (will scrape if empty)
-    await ensureDeals();
-    
+    // Read from storage only - scraping done by cron
     const { deals, total } = await getFilteredDeals({
       type: options.type,
       destination: options.destination,
@@ -117,7 +101,6 @@ export async function getServerDeals(options: {
 // Server-side: Get single deal
 export async function getServerDeal(id: string): Promise<{ success: boolean; deal: Deal | null }> {
   try {
-    await ensureDeals();
     const deal = await getDealById(id);
     return { success: !!deal, deal: deal || null };
   } catch (error) {
@@ -129,7 +112,6 @@ export async function getServerDeal(id: string): Promise<{ success: boolean; dea
 // Server-side: Get deals for a city
 export async function getServerCityDeals(slug: string): Promise<{ success: boolean; deals: Deal[]; total: number }> {
   try {
-    await ensureDeals();
     const deals = await getDealsForCity(slug);
     return { success: true, deals, total: deals.length };
   } catch (error) {
