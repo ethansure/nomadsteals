@@ -1,8 +1,13 @@
 // Server-side data access (for server components)
 // Reads from storage only - scraping is done by cron job
+// Uses unstable_cache for edge caching of data fetches
 
+import { unstable_cache } from 'next/cache';
 import { getDeals, getDealById, getDealsForCity, getStats, getDealsMetadata, getFilteredDeals, getSimilarHistoricalDeals } from './deals-store';
 import { Deal } from '../types';
+
+// Cache duration: 5 minutes (matches ISR revalidation)
+const CACHE_DURATION = 300;
 
 export interface ServerDealsResponse {
   success: boolean;
@@ -35,7 +40,34 @@ export interface ServerStatsResponse {
   };
 }
 
-// Server-side: Get all deals
+// Cached data fetcher for deals (edge-cached for 5 minutes)
+const getCachedDeals = unstable_cache(
+  async (limit: number, offset: number, type?: string, destination?: string) => {
+    const { deals, total } = await getFilteredDeals({
+      type,
+      destination,
+      limit,
+      offset,
+      days: 1, // Only show deals from last 24 hours
+    });
+    return { deals, total };
+  },
+  ['server-deals'],
+  { revalidate: CACHE_DURATION, tags: ['deals'] }
+);
+
+// Cached stats fetcher
+const getCachedStats = unstable_cache(
+  async () => {
+    const stats = await getStats();
+    const metadata = await getDealsMetadata();
+    return { stats, metadata };
+  },
+  ['server-stats'],
+  { revalidate: CACHE_DURATION, tags: ['stats'] }
+);
+
+// Server-side: Get all deals (with edge caching)
 export async function getServerDeals(options: {
   limit?: number;
   offset?: number;
@@ -43,27 +75,26 @@ export async function getServerDeals(options: {
   destination?: string;
 } = {}): Promise<ServerDealsResponse> {
   try {
-    // Read from storage only - scraping done by cron
-    // Filter to today's deals only (discovered in last 24 hours)
-    const { deals, total } = await getFilteredDeals({
-      type: options.type,
-      destination: options.destination,
-      limit: options.limit || 20,
-      offset: options.offset || 0,
-      days: 1, // Only show deals from last 24 hours
-    });
+    const limit = options.limit || 20;
+    const offset = options.offset || 0;
     
-    const stats = await getStats();
-    const metadata = await getDealsMetadata();
+    // Use cached fetchers - avoids hitting Postgres on every request
+    const [dealsResult, statsResult] = await Promise.all([
+      getCachedDeals(limit, offset, options.type, options.destination),
+      getCachedStats(),
+    ]);
+    
+    const { deals, total } = dealsResult;
+    const { stats, metadata } = statsResult;
     
     return {
       success: true,
       deals,
       pagination: {
         total,
-        limit: options.limit || 20,
-        offset: options.offset || 0,
-        hasMore: (options.offset || 0) + deals.length < total,
+        limit,
+        offset,
+        hasMore: offset + deals.length < total,
       },
       meta: {
         lastUpdated: metadata?.lastUpdated || stats.updatedAt,
@@ -122,11 +153,11 @@ export async function getServerCityDeals(slug: string): Promise<{ success: boole
   }
 }
 
-// Server-side: Get stats
+// Server-side: Get stats (with edge caching)
 export async function getServerStats(): Promise<ServerStatsResponse> {
   try {
-    const stats = await getStats();
-    const metadata = await getDealsMetadata();
+    // Use cached stats fetcher
+    const { stats, metadata } = await getCachedStats();
     
     return {
       success: true,
