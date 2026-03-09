@@ -1,13 +1,40 @@
 // Postgres client for NomadSteals
-// Uses @vercel/postgres for seamless Vercel + Supabase integration
+// Uses postgres.js for Supabase connection
 
-import { sql } from '@vercel/postgres';
+import postgres from 'postgres';
 import { Deal, DealStatus, DealType } from '../types';
+
+// Singleton SQL client
+let sql: ReturnType<typeof postgres> | null = null;
+
+function getSQL() {
+  if (!sql) {
+    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error('POSTGRES_URL or DATABASE_URL not configured');
+    }
+    
+    sql = postgres(connectionString, {
+      ssl: 'require',
+      max: 10,
+      idle_timeout: 30,
+      connect_timeout: 10,
+    });
+  }
+  return sql;
+}
+
+// Check if Postgres is configured
+export async function isConfigured(): Promise<boolean> {
+  const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+  return !!connectionString;
+}
 
 // Initialize database schema
 export async function initSchema(): Promise<void> {
-  // Create deals table
-  await sql`
+  const db = getSQL();
+  
+  await db`
     CREATE TABLE IF NOT EXISTS deals (
       id VARCHAR(255) PRIMARY KEY,
       deal_signature VARCHAR(512) UNIQUE,
@@ -52,14 +79,12 @@ export async function initSchema(): Promise<void> {
     )
   `;
 
-  // Create indexes
-  await sql`CREATE INDEX IF NOT EXISTS idx_deals_value_score ON deals(value_score DESC)`;
-  await sql`CREATE INDEX IF NOT EXISTS idx_deals_status ON deals(status)`;
-  await sql`CREATE INDEX IF NOT EXISTS idx_deals_is_active ON deals(is_active)`;
-  await sql`CREATE INDEX IF NOT EXISTS idx_deals_scraped_at ON deals(scraped_at DESC)`;
+  await db`CREATE INDEX IF NOT EXISTS idx_deals_value_score ON deals(value_score DESC)`;
+  await db`CREATE INDEX IF NOT EXISTS idx_deals_status ON deals(status)`;
+  await db`CREATE INDEX IF NOT EXISTS idx_deals_is_active ON deals(is_active)`;
+  await db`CREATE INDEX IF NOT EXISTS idx_deals_scraped_at ON deals(scraped_at DESC)`;
 
-  // Create stats table
-  await sql`
+  await db`
     CREATE TABLE IF NOT EXISTS deal_stats (
       id SERIAL PRIMARY KEY,
       total_deals INTEGER DEFAULT 0,
@@ -71,8 +96,7 @@ export async function initSchema(): Promise<void> {
     )
   `;
 
-  // Insert initial stats row
-  await sql`INSERT INTO deal_stats (id, total_deals) VALUES (1, 0) ON CONFLICT (id) DO NOTHING`;
+  await db`INSERT INTO deal_stats (id, total_deals) VALUES (1, 0) ON CONFLICT (id) DO NOTHING`;
 
   console.log('[Postgres] Schema initialized');
 }
@@ -110,21 +134,22 @@ function rowToDeal(row: Record<string, unknown>): Deal {
     isHistoricLow: (row.is_historic_low as boolean) || false,
     isActive: row.is_active as boolean,
     status: row.status as DealStatus,
-    postedAt: row.posted_at ? new Date(row.posted_at as string).toISOString() : new Date().toISOString(),
-    scrapedAt: row.scraped_at ? new Date(row.scraped_at as string).toISOString() : undefined,
-    firstSeenAt: row.first_seen_at ? new Date(row.first_seen_at as string).toISOString() : undefined,
-    lastSeenAt: row.last_seen_at ? new Date(row.last_seen_at as string).toISOString() : undefined,
-    expiredAt: row.expired_at ? new Date(row.expired_at as string).toISOString() : undefined,
-    archivedAt: row.archived_at ? new Date(row.archived_at as string).toISOString() : undefined,
+    postedAt: row.posted_at ? String(row.posted_at) : new Date().toISOString(),
+    scrapedAt: row.scraped_at ? String(row.scraped_at) : undefined,
+    firstSeenAt: row.first_seen_at ? String(row.first_seen_at) : undefined,
+    lastSeenAt: row.last_seen_at ? String(row.last_seen_at) : undefined,
+    expiredAt: row.expired_at ? String(row.expired_at) : undefined,
+    archivedAt: row.archived_at ? String(row.archived_at) : undefined,
     views: (row.views as number) || 0,
     saves: (row.saves as number) || 0,
-    updatedAt: row.updated_at ? new Date(row.updated_at as string).toISOString() : new Date().toISOString(),
+    updatedAt: row.updated_at ? String(row.updated_at) : new Date().toISOString(),
   };
 }
 
 // Get all active deals
 export async function getDeals(): Promise<Deal[]> {
-  const { rows } = await sql`
+  const db = getSQL();
+  const rows = await db`
     SELECT * FROM deals 
     WHERE is_active = true AND status = 'active'
     ORDER BY value_score DESC
@@ -133,9 +158,10 @@ export async function getDeals(): Promise<Deal[]> {
   return rows.map(row => rowToDeal(row as Record<string, unknown>));
 }
 
-// Get top deals by value score (for KV cache)
+// Get top deals by value score
 export async function getTopDeals(limit: number = 50): Promise<Deal[]> {
-  const { rows } = await sql`
+  const db = getSQL();
+  const rows = await db`
     SELECT * FROM deals 
     WHERE is_active = true AND status = 'active'
     ORDER BY value_score DESC
@@ -146,7 +172,8 @@ export async function getTopDeals(limit: number = 50): Promise<Deal[]> {
 
 // Get all deals including archived
 export async function getAllDeals(): Promise<Deal[]> {
-  const { rows } = await sql`SELECT * FROM deals ORDER BY value_score DESC`;
+  const db = getSQL();
+  const rows = await db`SELECT * FROM deals ORDER BY value_score DESC`;
   return rows.map(row => rowToDeal(row as Record<string, unknown>));
 }
 
@@ -164,40 +191,41 @@ export async function getFilteredDeals(filters: {
   limit?: number;
   offset?: number;
 }): Promise<{ deals: Deal[]; total: number }> {
+  const db = getSQL();
   const limit = filters.limit || 20;
   const offset = filters.offset || 0;
   
-  let result;
+  let rows;
   let countResult;
   
   if (filters.status === 'all') {
-    result = await sql`
+    rows = await db`
       SELECT * FROM deals 
       ORDER BY value_score DESC
       LIMIT ${limit} OFFSET ${offset}
     `;
-    countResult = await sql`SELECT COUNT(*) as count FROM deals`;
+    countResult = await db`SELECT COUNT(*)::int as count FROM deals`;
   } else if (filters.status === 'expired' || filters.status === 'archived') {
-    result = await sql`
+    rows = await db`
       SELECT * FROM deals 
       WHERE status = ${filters.status}
       ORDER BY value_score DESC
       LIMIT ${limit} OFFSET ${offset}
     `;
-    countResult = await sql`SELECT COUNT(*) as count FROM deals WHERE status = ${filters.status}`;
+    countResult = await db`SELECT COUNT(*)::int as count FROM deals WHERE status = ${filters.status}`;
   } else {
-    result = await sql`
+    rows = await db`
       SELECT * FROM deals 
       WHERE status = 'active' AND is_active = true
       ORDER BY value_score DESC
       LIMIT ${limit} OFFSET ${offset}
     `;
-    countResult = await sql`SELECT COUNT(*) as count FROM deals WHERE status = 'active' AND is_active = true`;
+    countResult = await db`SELECT COUNT(*)::int as count FROM deals WHERE status = 'active' AND is_active = true`;
   }
   
   return {
-    deals: result.rows.map(row => rowToDeal(row as Record<string, unknown>)),
-    total: parseInt(countResult.rows[0].count as string, 10),
+    deals: rows.map(row => rowToDeal(row as Record<string, unknown>)),
+    total: countResult[0].count as number,
   };
 }
 
@@ -205,11 +233,12 @@ export async function getFilteredDeals(filters: {
 export async function upsertDeals(deals: Deal[]): Promise<number> {
   if (deals.length === 0) return 0;
   
+  const db = getSQL();
   let upsertedCount = 0;
 
   for (const deal of deals) {
     try {
-      await sql`
+      await db`
         INSERT INTO deals (
           id, deal_signature, type, title, description,
           original_price, current_price, currency, savings_percent, value_score,
@@ -252,24 +281,26 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
 
 // Mark stale deals as inactive
 export async function markStaleDealsInactive(hoursThreshold: number = 24): Promise<number> {
-  const result = await sql`
+  const db = getSQL();
+  const result = await db`
     UPDATE deals 
     SET is_active = false, updated_at = NOW()
     WHERE is_active = true 
       AND last_seen_at < NOW() - INTERVAL '1 hour' * ${hoursThreshold}
   `;
-  return result.rowCount || 0;
+  return result.count;
 }
 
 // Archive expired deals
 export async function archiveExpiredDeals(): Promise<number> {
-  const result = await sql`
+  const db = getSQL();
+  const result = await db`
     UPDATE deals 
     SET status = 'expired', expired_at = NOW(), archived_at = NOW(), updated_at = NOW()
     WHERE status = 'active' 
       AND book_by_date < CURRENT_DATE
   `;
-  return result.rowCount || 0;
+  return result.count;
 }
 
 // Get stats
@@ -282,35 +313,37 @@ export async function getStats(): Promise<{
   sourceBreakdown: Record<string, number>;
   updatedAt: string;
 }> {
-  const statsResult = await sql`
+  const db = getSQL();
+  
+  const statsResult = await db`
     SELECT 
-      COUNT(*) as total_deals,
-      COUNT(*) FILTER (WHERE is_active = true AND status = 'active') as active_deals,
-      COUNT(*) FILTER (WHERE is_hot_deal = true AND is_active = true) as hot_deals,
-      COALESCE(AVG(savings_percent) FILTER (WHERE is_active = true), 0) as avg_savings,
-      COUNT(*) FILTER (WHERE status IN ('expired', 'archived')) as archived_deals
+      COUNT(*)::int as total_deals,
+      COUNT(*) FILTER (WHERE is_active = true AND status = 'active')::int as active_deals,
+      COUNT(*) FILTER (WHERE is_hot_deal = true AND is_active = true)::int as hot_deals,
+      COALESCE(AVG(savings_percent) FILTER (WHERE is_active = true), 0)::int as avg_savings,
+      COUNT(*) FILTER (WHERE status IN ('expired', 'archived'))::int as archived_deals
     FROM deals
   `;
 
-  const sourceResult = await sql`
-    SELECT source, COUNT(*) as count 
+  const sourceResult = await db`
+    SELECT source, COUNT(*)::int as count 
     FROM deals 
     WHERE is_active = true AND status = 'active'
     GROUP BY source
   `;
 
   const sourceBreakdown: Record<string, number> = {};
-  for (const row of sourceResult.rows) {
-    sourceBreakdown[row.source as string] = parseInt(row.count as string, 10);
+  for (const row of sourceResult) {
+    sourceBreakdown[row.source as string] = row.count as number;
   }
 
-  const stats = statsResult.rows[0];
+  const stats = statsResult[0];
   return {
-    totalDeals: parseInt(stats.total_deals as string, 10),
-    activeDeals: parseInt(stats.active_deals as string, 10),
-    hotDeals: parseInt(stats.hot_deals as string, 10),
-    avgSavings: Math.round(parseFloat(stats.avg_savings as string) || 0),
-    archivedDeals: parseInt(stats.archived_deals as string, 10),
+    totalDeals: stats.total_deals as number,
+    activeDeals: stats.active_deals as number,
+    hotDeals: stats.hot_deals as number,
+    avgSavings: stats.avg_savings as number,
+    archivedDeals: stats.archived_deals as number,
     sourceBreakdown,
     updatedAt: new Date().toISOString(),
   };
@@ -319,8 +352,9 @@ export async function getStats(): Promise<{
 // Update stats table
 export async function updateStatsTable(): Promise<void> {
   const stats = await getStats();
+  const db = getSQL();
   
-  await sql`
+  await db`
     UPDATE deal_stats SET
       total_deals = ${stats.totalDeals},
       active_deals = ${stats.activeDeals},
@@ -330,11 +364,4 @@ export async function updateStatsTable(): Promise<void> {
       updated_at = NOW()
     WHERE id = 1
   `;
-}
-
-// Check if Postgres is configured
-// Note: @vercel/postgres manages connections automatically, we just check env var
-export async function isConfigured(): Promise<boolean> {
-  const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-  return !!connectionString;
 }
