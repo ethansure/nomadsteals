@@ -2,9 +2,9 @@
 // Scrapes fresh data if no cached deals exist (serverless-friendly)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getFilteredDeals, getStats, getDealsMetadata, getDeals, saveDeals } from '@/lib/api/deals-store';
+import { getFilteredDeals, getStats, getDealsMetadata } from '@/lib/api/deals-store';
 import { aggregateDeals } from '@/lib/api/deal-aggregator';
-import { getCitiesInRegion, cityInRegion, getRegion } from '@/lib/regions';
+import { getCitiesInRegion } from '@/lib/regions';
 
 // Force dynamic rendering (don't cache at build time)
 export const dynamic = 'force-dynamic';
@@ -14,15 +14,8 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     
-    // Check if we have cached deals
-    let existingDeals = await getDeals();
-    
-    // If no deals exist, scrape fresh data
-    if (existingDeals.length === 0) {
-      console.log('[API] No cached deals, scraping fresh data...');
-      const result = await aggregateDeals({ maxDealsPerSource: 25 });
-      console.log(`[API] Scraped ${result.deals.length} deals`);
-    }
+    // NOTE: No auto-scraping here! Scraping only via cron (/api/cron/refresh)
+    // This endpoint only reads from database/cache
     
     const statusParam = searchParams.get('status');
     const validStatuses = ['active', 'expired', 'archived', 'all'] as const;
