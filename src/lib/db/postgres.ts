@@ -1,33 +1,11 @@
 // Postgres client for NomadSteals
-// Uses postgres.js (porsager/postgres) for better SSL handling with Supabase
+// Uses @vercel/postgres for seamless Vercel + Supabase integration
 
-import postgres from 'postgres';
+import { sql } from '@vercel/postgres';
 import { Deal, DealStatus, DealType } from '../types';
-
-// Singleton SQL client
-let sql: ReturnType<typeof postgres> | null = null;
-
-function getSQL() {
-  if (!sql) {
-    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (!connectionString) {
-      throw new Error('POSTGRES_URL or DATABASE_URL not configured');
-    }
-    
-    sql = postgres(connectionString, {
-      ssl: 'require',
-      max: 10,
-      idle_timeout: 30,
-      connect_timeout: 10,
-    });
-  }
-  return sql;
-}
 
 // Initialize database schema
 export async function initSchema(): Promise<void> {
-  const sql = getSQL();
-  
   // Create deals table
   await sql`
     CREATE TABLE IF NOT EXISTS deals (
@@ -146,8 +124,7 @@ function rowToDeal(row: Record<string, unknown>): Deal {
 
 // Get all active deals
 export async function getDeals(): Promise<Deal[]> {
-  const sql = getSQL();
-  const rows = await sql`
+  const { rows } = await sql`
     SELECT * FROM deals 
     WHERE is_active = true AND status = 'active'
     ORDER BY value_score DESC
@@ -158,8 +135,7 @@ export async function getDeals(): Promise<Deal[]> {
 
 // Get top deals by value score (for KV cache)
 export async function getTopDeals(limit: number = 50): Promise<Deal[]> {
-  const sql = getSQL();
-  const rows = await sql`
+  const { rows } = await sql`
     SELECT * FROM deals 
     WHERE is_active = true AND status = 'active'
     ORDER BY value_score DESC
@@ -170,8 +146,7 @@ export async function getTopDeals(limit: number = 50): Promise<Deal[]> {
 
 // Get all deals including archived
 export async function getAllDeals(): Promise<Deal[]> {
-  const sql = getSQL();
-  const rows = await sql`SELECT * FROM deals ORDER BY value_score DESC`;
+  const { rows } = await sql`SELECT * FROM deals ORDER BY value_score DESC`;
   return rows.map(row => rowToDeal(row as Record<string, unknown>));
 }
 
@@ -189,23 +164,21 @@ export async function getFilteredDeals(filters: {
   limit?: number;
   offset?: number;
 }): Promise<{ deals: Deal[]; total: number }> {
-  const sql = getSQL();
   const limit = filters.limit || 20;
   const offset = filters.offset || 0;
   
-  // Build dynamic query - for now, simplified version
-  let rows;
+  let result;
   let countResult;
   
   if (filters.status === 'all') {
-    rows = await sql`
+    result = await sql`
       SELECT * FROM deals 
       ORDER BY value_score DESC
       LIMIT ${limit} OFFSET ${offset}
     `;
     countResult = await sql`SELECT COUNT(*) as count FROM deals`;
   } else if (filters.status === 'expired' || filters.status === 'archived') {
-    rows = await sql`
+    result = await sql`
       SELECT * FROM deals 
       WHERE status = ${filters.status}
       ORDER BY value_score DESC
@@ -213,7 +186,7 @@ export async function getFilteredDeals(filters: {
     `;
     countResult = await sql`SELECT COUNT(*) as count FROM deals WHERE status = ${filters.status}`;
   } else {
-    rows = await sql`
+    result = await sql`
       SELECT * FROM deals 
       WHERE status = 'active' AND is_active = true
       ORDER BY value_score DESC
@@ -223,8 +196,8 @@ export async function getFilteredDeals(filters: {
   }
   
   return {
-    deals: rows.map(row => rowToDeal(row as Record<string, unknown>)),
-    total: parseInt(countResult[0].count as string, 10),
+    deals: result.rows.map(row => rowToDeal(row as Record<string, unknown>)),
+    total: parseInt(countResult.rows[0].count as string, 10),
   };
 }
 
@@ -232,7 +205,6 @@ export async function getFilteredDeals(filters: {
 export async function upsertDeals(deals: Deal[]): Promise<number> {
   if (deals.length === 0) return 0;
   
-  const sql = getSQL();
   let upsertedCount = 0;
 
   for (const deal of deals) {
@@ -253,7 +225,7 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
           ${deal.originCity || null}, ${deal.originCode || null}, ${deal.destinationCity}, ${deal.destinationCode || null},
           ${deal.departureDate || null}, ${deal.returnDate || null}, ${deal.bookByDate}, ${deal.travelWindow || null},
           ${deal.airline || null}, ${deal.bookingUrl}, ${deal.imageUrl || ''}, ${deal.source},
-          ${deal.includes || []}, ${deal.restrictions || []}, ${deal.tags || []},
+          ${JSON.stringify(deal.includes || [])}, ${JSON.stringify(deal.restrictions || [])}, ${JSON.stringify(deal.tags || [])},
           ${deal.isHotDeal || false}, ${deal.isExpiringSoon || false}, ${deal.isHistoricLow || false}, ${deal.isActive !== false}, ${deal.status || 'active'},
           ${deal.postedAt || new Date().toISOString()}, ${deal.scrapedAt || new Date().toISOString()}, ${deal.firstSeenAt || new Date().toISOString()}, ${deal.lastSeenAt || new Date().toISOString()}
         )
@@ -280,26 +252,24 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
 
 // Mark stale deals as inactive
 export async function markStaleDealsInactive(hoursThreshold: number = 24): Promise<number> {
-  const sql = getSQL();
   const result = await sql`
     UPDATE deals 
     SET is_active = false, updated_at = NOW()
     WHERE is_active = true 
-      AND last_seen_at < NOW() - INTERVAL '${hoursThreshold} hours'
+      AND last_seen_at < NOW() - INTERVAL '1 hour' * ${hoursThreshold}
   `;
-  return result.count;
+  return result.rowCount || 0;
 }
 
 // Archive expired deals
 export async function archiveExpiredDeals(): Promise<number> {
-  const sql = getSQL();
   const result = await sql`
     UPDATE deals 
     SET status = 'expired', expired_at = NOW(), archived_at = NOW(), updated_at = NOW()
     WHERE status = 'active' 
       AND book_by_date < CURRENT_DATE
   `;
-  return result.count;
+  return result.rowCount || 0;
 }
 
 // Get stats
@@ -312,8 +282,6 @@ export async function getStats(): Promise<{
   sourceBreakdown: Record<string, number>;
   updatedAt: string;
 }> {
-  const sql = getSQL();
-  
   const statsResult = await sql`
     SELECT 
       COUNT(*) as total_deals,
@@ -332,16 +300,16 @@ export async function getStats(): Promise<{
   `;
 
   const sourceBreakdown: Record<string, number> = {};
-  for (const row of sourceResult) {
+  for (const row of sourceResult.rows) {
     sourceBreakdown[row.source as string] = parseInt(row.count as string, 10);
   }
 
-  const stats = statsResult[0];
+  const stats = statsResult.rows[0];
   return {
     totalDeals: parseInt(stats.total_deals as string, 10),
     activeDeals: parseInt(stats.active_deals as string, 10),
     hotDeals: parseInt(stats.hot_deals as string, 10),
-    avgSavings: Math.round(parseFloat(stats.avg_savings as string)),
+    avgSavings: Math.round(parseFloat(stats.avg_savings as string) || 0),
     archivedDeals: parseInt(stats.archived_deals as string, 10),
     sourceBreakdown,
     updatedAt: new Date().toISOString(),
@@ -351,7 +319,6 @@ export async function getStats(): Promise<{
 // Update stats table
 export async function updateStatsTable(): Promise<void> {
   const stats = await getStats();
-  const sql = getSQL();
   
   await sql`
     UPDATE deal_stats SET
@@ -371,7 +338,6 @@ export async function isConfigured(): Promise<boolean> {
     const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
     if (!connectionString) return false;
     
-    const sql = getSQL();
     await sql`SELECT 1`;
     return true;
   } catch (error) {
