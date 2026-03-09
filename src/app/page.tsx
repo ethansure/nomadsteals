@@ -10,9 +10,9 @@ import { popularCities } from "@/lib/sample-data";
 import { Deal } from "@/lib/types";
 import { Compass, Wallet, Flame, Sparkles, MapPin, Calendar, Plane, Building2, Package, Sun, Palmtree, Umbrella } from "lucide-react";
 
-// Force dynamic rendering to always get fresh scraped deals
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Use ISR with 5-minute revalidation for fast page loads
+// Deals are scraped by cron, no need for real-time fetch
+export const revalidate = 300; // 5 minutes
 
 export default async function Home() {
   // Fetch real deals from data store
