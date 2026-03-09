@@ -5,6 +5,7 @@ import { scrapeTheFlightDeal } from './theflightdeal';
 import { scrapeTravelPirates } from './travelpirates';
 import { scrapeAirfarewatchdog } from './airfarewatchdog';
 import { scrapeSkiplagged } from './skiplagged';
+import { scrapeCruiseCritic } from './cruisecritic';
 import { ScrapedDeal, ScrapeResult, ScraperSource } from './types';
 import { Deal } from '../types';
 
@@ -26,6 +27,7 @@ export interface ScrapeAllResult {
     travelpirates: number;
     airfarewatchdog: number;
     skiplagged: number;
+    cruisecritic: number;
     totalDeals: number;
     avgValueScore: number;
     hotDeals: number;
@@ -117,6 +119,20 @@ export async function scrapeAllSources(options: {
     console.error('[Scraper] Skiplagged failed:', errMsg);
   }
 
+  await sleep(delayBetweenSources);
+
+  // Scrape CruiseCritic (cruise deals)
+  try {
+    const cruiseDeals = await scrapeCruiseCritic(maxDealsPerSource);
+    allDeals.push(...cruiseDeals);
+    sources.push('cruisecritic');
+    console.log(`[Scraper] CruiseCritic: ${cruiseDeals.length} deals`);
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    errors.push(`CruiseCritic: ${errMsg}`);
+    console.error('[Scraper] CruiseCritic failed:', errMsg);
+  }
+
   // Deduplicate deals
   const deduped = deduplicateDeals(allDeals);
   console.log(`[Scraper] After dedup: ${deduped.length} deals (from ${allDeals.length})`);
@@ -131,6 +147,7 @@ export async function scrapeAllSources(options: {
     travelpirates: deduped.filter(d => d.source === 'travelpirates').length,
     airfarewatchdog: deduped.filter(d => d.source === 'airfarewatchdog').length,
     skiplagged: deduped.filter(d => d.source === 'skiplagged').length,
+    cruisecritic: deduped.filter(d => d.source === 'cruisecritic').length,
     totalDeals: deduped.length,
     avgValueScore: deduped.length > 0 
       ? Math.round(deduped.reduce((acc, d) => acc + d.valueScore, 0) / deduped.length) 
@@ -193,13 +210,28 @@ export function scrapedDealToAppDeal(scraped: ScrapedDeal): Deal {
     'travelpirates': 'TravelPirates',
     'airfarewatchdog': 'Airfarewatchdog',
     'skiplagged': 'Skiplagged',
+    'cruisecritic': 'Cruise Critic',
   };
+
+  // Determine deal type and customize based on source
+  const isCruise = scraped.source === 'cruisecritic';
+  const dealType = isCruise ? 'cruise' : 'flight';
+  
+  const description = isCruise
+    ? scraped.description || `Amazing cruise deal to ${scraped.destination}! Save ${scraped.savingsPercent}% on this voyage.`
+    : scraped.description || `Great deal on flights to ${scraped.destination}! Save ${scraped.savingsPercent}% compared to average prices.`;
+  
+  const includes = isCruise
+    ? ['Accommodations', 'Meals & Entertainment', 'Port Visits', 'Taxes & Fees']
+    : scraped.isRoundtrip 
+      ? ['Roundtrip Flight', 'Personal Item', 'Taxes & Fees'] 
+      : ['One-way Flight', 'Personal Item', 'Taxes & Fees'];
 
   return {
     id: scraped.id,
-    type: 'flight',
+    type: dealType,
     title: scraped.title,
-    description: scraped.description || `Great deal on flights to ${scraped.destination}! Save ${scraped.savingsPercent}% compared to average prices.`,
+    description,
     originalPrice: scraped.originalPrice,
     currentPrice: scraped.price,
     currency: scraped.currency,
@@ -213,10 +245,8 @@ export function scrapedDealToAppDeal(scraped: ScrapedDeal): Deal {
     returnDate: returnDate.toISOString().split('T')[0],
     bookByDate: bookByDate.toISOString().split('T')[0],
     travelWindow: formatTravelWindow(departureDate),
-    airline: scraped.airline,
-    includes: scraped.isRoundtrip 
-      ? ['Roundtrip Flight', 'Personal Item', 'Taxes & Fees'] 
-      : ['One-way Flight', 'Personal Item', 'Taxes & Fees'],
+    airline: scraped.airline, // For cruises, this holds the cruise line name
+    includes,
     restrictions: ['Subject to availability', 'Non-refundable'],
     imageUrl: scraped.imageUrl || 'https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800',
     bookingUrl: scraped.originalUrl,

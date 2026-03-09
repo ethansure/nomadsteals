@@ -17,6 +17,7 @@ import { Plane, Building2, Package, Flame, SlidersHorizontal, Sparkles, MapPin, 
 const dealTypes: { value: DealType | "all"; label: string; emoji: string }[] = [
   { value: "all", label: "All Deals", emoji: "🧭" },
   { value: "flight", label: "Flights", emoji: "✈️" },
+  { value: "cruise", label: "Cruises", emoji: "🚢" },
   { value: "hotel", label: "Hotels", emoji: "🏨" },
   { value: "package", label: "Packages", emoji: "📦" },
 ];
