@@ -276,7 +276,7 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
           ${deal.originCity || null}, ${deal.originCode || null}, ${deal.destinationCity}, ${deal.destinationCode || null},
           ${bookByDate}, ${deal.travelWindow || null},
           ${deal.airline || null}, ${deal.bookingUrl}, ${deal.imageUrl || ''}, ${deal.source},
-          ${JSON.stringify(deal.includes || [])}::jsonb, ${JSON.stringify(deal.restrictions || [])}::jsonb, ${JSON.stringify(deal.tags || [])}::jsonb,
+          '[]'::jsonb, '[]'::jsonb, '[]'::jsonb,
           ${deal.isHotDeal || false}, ${deal.isExpiringSoon || false}, ${deal.isHistoricLow || false}, true, 'active',
           NOW(), NOW(), NOW()
         )
