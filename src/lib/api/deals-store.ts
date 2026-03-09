@@ -167,6 +167,10 @@ async function getArchivedDealsFromFile(): Promise<Deal[]> {
 
 // Get all deals including archived
 export async function getAllDeals(): Promise<Deal[]> {
+  // Use hybrid storage first (Postgres)
+  if (useHybridStorage()) {
+    return hybridStore.getAllDeals();
+  }
   if (useBlobStorage()) {
     return getAllDealsFromBlob();
   }
@@ -177,6 +181,11 @@ export async function getAllDeals(): Promise<Deal[]> {
 
 // Get archived/expired deals
 export async function getArchivedDeals(): Promise<Deal[]> {
+  // Use hybrid storage first (Postgres)
+  if (useHybridStorage()) {
+    const all = await hybridStore.getAllDeals();
+    return all.filter(d => d.status === 'expired' || d.status === 'archived');
+  }
   if (useBlobStorage()) {
     return getArchivedDealsFromBlob();
   }
