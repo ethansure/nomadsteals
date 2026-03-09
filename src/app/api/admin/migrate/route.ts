@@ -16,6 +16,7 @@ export async function GET() {
       envVars: {
         POSTGRES_URL: !!process.env.POSTGRES_URL,
         DATABASE_URL: !!process.env.DATABASE_URL,
+        NEON_DATABASE_URL: !!process.env.NEON_DATABASE_URL,
         REDIS_URL: !!process.env.REDIS_URL,
         KV_REST_API_URL: !!process.env.KV_REST_API_URL,
         BLOB_READ_WRITE_TOKEN: !!process.env.BLOB_READ_WRITE_TOKEN,
