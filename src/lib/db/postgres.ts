@@ -110,6 +110,20 @@ export async function initSchema(): Promise<void> {
   console.log('[Postgres] Schema initialized');
 }
 
+// Parse JSONB field to array
+function parseJsonArray(value: unknown): string[] {
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
 // Convert database row to Deal object
 function rowToDeal(row: Record<string, unknown>): Deal {
   return {
@@ -135,9 +149,9 @@ function rowToDeal(row: Record<string, unknown>): Deal {
     bookingUrl: row.booking_url as string,
     imageUrl: (row.image_url as string) || '',
     source: row.source as string,
-    includes: (row.includes as string[]) || [],
-    restrictions: (row.restrictions as string[]) || [],
-    tags: (row.tags as string[]) || [],
+    includes: parseJsonArray(row.includes),
+    restrictions: parseJsonArray(row.restrictions),
+    tags: parseJsonArray(row.tags),
     isHotDeal: (row.is_hot_deal as boolean) || false,
     isExpiringSoon: (row.is_expiring_soon as boolean) || false,
     isHistoricLow: (row.is_historic_low as boolean) || false,
