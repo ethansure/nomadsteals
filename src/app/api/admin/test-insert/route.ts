@@ -1,4 +1,5 @@
 // Test endpoint - try inserting a single deal directly
+// Last updated: 2026-03-08T21:55:00Z
 import { NextResponse } from 'next/server';
 import * as postgres from '@/lib/db/postgres';
 
