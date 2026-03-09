@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Deal } from "@/lib/types";
 import { getRegionForCity } from "@/lib/regions";
 import { Plane, Building2, Package, Ship, Zap, Flame, TrendingDown, Eye, Heart, Clock, Sparkles } from "lucide-react";
@@ -41,10 +42,14 @@ export function DealCard({ deal }: { deal: Deal }) {
     <div className="group bg-white rounded-3xl shadow-soft hover:shadow-soft-lg transition-all duration-500 overflow-hidden border border-[#FF6B6B]/5 hover:-translate-y-1">
       {/* Image */}
       <Link href={`/deals/${deal.id}`} className="block relative h-52 overflow-hidden">
-        <img 
+        <Image 
           src={deal.imageUrl} 
           alt={deal.destinationCity}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover group-hover:scale-110 transition-transform duration-700"
+          loading="lazy"
+          quality={75}
         />
         
         {/* Warm Gradient Overlay */}

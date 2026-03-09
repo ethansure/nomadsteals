@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
     const stats = await getStats();
     const metadata = await getDealsMetadata();
     
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       deals,
       pagination: {
@@ -110,6 +110,11 @@ export async function GET(request: NextRequest) {
         },
       },
     });
+    
+    // Add cache headers for CDN caching
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+    
+    return response;
   } catch (error) {
     console.error('Error fetching deals:', error);
     return NextResponse.json(
