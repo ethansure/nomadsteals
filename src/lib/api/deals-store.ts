@@ -198,15 +198,22 @@ export async function getArchivedDeals(): Promise<Deal[]> {
 // Write deals to storage (APPEND mode with deduplication)
 // Never overwrites - merges new deals with existing, updates timestamps
 export async function saveDeals(deals: Deal[], sources: string[]): Promise<void> {
+  console.log(`[DealsStore] saveDeals called with ${deals.length} deals`);
+  console.log(`[DealsStore] useHybridStorage: ${useHybridStorage()}, useBlobStorage: ${useBlobStorage()}`);
+  
   // Use hybrid storage if Postgres is configured
   if (useHybridStorage()) {
+    console.log(`[DealsStore] Using hybrid storage (Postgres)`);
     return hybridStore.saveDeals(deals, sources);
   }
   
   // Use Blob storage if configured (production)
   if (useBlobStorage()) {
+    console.log(`[DealsStore] Using Blob storage`);
     return saveDealsToBlob(deals, sources);
   }
+  
+  console.log(`[DealsStore] Using local file storage`);
 
   const now = new Date().toISOString();
   

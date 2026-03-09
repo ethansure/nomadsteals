@@ -84,6 +84,7 @@ export async function getFilteredDeals(filters: {
 
 // Save deals (write to Postgres, invalidate cache)
 export async function saveDeals(deals: Deal[], sources: string[]): Promise<void> {
+  console.log(`[HybridStore] saveDeals called with ${deals.length} deals`);
   const now = new Date().toISOString();
 
   // Add timestamps to deals
@@ -96,13 +97,18 @@ export async function saveDeals(deals: Deal[], sources: string[]): Promise<void>
     status: (deal.status || 'active') as DealStatus,
   }));
 
+  console.log(`[HybridStore] Postgres configured: ${postgres.isConfigured()}`);
+  
   // Write to Postgres
   if (postgres.isConfigured()) {
+    console.log(`[HybridStore] Calling postgres.upsertDeals with ${processedDeals.length} deals`);
     const count = await postgres.upsertDeals(processedDeals);
     console.log(`[HybridStore] Upserted ${count} deals to Postgres`);
 
     // Update stats
     await postgres.updateStatsTable();
+  } else {
+    console.log(`[HybridStore] Postgres NOT configured, skipping upsert`);
   }
 
   // Invalidate Redis cache so next read gets fresh data
