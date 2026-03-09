@@ -257,6 +257,12 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
         continue;
       }
       
+      // Sanitize text fields - remove null bytes and limit length
+      const safeTitle = (deal.title || '').replace(/\0/g, '').slice(0, 1000);
+      const safeDesc = (deal.description || '').replace(/\0/g, '').slice(0, 5000);
+      const safeDest = (deal.destinationCity || '').replace(/\0/g, '').slice(0, 250);
+      const safeOrigin = (deal.originCity || '').replace(/\0/g, '').slice(0, 250);
+      
       // Ensure dates are valid or null
       const bookByDate = toISODate(deal.bookByDate) || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
       
@@ -271,9 +277,9 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
           is_hot_deal, is_expiring_soon, is_historic_low, is_active, status,
           scraped_at, first_seen_at, last_seen_at
         ) VALUES (
-          ${deal.id}, ${deal.dealSignature || null}, ${deal.type || 'flight'}, ${deal.title}, ${deal.description || ''},
+          ${deal.id}, ${deal.dealSignature || null}, ${deal.type || 'flight'}, ${safeTitle}, ${safeDesc},
           ${deal.originalPrice || 0}, ${deal.currentPrice}, ${deal.currency || 'USD'}, ${deal.savingsPercent || 0}, ${deal.valueScore || 50},
-          ${deal.originCity || null}, ${deal.originCode || null}, ${deal.destinationCity}, ${deal.destinationCode || null},
+          ${safeOrigin || null}, ${deal.originCode || null}, ${safeDest}, ${deal.destinationCode || null},
           ${bookByDate}, ${deal.travelWindow || null},
           ${deal.airline || null}, ${deal.bookingUrl}, ${deal.imageUrl || ''}, ${deal.source},
           '[]'::jsonb, '[]'::jsonb, '[]'::jsonb,
