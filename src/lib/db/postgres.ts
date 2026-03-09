@@ -332,16 +332,9 @@ export async function updateStatsTable(): Promise<void> {
   `;
 }
 
-// Check if Postgres is configured and working
+// Check if Postgres is configured
+// Note: @vercel/postgres manages connections automatically, we just check env var
 export async function isConfigured(): Promise<boolean> {
-  try {
-    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (!connectionString) return false;
-    
-    await sql`SELECT 1`;
-    return true;
-  } catch (error) {
-    console.error('[Postgres] Connection check failed:', error);
-    return false;
-  }
+  const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+  return !!connectionString;
 }
