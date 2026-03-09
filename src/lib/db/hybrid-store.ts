@@ -16,7 +16,7 @@ import * as redis from './redis';
 // Initialize the hybrid store
 export async function init(): Promise<void> {
   // Initialize Postgres schema if needed
-  if (await postgres.isConfigured()) {
+  if (postgres.isConfigured()) {
     await postgres.initSchema();
     console.log('[HybridStore] Postgres initialized');
   }
@@ -38,7 +38,7 @@ export async function getDeals(): Promise<Deal[]> {
   }
 
   // Fetch from Postgres
-  if (await postgres.isConfigured()) {
+  if (postgres.isConfigured()) {
     const deals = await postgres.getDeals();
     console.log(`[HybridStore] Fetched ${deals.length} deals from Postgres`);
 
@@ -56,7 +56,7 @@ export async function getDeals(): Promise<Deal[]> {
 
 // Get all deals including archived (direct from Postgres)
 export async function getAllDeals(): Promise<Deal[]> {
-  if (await postgres.isConfigured()) {
+  if (postgres.isConfigured()) {
     return postgres.getAllDeals();
   }
   return [];
@@ -76,7 +76,7 @@ export async function getFilteredDeals(filters: {
   limit?: number;
   offset?: number;
 }): Promise<{ deals: Deal[]; total: number }> {
-  if (await postgres.isConfigured()) {
+  if (postgres.isConfigured()) {
     return postgres.getFilteredDeals(filters);
   }
   return { deals: [], total: 0 };
@@ -97,7 +97,7 @@ export async function saveDeals(deals: Deal[], sources: string[]): Promise<void>
   }));
 
   // Write to Postgres
-  if (await postgres.isConfigured()) {
+  if (postgres.isConfigured()) {
     const count = await postgres.upsertDeals(processedDeals);
     console.log(`[HybridStore] Upserted ${count} deals to Postgres`);
 
@@ -131,7 +131,7 @@ export async function getStats(): Promise<{
   }
 
   // Fetch from Postgres
-  if (await postgres.isConfigured()) {
+  if (postgres.isConfigured()) {
     const stats = await postgres.getStats();
     
     // Cache in Redis
@@ -154,7 +154,7 @@ export async function getStats(): Promise<{
 
 // Mark stale deals as inactive
 export async function markStaleDealsInactive(hoursThreshold: number = 24): Promise<number> {
-  if (await postgres.isConfigured()) {
+  if (postgres.isConfigured()) {
     const count = await postgres.markStaleDealsInactive(hoursThreshold);
     
     // Invalidate cache
@@ -169,7 +169,7 @@ export async function markStaleDealsInactive(hoursThreshold: number = 24): Promi
 
 // Archive expired deals
 export async function removeExpiredDeals(): Promise<number> {
-  if (await postgres.isConfigured()) {
+  if (postgres.isConfigured()) {
     const count = await postgres.archiveExpiredDeals();
 
     // Invalidate cache

@@ -1,16 +1,36 @@
 // Postgres client for NomadSteals
-// Uses @vercel/postgres for Neon integration
+// Uses postgres.js for Supabase integration
 
-import { sql } from '@vercel/postgres';
+import postgres from 'postgres';
 import { Deal, DealStatus, DealType } from '../types';
 
+// Create connection lazily
+let sqlClient: ReturnType<typeof postgres> | null = null;
+
+function getClient() {
+  if (!sqlClient) {
+    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error('No Postgres connection string configured');
+    }
+    sqlClient = postgres(connectionString, {
+      ssl: 'require',
+      max: 10,
+      idle_timeout: 20,
+      connect_timeout: 10,
+    });
+  }
+  return sqlClient;
+}
+
 // Check if Postgres is configured
-export async function isConfigured(): Promise<boolean> {
-  return !!(process.env.POSTGRES_URL || process.env.DATABASE_URL || process.env.NEON_DATABASE_URL || process.env.NEON_POSTGRES_URL);
+export function isConfigured(): boolean {
+  return !!(process.env.POSTGRES_URL || process.env.DATABASE_URL);
 }
 
 // Reset schema (drop and recreate tables)
 export async function resetSchema(): Promise<void> {
+  const sql = getClient();
   await sql`DROP TABLE IF EXISTS deals CASCADE`;
   await sql`DROP TABLE IF EXISTS deal_stats CASCADE`;
   console.log('[Postgres] Tables dropped');
@@ -19,6 +39,8 @@ export async function resetSchema(): Promise<void> {
 
 // Initialize database schema
 export async function initSchema(): Promise<void> {
+  const sql = getClient();
+  
   await sql`
     CREATE TABLE IF NOT EXISTS deals (
       id VARCHAR(255) PRIMARY KEY,
@@ -145,7 +167,8 @@ function rowToDeal(row: Record<string, unknown>): Deal {
 
 // Get all active deals
 export async function getDeals(): Promise<Deal[]> {
-  const { rows } = await sql`
+  const sql = getClient();
+  const rows = await sql`
     SELECT * FROM deals 
     WHERE is_active = true AND status = 'active'
     ORDER BY value_score DESC
@@ -156,7 +179,8 @@ export async function getDeals(): Promise<Deal[]> {
 
 // Get all deals including archived
 export async function getAllDeals(): Promise<Deal[]> {
-  const { rows } = await sql`SELECT * FROM deals ORDER BY value_score DESC`;
+  const sql = getClient();
+  const rows = await sql`SELECT * FROM deals ORDER BY value_score DESC`;
   return rows.map(row => rowToDeal(row as Record<string, unknown>));
 }
 
@@ -174,26 +198,27 @@ export async function getFilteredDeals(filters: {
   limit?: number;
   offset?: number;
 }): Promise<{ deals: Deal[]; total: number }> {
+  const sql = getClient();
   const limit = filters.limit || 20;
   const offset = filters.offset || 0;
   
-  let result;
-  let countResult;
+  let rows;
+  let countRows;
   
   if (filters.status === 'all') {
-    result = await sql`SELECT * FROM deals ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
-    countResult = await sql`SELECT COUNT(*)::int as count FROM deals`;
+    rows = await sql`SELECT * FROM deals ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
+    countRows = await sql`SELECT COUNT(*)::int as count FROM deals`;
   } else if (filters.status === 'expired' || filters.status === 'archived') {
-    result = await sql`SELECT * FROM deals WHERE status = ${filters.status} ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
-    countResult = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = ${filters.status}`;
+    rows = await sql`SELECT * FROM deals WHERE status = ${filters.status} ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
+    countRows = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = ${filters.status}`;
   } else {
-    result = await sql`SELECT * FROM deals WHERE status = 'active' AND is_active = true ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
-    countResult = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = 'active' AND is_active = true`;
+    rows = await sql`SELECT * FROM deals WHERE status = 'active' AND is_active = true ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
+    countRows = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = 'active' AND is_active = true`;
   }
   
   return {
-    deals: result.rows.map(row => rowToDeal(row as Record<string, unknown>)),
-    total: countResult.rows[0].count as number,
+    deals: rows.map(row => rowToDeal(row as Record<string, unknown>)),
+    total: (countRows[0]?.count as number) || 0,
   };
 }
 
@@ -201,6 +226,7 @@ export async function getFilteredDeals(filters: {
 export async function upsertDeals(deals: Deal[]): Promise<number> {
   if (deals.length === 0) return 0;
   
+  const sql = getClient();
   let upsertedCount = 0;
 
   for (const deal of deals) {
@@ -224,7 +250,7 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
           ${deal.originCity || null}, ${deal.originCode || null}, ${deal.destinationCity}, ${deal.destinationCode || null},
           ${bookByDate}, ${deal.travelWindow || null},
           ${deal.airline || null}, ${deal.bookingUrl}, ${deal.imageUrl || ''}, ${deal.source},
-          ${JSON.stringify(deal.includes || [])}, ${JSON.stringify(deal.restrictions || [])}, ${JSON.stringify(deal.tags || [])},
+          ${JSON.stringify(deal.includes || [])}::jsonb, ${JSON.stringify(deal.restrictions || [])}::jsonb, ${JSON.stringify(deal.tags || [])}::jsonb,
           ${deal.isHotDeal || false}, ${deal.isExpiringSoon || false}, ${deal.isHistoricLow || false}, true, 'active',
           NOW(), NOW(), NOW()
         )
@@ -251,24 +277,28 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
 
 // Mark stale deals as inactive
 export async function markStaleDealsInactive(hoursThreshold: number = 24): Promise<number> {
+  const sql = getClient();
   const result = await sql`
     UPDATE deals 
     SET is_active = false, updated_at = NOW()
     WHERE is_active = true 
       AND last_seen_at < NOW() - INTERVAL '1 hour' * ${hoursThreshold}
+    RETURNING id
   `;
-  return result.rowCount || 0;
+  return result.length;
 }
 
 // Archive expired deals
 export async function archiveExpiredDeals(): Promise<number> {
+  const sql = getClient();
   const result = await sql`
     UPDATE deals 
     SET status = 'expired', expired_at = NOW(), archived_at = NOW(), updated_at = NOW()
     WHERE status = 'active' 
       AND book_by_date < CURRENT_DATE
+    RETURNING id
   `;
-  return result.rowCount || 0;
+  return result.length;
 }
 
 // Get stats
@@ -281,6 +311,8 @@ export async function getStats(): Promise<{
   sourceBreakdown: Record<string, number>;
   updatedAt: string;
 }> {
+  const sql = getClient();
+  
   const statsResult = await sql`
     SELECT 
       COUNT(*)::int as total_deals,
@@ -299,17 +331,17 @@ export async function getStats(): Promise<{
   `;
 
   const sourceBreakdown: Record<string, number> = {};
-  for (const row of sourceResult.rows) {
+  for (const row of sourceResult) {
     sourceBreakdown[row.source as string] = row.count as number;
   }
 
-  const stats = statsResult.rows[0];
+  const stats = statsResult[0];
   return {
-    totalDeals: stats.total_deals as number,
-    activeDeals: stats.active_deals as number,
-    hotDeals: stats.hot_deals as number,
-    avgSavings: stats.avg_savings as number,
-    archivedDeals: stats.archived_deals as number,
+    totalDeals: (stats.total_deals as number) || 0,
+    activeDeals: (stats.active_deals as number) || 0,
+    hotDeals: (stats.hot_deals as number) || 0,
+    avgSavings: (stats.avg_savings as number) || 0,
+    archivedDeals: (stats.archived_deals as number) || 0,
     sourceBreakdown,
     updatedAt: new Date().toISOString(),
   };
@@ -317,6 +349,7 @@ export async function getStats(): Promise<{
 
 // Update stats table
 export async function updateStatsTable(): Promise<void> {
+  const sql = getClient();
   const stats = await getStats();
   await sql`
     UPDATE deal_stats SET
@@ -324,7 +357,7 @@ export async function updateStatsTable(): Promise<void> {
       active_deals = ${stats.activeDeals},
       hot_deals = ${stats.hotDeals},
       avg_savings = ${stats.avgSavings},
-      source_breakdown = ${JSON.stringify(stats.sourceBreakdown)},
+      source_breakdown = ${JSON.stringify(stats.sourceBreakdown)}::jsonb,
       updated_at = NOW()
     WHERE id = 1
   `;
