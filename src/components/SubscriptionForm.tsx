@@ -241,7 +241,7 @@ export function SubscriptionForm({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder:text-gray-400"
             required
           />
         </div>
@@ -476,7 +476,7 @@ export function SubscriptionForm({
                     maxPrice: e.target.value ? parseInt(e.target.value) : undefined 
                   })}
                   placeholder="No limit"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-gray-900 bg-white placeholder:text-gray-400"
                   min="0"
                   step="50"
                 />
@@ -496,7 +496,7 @@ export function SubscriptionForm({
                   minValueScore: e.target.value ? parseInt(e.target.value) : undefined 
                 })}
                 placeholder="No minimum"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-gray-900 bg-white placeholder:text-gray-400"
                 min="0"
                 max="100"
               />
