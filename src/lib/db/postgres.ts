@@ -9,12 +9,16 @@ let pool: Pool | null = null;
 
 function getPool(): Pool {
   if (!pool) {
-    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+    let connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
     if (!connectionString) {
       throw new Error('POSTGRES_URL or DATABASE_URL not configured');
     }
     
-    // Always use SSL with rejectUnauthorized: false for cloud providers (Supabase, Neon, etc.)
+    // Remove sslmode from connection string (we handle it in Pool config)
+    // pg library doesn't parse sslmode from URL
+    connectionString = connectionString.replace(/[?&]sslmode=[^&]+/g, '');
+    
+    // Supabase pooler requires SSL
     pool = new Pool({
       connectionString,
       ssl: {
