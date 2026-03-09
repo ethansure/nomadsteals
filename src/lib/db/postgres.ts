@@ -1,52 +1,28 @@
 // Postgres client for NomadSteals
-// Uses postgres.js for Supabase connection
+// Uses @vercel/postgres for Neon integration
 
-import postgres from 'postgres';
+import { sql } from '@vercel/postgres';
 import { Deal, DealStatus, DealType } from '../types';
-
-// Singleton SQL client
-let sql: ReturnType<typeof postgres> | null = null;
-
-function getSQL() {
-  if (!sql) {
-    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (!connectionString) {
-      throw new Error('POSTGRES_URL or DATABASE_URL not configured');
-    }
-    
-    sql = postgres(connectionString, {
-      ssl: 'require',
-      max: 10,
-      idle_timeout: 30,
-      connect_timeout: 10,
-    });
-  }
-  return sql;
-}
 
 // Check if Postgres is configured
 export async function isConfigured(): Promise<boolean> {
-  const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-  return !!connectionString;
+  return !!(process.env.POSTGRES_URL || process.env.DATABASE_URL);
 }
 
 // Reset schema (drop and recreate tables)
 export async function resetSchema(): Promise<void> {
-  const db = getSQL();
-  await db`DROP TABLE IF EXISTS deals CASCADE`;
-  await db`DROP TABLE IF EXISTS deal_stats CASCADE`;
+  await sql`DROP TABLE IF EXISTS deals CASCADE`;
+  await sql`DROP TABLE IF EXISTS deal_stats CASCADE`;
   console.log('[Postgres] Tables dropped');
   await initSchema();
 }
 
 // Initialize database schema
 export async function initSchema(): Promise<void> {
-  const db = getSQL();
-  
-  await db`
+  await sql`
     CREATE TABLE IF NOT EXISTS deals (
       id VARCHAR(255) PRIMARY KEY,
-      deal_signature VARCHAR(512) UNIQUE,
+      deal_signature VARCHAR(512),
       type VARCHAR(50) DEFAULT 'flight',
       title TEXT NOT NULL,
       description TEXT,
@@ -75,25 +51,24 @@ export async function initSchema(): Promise<void> {
       is_historic_low BOOLEAN DEFAULT FALSE,
       is_active BOOLEAN DEFAULT TRUE,
       status VARCHAR(20) DEFAULT 'active',
-      posted_at TIMESTAMP WITH TIME ZONE,
-      scraped_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-      first_seen_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-      last_seen_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-      expired_at TIMESTAMP WITH TIME ZONE,
-      archived_at TIMESTAMP WITH TIME ZONE,
+      posted_at TIMESTAMPTZ,
+      scraped_at TIMESTAMPTZ DEFAULT NOW(),
+      first_seen_at TIMESTAMPTZ DEFAULT NOW(),
+      last_seen_at TIMESTAMPTZ DEFAULT NOW(),
+      expired_at TIMESTAMPTZ,
+      archived_at TIMESTAMPTZ,
       views INTEGER DEFAULT 0,
       saves INTEGER DEFAULT 0,
-      created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-      updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
 
-  await db`CREATE INDEX IF NOT EXISTS idx_deals_value_score ON deals(value_score DESC)`;
-  await db`CREATE INDEX IF NOT EXISTS idx_deals_status ON deals(status)`;
-  await db`CREATE INDEX IF NOT EXISTS idx_deals_is_active ON deals(is_active)`;
-  await db`CREATE INDEX IF NOT EXISTS idx_deals_scraped_at ON deals(scraped_at DESC)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_deals_value_score ON deals(value_score DESC)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_deals_status ON deals(status)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_deals_is_active ON deals(is_active)`;
 
-  await db`
+  await sql`
     CREATE TABLE IF NOT EXISTS deal_stats (
       id SERIAL PRIMARY KEY,
       total_deals INTEGER DEFAULT 0,
@@ -101,12 +76,11 @@ export async function initSchema(): Promise<void> {
       hot_deals INTEGER DEFAULT 0,
       avg_savings INTEGER DEFAULT 0,
       source_breakdown JSONB DEFAULT '{}',
-      updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      updated_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
 
-  await db`INSERT INTO deal_stats (id, total_deals) VALUES (1, 0) ON CONFLICT (id) DO NOTHING`;
-
+  await sql`INSERT INTO deal_stats (id, total_deals) VALUES (1, 0) ON CONFLICT (id) DO NOTHING`;
   console.log('[Postgres] Schema initialized');
 }
 
@@ -171,8 +145,7 @@ function rowToDeal(row: Record<string, unknown>): Deal {
 
 // Get all active deals
 export async function getDeals(): Promise<Deal[]> {
-  const db = getSQL();
-  const rows = await db`
+  const { rows } = await sql`
     SELECT * FROM deals 
     WHERE is_active = true AND status = 'active'
     ORDER BY value_score DESC
@@ -181,22 +154,9 @@ export async function getDeals(): Promise<Deal[]> {
   return rows.map(row => rowToDeal(row as Record<string, unknown>));
 }
 
-// Get top deals by value score
-export async function getTopDeals(limit: number = 50): Promise<Deal[]> {
-  const db = getSQL();
-  const rows = await db`
-    SELECT * FROM deals 
-    WHERE is_active = true AND status = 'active'
-    ORDER BY value_score DESC
-    LIMIT ${limit}
-  `;
-  return rows.map(row => rowToDeal(row as Record<string, unknown>));
-}
-
 // Get all deals including archived
 export async function getAllDeals(): Promise<Deal[]> {
-  const db = getSQL();
-  const rows = await db`SELECT * FROM deals ORDER BY value_score DESC`;
+  const { rows } = await sql`SELECT * FROM deals ORDER BY value_score DESC`;
   return rows.map(row => rowToDeal(row as Record<string, unknown>));
 }
 
@@ -214,41 +174,26 @@ export async function getFilteredDeals(filters: {
   limit?: number;
   offset?: number;
 }): Promise<{ deals: Deal[]; total: number }> {
-  const db = getSQL();
   const limit = filters.limit || 20;
   const offset = filters.offset || 0;
   
-  let rows;
+  let result;
   let countResult;
   
   if (filters.status === 'all') {
-    rows = await db`
-      SELECT * FROM deals 
-      ORDER BY value_score DESC
-      LIMIT ${limit} OFFSET ${offset}
-    `;
-    countResult = await db`SELECT COUNT(*)::int as count FROM deals`;
+    result = await sql`SELECT * FROM deals ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
+    countResult = await sql`SELECT COUNT(*)::int as count FROM deals`;
   } else if (filters.status === 'expired' || filters.status === 'archived') {
-    rows = await db`
-      SELECT * FROM deals 
-      WHERE status = ${filters.status}
-      ORDER BY value_score DESC
-      LIMIT ${limit} OFFSET ${offset}
-    `;
-    countResult = await db`SELECT COUNT(*)::int as count FROM deals WHERE status = ${filters.status}`;
+    result = await sql`SELECT * FROM deals WHERE status = ${filters.status} ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
+    countResult = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = ${filters.status}`;
   } else {
-    rows = await db`
-      SELECT * FROM deals 
-      WHERE status = 'active' AND is_active = true
-      ORDER BY value_score DESC
-      LIMIT ${limit} OFFSET ${offset}
-    `;
-    countResult = await db`SELECT COUNT(*)::int as count FROM deals WHERE status = 'active' AND is_active = true`;
+    result = await sql`SELECT * FROM deals WHERE status = 'active' AND is_active = true ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
+    countResult = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = 'active' AND is_active = true`;
   }
   
   return {
-    deals: rows.map(row => rowToDeal(row as Record<string, unknown>)),
-    total: countResult[0].count as number,
+    deals: result.rows.map(row => rowToDeal(row as Record<string, unknown>)),
+    total: countResult.rows[0].count as number,
   };
 }
 
@@ -256,30 +201,32 @@ export async function getFilteredDeals(filters: {
 export async function upsertDeals(deals: Deal[]): Promise<number> {
   if (deals.length === 0) return 0;
   
-  const db = getSQL();
   let upsertedCount = 0;
 
   for (const deal of deals) {
     try {
-      await db`
+      // Ensure dates are valid or null
+      const bookByDate = deal.bookByDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      
+      await sql`
         INSERT INTO deals (
           id, deal_signature, type, title, description,
           original_price, current_price, currency, savings_percent, value_score,
           origin_city, origin_code, destination_city, destination_code,
-          departure_date, return_date, book_by_date, travel_window,
+          book_by_date, travel_window,
           airline, booking_url, image_url, source,
           includes, restrictions, tags,
           is_hot_deal, is_expiring_soon, is_historic_low, is_active, status,
-          posted_at, scraped_at, first_seen_at, last_seen_at
+          scraped_at, first_seen_at, last_seen_at
         ) VALUES (
           ${deal.id}, ${deal.dealSignature || null}, ${deal.type || 'flight'}, ${deal.title}, ${deal.description || ''},
-          ${deal.originalPrice}, ${deal.currentPrice}, ${deal.currency || 'USD'}, ${deal.savingsPercent}, ${deal.valueScore},
+          ${deal.originalPrice || 0}, ${deal.currentPrice}, ${deal.currency || 'USD'}, ${deal.savingsPercent || 0}, ${deal.valueScore || 50},
           ${deal.originCity || null}, ${deal.originCode || null}, ${deal.destinationCity}, ${deal.destinationCode || null},
-          ${deal.departureDate || null}, ${deal.returnDate || null}, ${deal.bookByDate}, ${deal.travelWindow || null},
+          ${bookByDate}, ${deal.travelWindow || null},
           ${deal.airline || null}, ${deal.bookingUrl}, ${deal.imageUrl || ''}, ${deal.source},
           ${JSON.stringify(deal.includes || [])}, ${JSON.stringify(deal.restrictions || [])}, ${JSON.stringify(deal.tags || [])},
-          ${deal.isHotDeal || false}, ${deal.isExpiringSoon || false}, ${deal.isHistoricLow || false}, ${deal.isActive !== false}, ${deal.status || 'active'},
-          ${deal.postedAt || new Date().toISOString()}, ${deal.scrapedAt || new Date().toISOString()}, ${deal.firstSeenAt || new Date().toISOString()}, ${deal.lastSeenAt || new Date().toISOString()}
+          ${deal.isHotDeal || false}, ${deal.isExpiringSoon || false}, ${deal.isHistoricLow || false}, true, 'active',
+          NOW(), NOW(), NOW()
         )
         ON CONFLICT (id) DO UPDATE SET
           current_price = EXCLUDED.current_price,
@@ -296,13 +243,6 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
       upsertedCount++;
     } catch (error) {
       console.error(`[Postgres] Failed to upsert deal ${deal.id}:`, error);
-      console.error(`[Postgres] Deal data:`, JSON.stringify({
-        id: deal.id,
-        title: deal.title?.substring(0, 50),
-        bookByDate: deal.bookByDate,
-        currentPrice: deal.currentPrice,
-        destinationCity: deal.destinationCity,
-      }));
     }
   }
 
@@ -311,26 +251,24 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
 
 // Mark stale deals as inactive
 export async function markStaleDealsInactive(hoursThreshold: number = 24): Promise<number> {
-  const db = getSQL();
-  const result = await db`
+  const result = await sql`
     UPDATE deals 
     SET is_active = false, updated_at = NOW()
     WHERE is_active = true 
       AND last_seen_at < NOW() - INTERVAL '1 hour' * ${hoursThreshold}
   `;
-  return result.count;
+  return result.rowCount || 0;
 }
 
 // Archive expired deals
 export async function archiveExpiredDeals(): Promise<number> {
-  const db = getSQL();
-  const result = await db`
+  const result = await sql`
     UPDATE deals 
     SET status = 'expired', expired_at = NOW(), archived_at = NOW(), updated_at = NOW()
     WHERE status = 'active' 
       AND book_by_date < CURRENT_DATE
   `;
-  return result.count;
+  return result.rowCount || 0;
 }
 
 // Get stats
@@ -343,9 +281,7 @@ export async function getStats(): Promise<{
   sourceBreakdown: Record<string, number>;
   updatedAt: string;
 }> {
-  const db = getSQL();
-  
-  const statsResult = await db`
+  const statsResult = await sql`
     SELECT 
       COUNT(*)::int as total_deals,
       COUNT(*) FILTER (WHERE is_active = true AND status = 'active')::int as active_deals,
@@ -355,7 +291,7 @@ export async function getStats(): Promise<{
     FROM deals
   `;
 
-  const sourceResult = await db`
+  const sourceResult = await sql`
     SELECT source, COUNT(*)::int as count 
     FROM deals 
     WHERE is_active = true AND status = 'active'
@@ -363,11 +299,11 @@ export async function getStats(): Promise<{
   `;
 
   const sourceBreakdown: Record<string, number> = {};
-  for (const row of sourceResult) {
+  for (const row of sourceResult.rows) {
     sourceBreakdown[row.source as string] = row.count as number;
   }
 
-  const stats = statsResult[0];
+  const stats = statsResult.rows[0];
   return {
     totalDeals: stats.total_deals as number,
     activeDeals: stats.active_deals as number,
@@ -382,9 +318,7 @@ export async function getStats(): Promise<{
 // Update stats table
 export async function updateStatsTable(): Promise<void> {
   const stats = await getStats();
-  const db = getSQL();
-  
-  await db`
+  await sql`
     UPDATE deal_stats SET
       total_deals = ${stats.totalDeals},
       active_deals = ${stats.activeDeals},
