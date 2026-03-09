@@ -256,10 +256,10 @@ export function SubscriptionForm({
                         ...preferences,
                         originCities: Array.from(e.target.selectedOptions, opt => opt.value)
                       })}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm h-24"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm h-24 text-gray-900 bg-white"
                     >
                       {allCities.slice(0, 30).map(city => (
-                        <option key={city} value={city}>{city}</option>
+                        <option key={city} value={city} className="text-gray-900 py-1">{city}</option>
                       ))}
                     </select>
                     <div className="text-xs text-gray-400 mt-1">Hold Ctrl/Cmd to select multiple</div>

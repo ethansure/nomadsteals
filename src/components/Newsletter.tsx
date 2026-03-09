@@ -62,33 +62,13 @@ export function NewsletterForm({ variant = "inline", className = "" }: Newslette
           <p className="text-white/90 mb-10 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
             {t('subtitle', { count: '50,000' })}
           </p>
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
-            <div className="relative flex-1">
-              <input 
-                type="email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t('emailPlaceholder')}
-                className="px-6 py-4 pl-12 rounded-2xl text-[#2D3436] w-full outline-none focus:ring-4 focus:ring-white/30 shadow-lg placeholder:text-[#2D3436]/40"
-                required
-              />
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#FF6B6B]/50" />
-            </div>
-            <button 
-              type="submit"
-              disabled={status === "loading"}
-              className="px-8 py-4 bg-[#2D3436] text-white font-bold rounded-2xl hover:bg-[#4A5154] transition-all duration-300 whitespace-nowrap disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg hover:-translate-y-0.5"
-            >
-              {status === "loading" ? (
-                t('subscribing')
-              ) : (
-                <>
-                  {t('subscribe')}
-                  <Send className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </form>
+          <a 
+            href="/newsletter"
+            className="inline-flex items-center gap-3 px-10 py-5 bg-[#2D3436] text-white font-bold rounded-2xl hover:bg-[#4A5154] transition-all duration-300 shadow-lg hover:-translate-y-0.5 text-lg"
+          >
+            {t('subscribe')}
+            <Send className="w-5 h-5" />
+          </a>
           <p className="text-sm text-white/80 mt-6 flex items-center justify-center gap-2">
             <Lock className="w-4 h-4" />
             {t('noSpam')}
