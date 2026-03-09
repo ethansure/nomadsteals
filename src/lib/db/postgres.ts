@@ -1,27 +1,8 @@
 // Postgres client for NomadSteals
-// Uses postgres.js for Supabase integration
+// Uses @vercel/postgres for Neon integration
 
-import postgres from 'postgres';
+import { sql } from '@vercel/postgres';
 import { Deal, DealStatus, DealType } from '../types';
-
-// Create connection lazily
-let sqlClient: ReturnType<typeof postgres> | null = null;
-
-function getClient() {
-  if (!sqlClient) {
-    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-    if (!connectionString) {
-      throw new Error('No Postgres connection string configured');
-    }
-    sqlClient = postgres(connectionString, {
-      ssl: 'require',
-      max: 10,
-      idle_timeout: 20,
-      connect_timeout: 10,
-    });
-  }
-  return sqlClient;
-}
 
 // Check if Postgres is configured
 export function isConfigured(): boolean {
@@ -30,7 +11,6 @@ export function isConfigured(): boolean {
 
 // Reset schema (drop and recreate tables)
 export async function resetSchema(): Promise<void> {
-  const sql = getClient();
   await sql`DROP TABLE IF EXISTS deals CASCADE`;
   await sql`DROP TABLE IF EXISTS deal_stats CASCADE`;
   console.log('[Postgres] Tables dropped');
@@ -39,8 +19,6 @@ export async function resetSchema(): Promise<void> {
 
 // Initialize database schema
 export async function initSchema(): Promise<void> {
-  const sql = getClient();
-  
   await sql`
     CREATE TABLE IF NOT EXISTS deals (
       id VARCHAR(255) PRIMARY KEY,
@@ -167,8 +145,7 @@ function rowToDeal(row: Record<string, unknown>): Deal {
 
 // Get all active deals
 export async function getDeals(): Promise<Deal[]> {
-  const sql = getClient();
-  const rows = await sql`
+  const { rows } = await sql`
     SELECT * FROM deals 
     WHERE is_active = true AND status = 'active'
     ORDER BY value_score DESC
@@ -179,8 +156,7 @@ export async function getDeals(): Promise<Deal[]> {
 
 // Get all deals including archived
 export async function getAllDeals(): Promise<Deal[]> {
-  const sql = getClient();
-  const rows = await sql`SELECT * FROM deals ORDER BY value_score DESC`;
+  const { rows } = await sql`SELECT * FROM deals ORDER BY value_score DESC`;
   return rows.map(row => rowToDeal(row as Record<string, unknown>));
 }
 
@@ -198,27 +174,26 @@ export async function getFilteredDeals(filters: {
   limit?: number;
   offset?: number;
 }): Promise<{ deals: Deal[]; total: number }> {
-  const sql = getClient();
   const limit = filters.limit || 20;
   const offset = filters.offset || 0;
   
-  let rows;
-  let countRows;
+  let result;
+  let countResult;
   
   if (filters.status === 'all') {
-    rows = await sql`SELECT * FROM deals ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
-    countRows = await sql`SELECT COUNT(*)::int as count FROM deals`;
+    result = await sql`SELECT * FROM deals ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
+    countResult = await sql`SELECT COUNT(*)::int as count FROM deals`;
   } else if (filters.status === 'expired' || filters.status === 'archived') {
-    rows = await sql`SELECT * FROM deals WHERE status = ${filters.status} ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
-    countRows = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = ${filters.status}`;
+    result = await sql`SELECT * FROM deals WHERE status = ${filters.status} ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
+    countResult = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = ${filters.status}`;
   } else {
-    rows = await sql`SELECT * FROM deals WHERE status = 'active' AND is_active = true ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
-    countRows = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = 'active' AND is_active = true`;
+    result = await sql`SELECT * FROM deals WHERE status = 'active' AND is_active = true ORDER BY value_score DESC LIMIT ${limit} OFFSET ${offset}`;
+    countResult = await sql`SELECT COUNT(*)::int as count FROM deals WHERE status = 'active' AND is_active = true`;
   }
   
   return {
-    deals: rows.map(row => rowToDeal(row as Record<string, unknown>)),
-    total: (countRows[0]?.count as number) || 0,
+    deals: result.rows.map(row => rowToDeal(row as Record<string, unknown>)),
+    total: countResult.rows[0].count as number,
   };
 }
 
@@ -239,7 +214,6 @@ function toISODate(value: unknown): string | null {
 export async function upsertDeals(deals: Deal[]): Promise<number> {
   if (deals.length === 0) return 0;
   
-  const sql = getClient();
   let upsertedCount = 0;
 
   for (const deal of deals) {
@@ -257,7 +231,7 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
         continue;
       }
       
-      // Sanitize text fields - remove null bytes and limit length
+      // Sanitize text fields
       const safeTitle = (deal.title || '').replace(/\0/g, '').slice(0, 1000);
       const safeDesc = (deal.description || '').replace(/\0/g, '').slice(0, 5000);
       const safeDest = (deal.destinationCity || '').replace(/\0/g, '').slice(0, 250);
@@ -282,7 +256,7 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
           ${safeOrigin || null}, ${deal.originCode || null}, ${safeDest}, ${deal.destinationCode || null},
           ${bookByDate}, ${deal.travelWindow || null},
           ${deal.airline || null}, ${deal.bookingUrl}, ${deal.imageUrl || ''}, ${deal.source},
-          '[]'::jsonb, '[]'::jsonb, '[]'::jsonb,
+          ${JSON.stringify(deal.includes || [])}, ${JSON.stringify(deal.restrictions || [])}, ${JSON.stringify(deal.tags || [])},
           ${deal.isHotDeal || false}, ${deal.isExpiringSoon || false}, ${deal.isHistoricLow || false}, true, 'active',
           NOW(), NOW(), NOW()
         )
@@ -300,17 +274,8 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
       `;
       upsertedCount++;
     } catch (error) {
-      // Log the full error with deal details for debugging
       const errMsg = error instanceof Error ? error.message : String(error);
       console.error(`[Postgres] Failed to upsert deal ${deal.id}:`, errMsg);
-      console.error(`[Postgres] Deal data:`, JSON.stringify({
-        id: deal.id,
-        title: deal.title?.slice(0, 50),
-        destinationCity: deal.destinationCity,
-        currentPrice: deal.currentPrice,
-        bookingUrl: deal.bookingUrl?.slice(0, 50),
-        source: deal.source,
-      }));
     }
   }
 
@@ -320,28 +285,24 @@ export async function upsertDeals(deals: Deal[]): Promise<number> {
 
 // Mark stale deals as inactive
 export async function markStaleDealsInactive(hoursThreshold: number = 24): Promise<number> {
-  const sql = getClient();
   const result = await sql`
     UPDATE deals 
     SET is_active = false, updated_at = NOW()
     WHERE is_active = true 
       AND last_seen_at < NOW() - INTERVAL '1 hour' * ${hoursThreshold}
-    RETURNING id
   `;
-  return result.length;
+  return result.rowCount || 0;
 }
 
 // Archive expired deals
 export async function archiveExpiredDeals(): Promise<number> {
-  const sql = getClient();
   const result = await sql`
     UPDATE deals 
     SET status = 'expired', expired_at = NOW(), archived_at = NOW(), updated_at = NOW()
     WHERE status = 'active' 
       AND book_by_date < CURRENT_DATE
-    RETURNING id
   `;
-  return result.length;
+  return result.rowCount || 0;
 }
 
 // Get stats
@@ -354,8 +315,6 @@ export async function getStats(): Promise<{
   sourceBreakdown: Record<string, number>;
   updatedAt: string;
 }> {
-  const sql = getClient();
-  
   const statsResult = await sql`
     SELECT 
       COUNT(*)::int as total_deals,
@@ -374,17 +333,17 @@ export async function getStats(): Promise<{
   `;
 
   const sourceBreakdown: Record<string, number> = {};
-  for (const row of sourceResult) {
+  for (const row of sourceResult.rows) {
     sourceBreakdown[row.source as string] = row.count as number;
   }
 
-  const stats = statsResult[0];
+  const stats = statsResult.rows[0];
   return {
-    totalDeals: (stats.total_deals as number) || 0,
-    activeDeals: (stats.active_deals as number) || 0,
-    hotDeals: (stats.hot_deals as number) || 0,
-    avgSavings: (stats.avg_savings as number) || 0,
-    archivedDeals: (stats.archived_deals as number) || 0,
+    totalDeals: stats.total_deals as number,
+    activeDeals: stats.active_deals as number,
+    hotDeals: stats.hot_deals as number,
+    avgSavings: stats.avg_savings as number,
+    archivedDeals: stats.archived_deals as number,
     sourceBreakdown,
     updatedAt: new Date().toISOString(),
   };
@@ -392,7 +351,6 @@ export async function getStats(): Promise<{
 
 // Update stats table
 export async function updateStatsTable(): Promise<void> {
-  const sql = getClient();
   const stats = await getStats();
   await sql`
     UPDATE deal_stats SET
@@ -400,7 +358,7 @@ export async function updateStatsTable(): Promise<void> {
       active_deals = ${stats.activeDeals},
       hot_deals = ${stats.hotDeals},
       avg_savings = ${stats.avgSavings},
-      source_breakdown = ${JSON.stringify(stats.sourceBreakdown)}::jsonb,
+      source_breakdown = ${JSON.stringify(stats.sourceBreakdown)},
       updated_at = NOW()
     WHERE id = 1
   `;
