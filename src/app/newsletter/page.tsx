@@ -141,8 +141,8 @@ export default function NewsletterPage({
             Error fares, flash sales, and exclusive finds — delivered on your schedule.
           </p>
           
-          {/* Signup Form */}
-          <div className="max-w-3xl mx-auto bg-white/15 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+          {/* Signup Form - full width for customization options */}
+          <div className="w-full max-w-4xl mx-auto bg-white/15 backdrop-blur-sm rounded-3xl p-8 border border-white/20 transition-all duration-500">
             <SubscriptionForm />
           </div>
           
@@ -303,7 +303,7 @@ export default function NewsletterPage({
           <p className="text-white/90 mb-10 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
             Join 50,000+ savvy travelers who get our personalized deal alerts.
           </p>
-          <div className="max-w-3xl mx-auto bg-white/15 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+          <div className="w-full max-w-4xl mx-auto bg-white/15 backdrop-blur-sm rounded-3xl p-8 border border-white/20 transition-all duration-500">
             <SubscriptionForm />
           </div>
           <p className="text-sm text-white/80 mt-6 flex items-center justify-center gap-2">
