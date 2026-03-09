@@ -261,7 +261,7 @@ export function SubscriptionForm({
 
       {/* Advanced Preferences */}
       {showAdvanced && (
-        <div className="space-y-6 bg-gray-50 p-6 rounded-xl">
+        <div className="space-y-6 bg-gray-50 p-6 rounded-xl animate-in slide-in-from-top-2 fade-in duration-300">
           {/* Email Frequency */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
