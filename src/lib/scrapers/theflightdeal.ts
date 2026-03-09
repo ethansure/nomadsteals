@@ -229,7 +229,8 @@ function rssItemToDeal(item: RssItem): ScrapedDeal | null {
   const cleanTitle = `${route.origin} to ${route.destination} - $${price} RT`;
 
   return {
-    id: `tfd-${Buffer.from(item.link).toString('base64').slice(0, 12)}`,
+    // Use hash of full URL for unique ID (taking last part of URL which is unique)
+    id: `tfd-${Buffer.from(item.link).toString('base64').replace(/[+/=]/g, '').slice(-16)}`,
     source: 'theflightdeal',
     title: cleanTitle,
     origin: route.origin,

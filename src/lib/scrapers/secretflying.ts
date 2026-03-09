@@ -186,7 +186,8 @@ function rssItemToDeal(item: RssItem): ScrapedDeal | null {
   bookByDate.setDate(bookByDate.getDate() + 14); // Assume 2 weeks validity
 
   return {
-    id: `sf-${Buffer.from(item.link).toString('base64').slice(0, 12)}`,
+    // Use hash of full URL for unique ID (taking last part of URL which is unique)
+    id: `sf-${Buffer.from(item.link).toString('base64').replace(/[+/=]/g, '').slice(-16)}`,
     source: 'secretflying',
     title: item.title,
     origin: route.origin,
