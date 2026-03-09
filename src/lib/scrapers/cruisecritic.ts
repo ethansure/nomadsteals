@@ -33,13 +33,16 @@ const DESTINATION_IMAGES: Record<string, string> = {
   'hawaii': 'https://images.unsplash.com/photo-1507876466758-bc54f384809c?w=800',
   'bermuda': 'https://images.unsplash.com/photo-1580541631950-7282082b53ce?w=800',
   'canada': 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=800',
+  'canada & new england': 'https://images.unsplash.com/photo-1494791368093-85217fbbf8de?w=800',
   'new england': 'https://images.unsplash.com/photo-1494791368093-85217fbbf8de?w=800',
   'pacific': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
+  'pacific coastal': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
+  'british columbia': 'https://images.unsplash.com/photo-1531176175280-1c97b0ff2b0f?w=800',
   'norway': 'https://images.unsplash.com/photo-1520769669658-f07657f5a307?w=800',
   'default': 'https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800',
 };
 
-// Average cruise prices by destination for value calculation
+// Average cruise prices by destination for value calculation (per 7-night cruise)
 const AVG_CRUISE_PRICES: Record<string, number> = {
   'caribbean': 1200,
   'alaska': 1800,
@@ -49,8 +52,11 @@ const AVG_CRUISE_PRICES: Record<string, number> = {
   'mexico': 900,
   'hawaii': 2000,
   'bermuda': 1100,
-  'canada': 1500,
+  'canada': 1600,
+  'canada & new england': 1600,
   'pacific': 1000,
+  'pacific coastal': 1000,
+  'british columbia': 1400,
   'norway': 2800,
   'default': 1500,
 };
@@ -138,14 +144,15 @@ function generateTags(destination: string, cruiseLine: string, isLastMinute: boo
   
   // Destination tags
   if (destLower.includes('caribbean')) tags.push('caribbean', 'beach', 'tropical');
-  if (destLower.includes('alaska')) tags.push('alaska', 'wildlife', 'scenic');
-  if (destLower.includes('mediterranean') || destLower.includes('europe')) tags.push('europe', 'cultural');
+  if (destLower.includes('alaska') || destLower.includes('british columbia')) tags.push('alaska', 'wildlife', 'scenic', 'glaciers');
+  if (destLower.includes('mediterranean') || destLower.includes('europe') || destLower.includes('iberian')) tags.push('europe', 'cultural');
   if (destLower.includes('bahamas')) tags.push('bahamas', 'beach');
   if (destLower.includes('mexico')) tags.push('mexico', 'beach');
   if (destLower.includes('hawaii')) tags.push('hawaii', 'tropical', 'beach');
-  if (destLower.includes('norway')) tags.push('norway', 'fjords', 'scenic');
+  if (destLower.includes('norway') || destLower.includes('fjord') || destLower.includes('arctic')) tags.push('norway', 'fjords', 'scenic');
   if (destLower.includes('bermuda')) tags.push('bermuda', 'beach');
-  if (destLower.includes('canada') || destLower.includes('new england')) tags.push('fall-foliage');
+  if (destLower.includes('canada') || destLower.includes('new england') || destLower.includes('quebec')) tags.push('fall-foliage', 'scenic');
+  if (destLower.includes('pacific coastal') || destLower.includes('wine country')) tags.push('pacific', 'scenic', 'wine');
   
   // Cruise line tags
   const lineLower = cruiseLine.toLowerCase();
@@ -154,6 +161,10 @@ function generateTags(destination: string, cruiseLine: string, isLastMinute: boo
     tags.push('luxury', 'premium');
   }
   if (lineLower.includes('carnival') || lineLower.includes('norwegian')) tags.push('fun', 'entertainment');
+  if (lineLower.includes('holland america')) tags.push('classic', 'premium');
+  if (lineLower.includes('princess')) tags.push('premium');
+  if (lineLower.includes('royal caribbean')) tags.push('family', 'entertainment');
+  if (lineLower.includes('celebrity')) tags.push('premium', 'modern');
   
   // Deal type tags
   if (isLastMinute) tags.push('last-minute');
@@ -214,9 +225,25 @@ export async function scrapeCruiseCritic(maxDeals: number = 25): Promise<Scraped
       const parentText = $el.parent().text();
       let destination = 'Caribbean'; // Default
       
-      const destinations = ['Caribbean', 'Alaska', 'Mediterranean', 'Europe', 'Bahamas', 'Mexico', 'Hawaii', 'Bermuda', 'Canada', 'New England', 'Pacific', 'Norway'];
-      for (const dest of destinations) {
-        if (parentText.includes(dest) || title.includes(dest)) {
+      // More specific destinations first, then general ones
+      const destinationPatterns: [RegExp, string][] = [
+        [/Canada\s*&?\s*New\s*England|New\s*England/i, 'Canada & New England'],
+        [/Pacific\s*Coastal/i, 'Pacific Coastal'],
+        [/British\s*Columbia/i, 'Alaska'], // BC cruises are Alaska-like
+        [/Mediterranean/i, 'Mediterranean'],
+        [/Alaska/i, 'Alaska'],
+        [/Caribbean/i, 'Caribbean'],
+        [/Bahamas/i, 'Bahamas'],
+        [/Mexico|Mexican\s*Riviera/i, 'Mexico'],
+        [/Hawaii/i, 'Hawaii'],
+        [/Bermuda/i, 'Bermuda'],
+        [/Norway|Fjord/i, 'Norway'],
+        [/Europe/i, 'Europe'],
+      ];
+      
+      const combinedText = parentText + ' ' + title;
+      for (const [pattern, dest] of destinationPatterns) {
+        if (pattern.test(combinedText)) {
           destination = dest;
           break;
         }
@@ -287,11 +314,25 @@ export async function scrapeCruiseCritic(maxDeals: number = 25): Promise<Scraped
         
         if (price < 100 || price > 10000) continue;
         
-        // Determine destination from title
+        // Determine destination from title using same patterns
         let destination = 'Caribbean';
-        const destinations = ['Caribbean', 'Alaska', 'Mediterranean', 'Europe', 'Bahamas', 'Mexico', 'Hawaii', 'Bermuda', 'Canada', 'New England', 'Pacific Coastal', 'Norway'];
-        for (const dest of destinations) {
-          if (title.toLowerCase().includes(dest.toLowerCase())) {
+        const destinationPatterns: [RegExp, string][] = [
+          [/Canada\s*&?\s*New\s*England|New\s*England|Quebec|Québec/i, 'Canada & New England'],
+          [/Pacific\s*Coastal|Wine\s*Country/i, 'Pacific Coastal'],
+          [/British\s*Columbia/i, 'Alaska'],
+          [/Mediterranean/i, 'Mediterranean'],
+          [/Alaska|Glacier|Denali/i, 'Alaska'],
+          [/Caribbean/i, 'Caribbean'],
+          [/Bahamas/i, 'Bahamas'],
+          [/Mexico|Mexican\s*Riviera/i, 'Mexico'],
+          [/Hawaii/i, 'Hawaii'],
+          [/Bermuda/i, 'Bermuda'],
+          [/Norway|Fjord|Arctic/i, 'Norway'],
+          [/Europe|Iberian/i, 'Europe'],
+        ];
+        
+        for (const [pattern, dest] of destinationPatterns) {
+          if (pattern.test(title)) {
             destination = dest;
             break;
           }
