@@ -6,7 +6,7 @@ import { Deal, DealStatus, DealType } from '../types';
 
 // Check if Postgres is configured
 export async function isConfigured(): Promise<boolean> {
-  return !!(process.env.POSTGRES_URL || process.env.DATABASE_URL || process.env.NEON_DATABASE_URL);
+  return !!(process.env.POSTGRES_URL || process.env.DATABASE_URL || process.env.NEON_DATABASE_URL || process.env.NEON_POSTGRES_URL);
 }
 
 // Reset schema (drop and recreate tables)

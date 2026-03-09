@@ -33,7 +33,7 @@ import {
 
 // Check if hybrid storage (Postgres) is configured
 function useHybridStorage(): boolean {
-  return !!(process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.NEON_DATABASE_URL);
+  return !!(process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.NEON_DATABASE_URL || process.env.NEON_POSTGRES_URL);
 }
 
 // Check if Blob storage is configured
