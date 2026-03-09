@@ -77,21 +77,6 @@ export default async function Home() {
             <SearchBar variant="hero" />
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
-            {[
-              { label: "Active Deals", value: stats.totalDeals, Icon: Compass, emoji: "🧭" },
-              { label: "Avg Savings", value: `${stats.avgSavings}%`, Icon: Wallet, emoji: "💰" },
-              { label: "Hot Deals", value: stats.hotDeals, Icon: Flame, emoji: "🔥" },
-              { label: "Error Fares", value: deals.filter((d) => d.isHistoricLow).length, Icon: Sparkles, emoji: "✨" },
-            ].map((stat, i) => (
-              <div key={i} className="bg-white/20 backdrop-blur-sm rounded-2xl p-5 text-center border border-white/20 hover:bg-white/30 transition-all duration-300">
-                <div className="text-3xl mb-2">{stat.emoji}</div>
-                <div className="text-3xl font-bold">{stat.value}</div>
-                <div className="text-sm text-white/80">{stat.label}</div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
