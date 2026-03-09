@@ -1,6 +1,8 @@
 // Migration API - POST to migrate, GET for status
 import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { migrateFromBlob, getMigrationStatus } from '@/lib/db/migrate';
+import * as postgres from '@/lib/db/postgres';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,9 +29,21 @@ export async function GET() {
   }
 }
 
-// POST - Run migration
-export async function POST() {
+// POST - Run migration or reset
+// ?reset=true to drop and recreate tables
+export async function POST(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const reset = searchParams.get('reset') === 'true';
+    
+    if (reset) {
+      await postgres.resetSchema();
+      return NextResponse.json({
+        success: true,
+        message: 'Schema reset complete. Run scraper to populate data.',
+      });
+    }
+    
     const result = await migrateFromBlob();
     return NextResponse.json({
       success: result.errors.length === 0,

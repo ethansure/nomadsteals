@@ -30,6 +30,15 @@ export async function isConfigured(): Promise<boolean> {
   return !!connectionString;
 }
 
+// Reset schema (drop and recreate tables)
+export async function resetSchema(): Promise<void> {
+  const db = getSQL();
+  await db`DROP TABLE IF EXISTS deals CASCADE`;
+  await db`DROP TABLE IF EXISTS deal_stats CASCADE`;
+  console.log('[Postgres] Tables dropped');
+  await initSchema();
+}
+
 // Initialize database schema
 export async function initSchema(): Promise<void> {
   const db = getSQL();
