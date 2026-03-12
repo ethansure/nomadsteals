@@ -4,7 +4,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { aggregateDeals } from '@/lib/api/deal-aggregator';
 import { removeExpiredDeals, markStaleDealsInactive } from '@/lib/api/deals-store';
-import { processAlerts, sendWeeklyDigest, isWeeklyDigestDay } from '@/lib/email/send-alerts';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // Allow up to 60 seconds for the cron job
@@ -42,25 +41,23 @@ export async function GET(request: NextRequest) {
       maxDealsPerSource: 40,
     });
     
-    // Process email alerts for subscribers
-    let emailStats = { instant: { sent: 0, failed: 0, skipped: 0 }, daily: { sent: 0, failed: 0, skipped: 0 }, weekly: { sent: 0, failed: 0, skipped: 0 } };
+    // Process INSTANT email alerts only (daily/weekly handled by newsletter cron)
+    let emailStats = { instant: { sent: 0, failed: 0, skipped: 0 } };
     
     try {
-      console.log('[Cron] Processing email alerts...');
-      const alertResults = await processAlerts(result.deals);
-      emailStats.instant = { sent: alertResults.instant.sent, failed: alertResults.instant.failed, skipped: alertResults.instant.skipped };
-      emailStats.daily = { sent: alertResults.daily.sent, failed: alertResults.daily.failed, skipped: alertResults.daily.skipped };
+      // Only send instant alerts for hot deals during hourly refresh
+      // Daily and weekly newsletters are sent by /api/cron/newsletter at scheduled times
+      const hotDeals = result.deals.filter(d => d.isHotDeal || d.valueScore >= 90);
       
-      // Send weekly digest on Sundays
-      if (isWeeklyDigestDay()) {
-        console.log('[Cron] Sending weekly digests...');
-        const weeklyResult = await sendWeeklyDigest(result.deals);
-        emailStats.weekly = { sent: weeklyResult.sent, failed: weeklyResult.failed, skipped: weeklyResult.skipped };
+      if (hotDeals.length > 0) {
+        console.log(`[Cron] Processing instant alerts for ${hotDeals.length} hot deals...`);
+        const { sendInstantAlerts } = await import('@/lib/email/send-alerts');
+        const instantResult = await sendInstantAlerts(hotDeals);
+        emailStats.instant = { sent: instantResult.sent, failed: instantResult.failed, skipped: instantResult.skipped };
+        console.log(`[Cron] Instant alerts: ${emailStats.instant.sent} sent`);
       }
-      
-      console.log(`[Cron] Email alerts - Instant: ${emailStats.instant.sent} sent, Daily: ${emailStats.daily.sent} sent, Weekly: ${emailStats.weekly.sent} sent`);
     } catch (emailError) {
-      console.error('[Cron] Error processing email alerts:', emailError);
+      console.error('[Cron] Error processing instant alerts:', emailError);
     }
     
     const duration = Date.now() - startTime;

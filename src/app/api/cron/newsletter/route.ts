@@ -1,5 +1,8 @@
-// GET /api/cron/newsletter - Send daily newsletter to subscribers
-// Called by Vercel Cron at 8am PST daily
+// GET /api/cron/newsletter - Send newsletter to subscribers based on frequency
+// Called by Vercel Cron:
+//   - Daily at 8am PST for 'daily' subscribers
+//   - Weekly on Mondays at 8am PST for 'weekly' subscribers
+// Use ?frequency=daily or ?frequency=weekly to specify
 
 import { NextRequest, NextResponse } from 'next/server';
 import { sendDailyNewsletter } from '@/lib/email/daily-newsletter';
@@ -22,46 +25,61 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  console.log('[Newsletter Cron] Starting daily newsletter...');
+  // Get frequency from query param (default: daily)
+  const { searchParams } = new URL(request.url);
+  const frequency = (searchParams.get('frequency') || 'daily') as 'instant' | 'daily' | 'weekly';
+  
+  // Validate frequency
+  if (!['instant', 'daily', 'weekly'].includes(frequency)) {
+    return NextResponse.json({ error: 'Invalid frequency' }, { status: 400 });
+  }
+
+  console.log(`[Newsletter Cron] Starting ${frequency} newsletter...`);
   
   try {
-    // Get today's hot deals (sorted by value score)
+    // Get deals (sorted by value score)
     const allDeals = await getDeals();
+    
+    // For weekly, get more deals; for daily/instant, get top deals
+    const dealLimit = frequency === 'weekly' ? 30 : 20;
     const deals = allDeals
       .filter(d => d.isHotDeal || d.valueScore >= 70)
       .sort((a, b) => b.valueScore - a.valueScore)
-      .slice(0, 20);
+      .slice(0, dealLimit);
     
     if (deals.length === 0) {
-      console.log('[Newsletter Cron] No deals available to send');
+      console.log(`[Newsletter Cron] No deals available to send`);
       return NextResponse.json({
         success: true,
         message: 'No deals available to send',
+        frequency,
         sent: 0,
         failed: 0,
         skipped: 0,
       });
     }
 
-    console.log(`[Newsletter Cron] Found ${deals.length} deals to send`);
+    console.log(`[Newsletter Cron] Found ${deals.length} deals for ${frequency} subscribers`);
 
-    // Send newsletter to all verified subscribers
-    const result = await sendDailyNewsletter(deals);
+    // Send newsletter to subscribers with matching frequency preference
+    const result = await sendDailyNewsletter(deals, frequency);
 
-    console.log(`[Newsletter Cron] Complete: sent=${result.sent}, failed=${result.failed}, skipped=${result.skipped}`);
+    console.log(`[Newsletter Cron] ${frequency} complete: sent=${result.sent}, failed=${result.failed}, skipped=${result.skipped}`);
 
     return NextResponse.json({
       success: true,
-      message: 'Daily newsletter sent',
+      message: `${frequency.charAt(0).toUpperCase() + frequency.slice(1)} newsletter sent`,
+      frequency,
       ...result,
       dealsCount: deals.length,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('[Newsletter Cron] Error:', error);
+    console.error(`[Newsletter Cron] ${frequency} Error:`, error);
     return NextResponse.json(
       { 
         success: false, 
+        frequency,
         error: error instanceof Error ? error.message : 'Failed to send newsletter' 
       },
       { status: 500 }

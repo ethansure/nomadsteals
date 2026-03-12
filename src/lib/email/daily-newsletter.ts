@@ -102,8 +102,16 @@ export function generateDailyNewsletterHtml({ deals, recipientEmail, unsubscribe
   `;
 }
 
-export async function sendDailyNewsletter(deals: Deal[]): Promise<{ sent: number; failed: number; skipped: number }> {
-  const subscribers = await getVerifiedSubscriptions();
+export async function sendDailyNewsletter(
+  deals: Deal[], 
+  frequency: 'instant' | 'daily' | 'weekly' = 'daily'
+): Promise<{ sent: number; failed: number; skipped: number }> {
+  const allSubscribers = await getVerifiedSubscriptions();
+  
+  // Filter subscribers by their selected frequency
+  const subscribers = allSubscribers.filter(sub => sub.preferences.frequency === frequency);
+  
+  console.log(`[Newsletter] Sending ${frequency} newsletter to ${subscribers.length}/${allSubscribers.length} subscribers`);
   
   let sent = 0;
   let failed = 0;
