@@ -363,3 +363,14 @@ export async function updateStatsTable(): Promise<void> {
     WHERE id = 1
   `;
 }
+
+// Increment view count for a deal
+export async function incrementViews(dealId: string): Promise<number> {
+  const result = await sql`
+    UPDATE deals 
+    SET views = views + 1, updated_at = NOW()
+    WHERE id = ${dealId}
+    RETURNING views
+  `;
+  return result.rows[0]?.views || 0;
+}

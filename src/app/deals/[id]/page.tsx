@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { DealCard } from "@/components/DealCard";
 import { ValueScoreBadge, ValueScoreExplainer } from "@/components/ValueScoreBadge";
 import { NewsletterForm } from "@/components/Newsletter";
+import { ViewTracker } from "@/components/ViewTracker";
 import { getServerDeal, getServerDeals, getServerHistoricalDeals } from "@/lib/api/server";
 import { getDealById as getSampleDealById, sampleDeals } from "@/lib/sample-data";
 import { formatPrice, formatDate, timeAgo, getValueScoreLabel } from "@/lib/utils";
@@ -89,6 +90,7 @@ export default async function DealPage({ params }: DealPageProps) {
   return (
     <main className="min-h-screen bg-gray-50">
       <Header />
+      <ViewTracker dealId={deal.id} />
       
       {/* Hero Image */}
       <div className="relative h-64 md:h-96 overflow-hidden">
