@@ -2,7 +2,7 @@
 
 import { Deal } from '@/lib/types';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nomadsteals.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.nomadsteals.com';
 
 // Generate a single deal card HTML
 function dealCardHtml(deal: Deal): string {
