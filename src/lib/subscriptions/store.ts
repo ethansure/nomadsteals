@@ -1,8 +1,7 @@
-// Subscription Storage - JSON file based for MVP
-// Can be upgraded to Vercel KV / Upstash Redis later
+// Subscription Storage - Using Vercel KV / Upstash Redis
+// Serverless-compatible (no filesystem access)
 
-import fs from 'fs/promises';
-import path from 'path';
+import { Redis } from '@upstash/redis';
 import { v4 as uuidv4 } from 'uuid';
 import { 
   Subscription, 
@@ -11,35 +10,78 @@ import {
   DEFAULT_PREFERENCES 
 } from './types';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const SUBSCRIPTIONS_FILE = path.join(DATA_DIR, 'subscriptions.json');
+// Redis keys
+const KEYS = {
+  ALL_SUBS: 'subs:all',
+  BY_EMAIL: (email: string) => `subs:email:${email.toLowerCase()}`,
+  BY_VERIFY_TOKEN: (token: string) => `subs:verify:${token}`,
+  BY_UNSUB_TOKEN: (token: string) => `subs:unsub:${token}`,
+};
 
-// Ensure data directory and file exist
-async function ensureDataFile(): Promise<void> {
-  try {
-    await fs.access(DATA_DIR);
-  } catch {
-    await fs.mkdir(DATA_DIR, { recursive: true });
+// Singleton Redis client
+let redis: Redis | null = null;
+
+function getClient(): Redis | null {
+  if (redis) return redis;
+
+  const url = process.env.REDIS_URL || process.env.KV_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN;
+
+  if (!url) {
+    console.warn('[Subscriptions] Redis not configured');
+    return null;
   }
-  
+
   try {
-    await fs.access(SUBSCRIPTIONS_FILE);
-  } catch {
-    await fs.writeFile(SUBSCRIPTIONS_FILE, JSON.stringify([], null, 2));
+    if (url.startsWith('https://') && token) {
+      redis = new Redis({ url, token });
+    } else if (url.startsWith('redis')) {
+      redis = Redis.fromEnv();
+    } else {
+      return null;
+    }
+    return redis;
+  } catch (error) {
+    console.error('[Subscriptions] Failed to create Redis client:', error);
+    return null;
   }
 }
 
 // Read all subscriptions
 export async function getAllSubscriptions(): Promise<Subscription[]> {
-  await ensureDataFile();
-  const data = await fs.readFile(SUBSCRIPTIONS_FILE, 'utf-8');
-  return JSON.parse(data);
+  const client = getClient();
+  if (!client) return [];
+
+  try {
+    const data = await client.get<Subscription[]>(KEYS.ALL_SUBS);
+    return data || [];
+  } catch (error) {
+    console.error('[Subscriptions] getAllSubscriptions error:', error);
+    return [];
+  }
 }
 
 // Write all subscriptions
 async function saveAllSubscriptions(subscriptions: Subscription[]): Promise<void> {
-  await ensureDataFile();
-  await fs.writeFile(SUBSCRIPTIONS_FILE, JSON.stringify(subscriptions, null, 2));
+  const client = getClient();
+  if (!client) return;
+
+  try {
+    await client.set(KEYS.ALL_SUBS, subscriptions);
+    
+    // Update lookup indexes
+    for (const sub of subscriptions) {
+      await client.set(KEYS.BY_EMAIL(sub.email), sub.id);
+      if (sub.verificationToken) {
+        await client.set(KEYS.BY_VERIFY_TOKEN(sub.verificationToken), sub.id);
+      }
+      if (sub.unsubscribeToken) {
+        await client.set(KEYS.BY_UNSUB_TOKEN(sub.unsubscribeToken), sub.id);
+      }
+    }
+  } catch (error) {
+    console.error('[Subscriptions] saveAllSubscriptions error:', error);
+  }
 }
 
 // Get subscription by email
@@ -68,6 +110,11 @@ export async function getSubscriptionByUnsubscribeToken(token: string): Promise<
 
 // Create new subscription
 export async function createSubscription(input: SubscriptionCreateInput): Promise<Subscription> {
+  const client = getClient();
+  if (!client) {
+    throw new Error('Newsletter service not configured');
+  }
+
   const subscriptions = await getAllSubscriptions();
   
   // Check if email already exists
@@ -135,12 +182,21 @@ export async function updateSubscription(
 
 // Unsubscribe
 export async function unsubscribe(token: string): Promise<boolean> {
+  const client = getClient();
+  if (!client) return false;
+
   const subscriptions = await getAllSubscriptions();
-  const index = subscriptions.findIndex(s => s.unsubscribeToken === token);
+  const sub = subscriptions.find(s => s.unsubscribeToken === token);
   
-  if (index === -1) return false;
-  
+  if (!sub) return false;
+
+  const index = subscriptions.indexOf(sub);
   subscriptions.splice(index, 1);
+  
+  // Clean up indexes
+  await client.del(KEYS.BY_EMAIL(sub.email));
+  await client.del(KEYS.BY_UNSUB_TOKEN(token));
+  
   await saveAllSubscriptions(subscriptions);
   return true;
 }
