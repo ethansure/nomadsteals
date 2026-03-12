@@ -17,7 +17,7 @@ function getResend(): Resend | null {
 }
 
 const FROM_EMAIL = process.env.EMAIL_FROM || 'NomadSteals <deals@nomadsteals.com>';
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://nomadsteals.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.nomadsteals.com';
 
 export interface SendEmailOptions {
   to: string;
