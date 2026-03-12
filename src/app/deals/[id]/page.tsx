@@ -341,8 +341,12 @@ export default async function DealPage({ params }: DealPageProps) {
               </div>
               
               <ValueScoreExplainer />
-              <NewsletterForm variant="card" />
             </div>
+          </div>
+          
+          {/* Newsletter CTA - Below main content */}
+          <div className="mt-12">
+            <NewsletterForm variant="card" />
           </div>
           
           {/* Similar Deals */}
