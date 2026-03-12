@@ -16,6 +16,7 @@ export interface AggregatorResult {
     travelpirates: number;
     airfarewatchdog: number;
     skiplagged: number;
+    cruisecritic: number;
     totalDeals: number;
     avgValueScore: number;
     hotDeals: number;
@@ -47,6 +48,7 @@ export async function aggregateDeals(options: {
       case 'travelpirates': return 'TravelPirates';
       case 'airfarewatchdog': return 'Airfarewatchdog';
       case 'skiplagged': return 'Skiplagged';
+      case 'cruisecritic': return 'Cruise Critic';
       default: return s;
     }
   });
@@ -96,6 +98,7 @@ export async function aggregateDeals(options: {
       travelpirates: scrapeResult.stats.travelpirates,
       airfarewatchdog: scrapeResult.stats.airfarewatchdog,
       skiplagged: scrapeResult.stats.skiplagged,
+      cruisecritic: scrapeResult.stats.cruisecritic,
       totalDeals: deals.length,
       avgValueScore: scrapeResult.stats.avgValueScore,
       hotDeals: scrapeResult.stats.hotDeals,

@@ -59,7 +59,7 @@ export const DEFAULT_PREFERENCES: SubscriptionPreferences = {
   destinationCities: [],
   destinationRegions: [],
   anyDestination: true,
-  dealTypes: ['flight', 'hotel', 'package'],
+  dealTypes: ['flight', 'hotel', 'package', 'cruise'],
   maxPrice: undefined,
   frequency: 'daily',
   minValueScore: undefined,

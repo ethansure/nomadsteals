@@ -158,7 +158,7 @@ export function SearchBar({
 
   // Hero variant (default)
   return (
-    <div className={`bg-white rounded-3xl p-4 shadow-soft-lg border border-white/50 ${className}`}>
+    <div className={`bg-white rounded-3xl p-4 shadow-soft-lg border border-white/50 text-[#2D3436] ${className}`}>
       <div className="flex flex-col md:flex-row gap-4">
         {/* Origin */}
         <div className="flex-1">

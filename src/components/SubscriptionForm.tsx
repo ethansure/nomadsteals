@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { getRegionOptions, getAllCities, getPopularCities } from "@/lib/regions";
 import { SubscriptionPreferences, DEFAULT_PREFERENCES, EmailFrequency } from "@/lib/subscriptions/types";
 import { DealType } from "@/lib/types";
-import { Plane, Building2, Package, Mail, Tag, PlaneTakeoff, PlaneLanding, Wallet, Zap, Flame, PartyPopper, Lock, Search, X, Check } from "lucide-react";
+import { Plane, Building2, Package, Ship, Mail, Tag, PlaneTakeoff, PlaneLanding, Wallet, Zap, Flame, PartyPopper, Lock, Search, X, Check } from "lucide-react";
 
 // Searchable City Selector Component
 function CitySelector({ 
@@ -132,6 +132,7 @@ const DEAL_TYPES: { value: DealType; label: string; Icon: typeof Plane }[] = [
   { value: "flight", label: "Flights", Icon: Plane },
   { value: "hotel", label: "Hotels", Icon: Building2 },
   { value: "package", label: "Packages", Icon: Package },
+  { value: "cruise", label: "Cruises", Icon: Ship },
 ];
 
 const FREQUENCIES: { value: EmailFrequency; label: string; desc: string }[] = [
