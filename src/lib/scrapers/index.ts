@@ -6,6 +6,7 @@ import { scrapeTravelPirates } from './travelpirates';
 import { scrapeAirfarewatchdog } from './airfarewatchdog';
 import { scrapeSkiplagged } from './skiplagged';
 import { scrapeCruiseCritic } from './cruisecritic';
+import { scrapeTravelzoo } from './travelzoo';
 import { ScrapedDeal, ScrapeResult, ScraperSource } from './types';
 import { Deal } from '../types';
 
@@ -28,6 +29,7 @@ export interface ScrapeAllResult {
     airfarewatchdog: number;
     skiplagged: number;
     cruisecritic: number;
+    travelzoo: number;
     totalDeals: number;
     avgValueScore: number;
     hotDeals: number;
@@ -133,6 +135,23 @@ export async function scrapeAllSources(options: {
     console.error('[Scraper] CruiseCritic failed:', errMsg);
   }
 
+  await sleep(delayBetweenSources);
+
+  // Scrape Travelzoo (hotel deals)
+  try {
+    const travelzooResult = await scrapeTravelzoo();
+    allDeals.push(...travelzooResult.deals);
+    sources.push('travelzoo');
+    console.log(`[Scraper] Travelzoo: ${travelzooResult.deals.length} hotel deals`);
+    if (travelzooResult.error) {
+      errors.push(`Travelzoo: ${travelzooResult.error}`);
+    }
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
+    errors.push(`Travelzoo: ${errMsg}`);
+    console.error('[Scraper] Travelzoo failed:', errMsg);
+  }
+
   // Deduplicate deals
   const deduped = deduplicateDeals(allDeals);
   console.log(`[Scraper] After dedup: ${deduped.length} deals (from ${allDeals.length})`);
@@ -148,6 +167,7 @@ export async function scrapeAllSources(options: {
     airfarewatchdog: deduped.filter(d => d.source === 'airfarewatchdog').length,
     skiplagged: deduped.filter(d => d.source === 'skiplagged').length,
     cruisecritic: deduped.filter(d => d.source === 'cruisecritic').length,
+    travelzoo: deduped.filter(d => d.source === 'travelzoo').length,
     totalDeals: deduped.length,
     avgValueScore: deduped.length > 0 
       ? Math.round(deduped.reduce((acc, d) => acc + d.valueScore, 0) / deduped.length) 
@@ -211,18 +231,24 @@ export function scrapedDealToAppDeal(scraped: ScrapedDeal): Deal {
     'airfarewatchdog': 'Airfarewatchdog',
     'skiplagged': 'Skiplagged',
     'cruisecritic': 'Cruise Critic',
+    'travelzoo': 'Travelzoo',
   };
 
   // Determine deal type and customize based on source
   const isCruise = scraped.source === 'cruisecritic';
-  const dealType = isCruise ? 'cruise' : 'flight';
+  const isHotel = scraped.source === 'travelzoo';
+  const dealType = isCruise ? 'cruise' : isHotel ? 'hotel' : 'flight';
   
   const description = isCruise
     ? scraped.description || `Amazing cruise deal to ${scraped.destination}! Save ${scraped.savingsPercent}% on this voyage.`
+    : isHotel
+    ? scraped.description || `Incredible hotel deal in ${scraped.destination}! Save ${scraped.savingsPercent}% on your stay.`
     : scraped.description || `Great deal on flights to ${scraped.destination}! Save ${scraped.savingsPercent}% compared to average prices.`;
   
   const includes = isCruise
     ? ['Accommodations', 'Meals & Entertainment', 'Port Visits', 'Taxes & Fees']
+    : isHotel
+    ? ['Hotel Stay', 'Resort Amenities', 'Taxes & Fees']
     : scraped.isRoundtrip 
       ? ['Roundtrip Flight', 'Personal Item', 'Taxes & Fees'] 
       : ['One-way Flight', 'Personal Item', 'Taxes & Fees'];
