@@ -95,23 +95,45 @@ function parseRssFeed(xml: string): RssItem[] {
 }
 
 // Extract price from title like "Kansas City to Kona, Hawaii for only $428 roundtrip"
-function extractPrice(title: string): number | null {
-  const priceMatch = title.match(/\$(\d{2,4})/);
+// Also handles €, £, CAD, etc.
+function extractPrice(title: string): { price: number; currency: string } | null {
+  // Match various currency formats: $428, €328, £435, $356 CAD, etc.
+  const priceMatch = title.match(/[$€£](\d{2,4})(?:\s*(USD|CAD|EUR|GBP))?/i);
   if (priceMatch) {
-    return parseInt(priceMatch[1], 10);
+    const price = parseInt(priceMatch[1], 10);
+    let currency = 'USD';
+    
+    // Determine currency from symbol or suffix
+    if (title.includes('€')) currency = 'EUR';
+    else if (title.includes('£')) currency = 'GBP';
+    else if (title.includes('CAD')) currency = 'CAD';
+    else if (priceMatch[2]) currency = priceMatch[2].toUpperCase();
+    
+    return { price, currency };
   }
   return null;
 }
 
 // Extract origin and destination from title
 function extractRoute(title: string): { origin: string; destination: string } | null {
-  // Pattern: "Kansas City to Kona, Hawaii" or "New York to Paris"
-  const routeMatch = title.match(/^([^-]+?)\s+to\s+([^-]+?)(?:\s+for|\s*[-–(]|$)/i);
+  // Pattern 1: "Non-stop from Kansas City to Kona, Hawaii for only..."
+  // Pattern 2: "Kansas City to Kona, Hawaii for only..."
+  // Pattern 3: "Madrid, Spain to New York, USA for only..."
+  
+  // Try "from X to Y" pattern first
+  let routeMatch = title.match(/from\s+([^-]+?)\s+to\s+([^-]+?)(?:\s+for|\s*[-–(]|$)/i);
+  
+  // If not found, try "X to Y" pattern (at start of string)
+  if (!routeMatch) {
+    routeMatch = title.match(/^([^-]+?)\s+to\s+([^-]+?)(?:\s+for|\s*[-–(]|$)/i);
+  }
+  
   if (routeMatch) {
-    return {
-      origin: routeMatch[1].trim(),
-      destination: routeMatch[2].trim().replace(/,\s*$/, ''),
-    };
+    // Clean up "Non-stop" prefix if present in origin
+    let origin = routeMatch[1].trim().replace(/^Non-stop\s*/i, '');
+    let destination = routeMatch[2].trim().replace(/,\s*$/, '');
+    
+    return { origin, destination };
   }
   return null;
 }
@@ -168,18 +190,24 @@ function calculateValueScore(price: number, originCode?: string, destCode?: stri
 
 // Convert RSS item to ScrapedDeal
 function rssItemToDeal(item: RssItem): ScrapedDeal | null {
-  const price = extractPrice(item.title);
-  if (!price) return null;
+  const priceInfo = extractPrice(item.title);
+  if (!priceInfo) return null;
 
   const route = extractRoute(item.title);
   if (!route) return null;
 
+  const { price, currency } = priceInfo;
+  
+  // Convert to USD for comparison (rough estimates)
+  const toUsdRate: Record<string, number> = { USD: 1, CAD: 0.74, EUR: 1.08, GBP: 1.27 };
+  const priceUsd = Math.round(price * (toUsdRate[currency] || 1));
+
   const originCode = getAirportCode(route.origin);
   const destCode = getAirportCode(route.destination);
   
-  const valueScore = calculateValueScore(price, originCode, destCode);
+  const valueScore = calculateValueScore(priceUsd, originCode, destCode);
   const avgPrice = AVG_PRICES[originCode && destCode ? `${originCode}-${destCode}` : 'DEFAULT'] || AVG_PRICES['DEFAULT'];
-  const savingsPercent = Math.round(((avgPrice - price) / avgPrice) * 100);
+  const savingsPercent = Math.round(((avgPrice - priceUsd) / avgPrice) * 100);
 
   const pubDate = new Date(item.pubDate);
   const bookByDate = new Date();
@@ -194,9 +222,9 @@ function rssItemToDeal(item: RssItem): ScrapedDeal | null {
     originCode,
     destination: route.destination,
     destinationCode: destCode,
-    price,
+    price: priceUsd,  // Store USD-converted price for consistency
     originalPrice: avgPrice,
-    currency: 'USD',
+    currency: 'USD',  // Always store in USD after conversion
     originalUrl: item.link,
     imageUrl: getImageUrl(route.destination),
     postedAt: pubDate,
