@@ -188,6 +188,18 @@ function calculateValueScore(price: number, originCode?: string, destCode?: stri
   return Math.round(score);
 }
 
+// Generate a unique hash from a string (simple but effective)
+function hashString(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  // Convert to positive hex string and pad to ensure consistent length
+  return Math.abs(hash).toString(16).padStart(8, '0');
+}
+
 // Convert RSS item to ScrapedDeal
 function rssItemToDeal(item: RssItem): ScrapedDeal | null {
   const priceInfo = extractPrice(item.title);
@@ -214,8 +226,8 @@ function rssItemToDeal(item: RssItem): ScrapedDeal | null {
   bookByDate.setDate(bookByDate.getDate() + 14); // Assume 2 weeks validity
 
   return {
-    // Use hash of full URL for unique ID (taking last part of URL which is unique)
-    id: `sf-${Buffer.from(item.link).toString('base64').replace(/[+/=]/g, '').slice(-16)}`,
+    // Use hash of full URL for unique ID to avoid collisions from similar URL suffixes
+    id: `sf-${hashString(item.link)}`,
     source: 'secretflying',
     title: item.title,
     origin: route.origin,
