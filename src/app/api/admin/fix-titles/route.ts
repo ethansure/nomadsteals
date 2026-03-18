@@ -28,6 +28,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // First, fix the corrupted deal from regex bug (16578 should be $178)
+    const corruptedFix = await sql`
+      UPDATE deals 
+      SET title = 'European cities to Tobago from only $178 one-way',
+          updated_at = NOW()
+      WHERE id = 'sf-724ac2a7' AND title LIKE '%16578%'
+      RETURNING id
+    `;
+    
     // Get all deals with non-USD currency in title
     const { rows: deals } = await sql`
       SELECT id, title, current_price FROM deals
@@ -73,6 +82,7 @@ export async function GET(request: NextRequest) {
       success: true,
       message: `Normalized ${fixes.length} deal titles to USD`,
       totalChecked: deals.length,
+      corruptedFixed: corruptedFix.rowCount || 0,
       fixes,
     });
   } catch (error) {
