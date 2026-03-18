@@ -230,7 +230,8 @@ function rssItemToDeal(item: RssItem): ScrapedDeal | null {
   if (currency !== 'USD') {
     // Replace the original currency price with USD price
     // e.g., "€328" → "$354" or "£435" → "$552"
-    normalizedTitle = item.title.replace(/[$€£](\d{2,4})(?:\s*(USD|CAD|EUR|GBP))?/i, `$${priceUsd}`);
+    // Note: Use $$${priceUsd} because $ is a special char in replace (backreference)
+    normalizedTitle = item.title.replace(/[$€£](\d{2,4})(?:\s*(USD|CAD|EUR|GBP))?/i, `$$${priceUsd}`);
   }
 
   return {

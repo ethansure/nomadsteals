@@ -14,7 +14,8 @@ function hasNonUsdCurrency(title: string): boolean {
 // Replace currency price in title with USD price
 function normalizeTitlePrice(title: string, usdPrice: number): string {
   // Replace €328, £435, $356 CAD patterns with $usdPrice
-  return title.replace(/[$€£](\d{2,4})(?:\s*(USD|CAD|EUR|GBP))?/i, `$${usdPrice}`);
+  // Note: Use $$${usdPrice} because $ is a special char in replace (backreference)
+  return title.replace(/[$€£](\d{2,4})(?:\s*(USD|CAD|EUR|GBP))?/i, `$$${usdPrice}`);
 }
 
 export async function GET(request: NextRequest) {
