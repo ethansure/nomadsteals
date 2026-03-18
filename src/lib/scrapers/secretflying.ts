@@ -225,11 +225,19 @@ function rssItemToDeal(item: RssItem): ScrapedDeal | null {
   const bookByDate = new Date();
   bookByDate.setDate(bookByDate.getDate() + 14); // Assume 2 weeks validity
 
+  // Normalize title: replace original currency price with USD price if converted
+  let normalizedTitle = item.title;
+  if (currency !== 'USD') {
+    // Replace the original currency price with USD price
+    // e.g., "€328" → "$354" or "£435" → "$552"
+    normalizedTitle = item.title.replace(/[$€£](\d{2,4})(?:\s*(USD|CAD|EUR|GBP))?/i, `$${priceUsd}`);
+  }
+
   return {
     // Use hash of full URL for unique ID to avoid collisions from similar URL suffixes
     id: `sf-${hashString(item.link)}`,
     source: 'secretflying',
-    title: item.title,
+    title: normalizedTitle,
     origin: route.origin,
     originCode,
     destination: route.destination,
