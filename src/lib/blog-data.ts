@@ -2,6 +2,183 @@ import { BlogPost } from "./blog-types";
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "google-flights-tips-tricks-2026",
+    title: "Google Flights Tips & Tricks: The Ultimate Guide to Finding Cheap Flights in 2026",
+    description: "Master Google Flights with these 15 expert tips and hidden features. Learn how to use Explore, track prices, find the cheapest days, and score deals other travelers miss.",
+    content: `
+# Google Flights Tips & Tricks: The Ultimate Guide to Finding Cheap Flights in 2026
+
+Google Flights is the most powerful free flight search tool available—but most travelers only use 10% of its features. This guide reveals every trick to finding the cheapest flights possible.
+
+## Why Google Flights?
+
+Before diving into tips, here's why Google Flights dominates:
+
+- **No booking fees** (unlike some OTAs)
+- **Real-time pricing** directly from airlines
+- **Powerful filters** most sites don't offer
+- **Price tracking** with email alerts
+- **Explore feature** for flexible travelers
+
+## 15 Essential Google Flights Tips
+
+### 1. Use the "Explore" Feature for Maximum Flexibility
+
+If you're flexible on destination, click **Explore** (map icon) to see the cheapest flights from your airport to anywhere in the world.
+
+**Pro tip:** Set a budget filter (e.g., "Under $300 roundtrip") to only see destinations within your price range.
+
+### 2. Enable "Any Dates" for True Price Discovery
+
+In the Explore view, change dates to "Any dates" to see the absolute cheapest time to fly to each destination. This reveals pricing patterns most travelers miss.
+
+### 3. Use the Date Grid for Price Comparison
+
+Click the **Date grid** view to see prices across an entire month. The green-highlighted dates show the cheapest options—sometimes just shifting by 1-2 days saves $200+.
+
+### 4. Set Up Price Tracking
+
+Found a good flight but not ready to book? Click **Track prices** to receive email alerts when the price changes. Google will notify you of both drops and increases.
+
+**Important:** Price tracking works best 1-6 months before travel. Closer dates have less price volatility.
+
+### 5. Check "Nearby Airports"
+
+Enable **Nearby airports** for both origin and destination. Flying from a secondary airport 1-2 hours away can save hundreds:
+
+- NYC: Check EWR, JFK, and LGA
+- LA: Check LAX, BUR, SNA, ONT
+- London: Check LHR, LGW, STN, LTN
+
+### 6. Filter by Alliance or Airline
+
+Have airline status or preferred carriers? Use the **Airlines** filter to search only specific airlines or alliances (Star Alliance, Oneworld, SkyTeam).
+
+### 7. Use the "Bags" Filter Honestly
+
+Google Flights shows prices with and without bags. Toggle **Include carry-on** and **Include checked bag** to see true total costs—basic economy fares often become more expensive once you add bags.
+
+### 8. Sort by "Best" Not Just "Cheapest"
+
+The "Best" sort considers duration, stops, and price together. Sometimes paying $50 more saves 6 hours and a connection—worth it.
+
+### 9. Check One-Way Combinations
+
+Sometimes two one-way tickets on different airlines beat a roundtrip. Search separately and combine:
+
+- Outbound on Budget Carrier A
+- Return on Legacy Carrier B
+
+### 10. Explore "Multi-city" for Complex Trips
+
+Use **Multi-city** for:
+- Open-jaw trips (fly into Paris, out of Rome)
+- Adding a stopover
+- Complex itineraries
+
+### 11. Use Incognito Mode (Maybe)
+
+Popular advice says airlines track cookies to raise prices. While evidence is mixed, searching in incognito mode doesn't hurt and might help.
+
+### 12. Check the "Price Graph"
+
+The **Price graph** shows pricing trends over time. Look for:
+- Seasonal dips
+- Unusual low points
+- Patterns you can exploit
+
+### 13. Filter by Departure Time
+
+Going on a business trip? Filter by **Times** to only see morning departures or avoid red-eyes. The filter lets you set exact time windows.
+
+### 14. Exclude Long Layovers
+
+Use **Duration** and **Stops** filters together. A "1 stop" flight with a 9-hour layover might not be worth the savings—filter to max 3-hour connections.
+
+### 15. Combine with Airline Sales
+
+Google Flights shows real-time prices, so it catches flash sales automatically. Search your route when you know an airline is having a sale to see if your route is included.
+
+## Hidden Google Flights Features
+
+### The Calendar Trick
+Search with flexible dates, then look at the calendar heatmap. The lightest colored dates are cheapest.
+
+### Route-Wide Exploration
+Search "New York to Europe" (not a specific city) to see prices to all European cities at once.
+
+### Currency Toggle
+Change currency (bottom of page) to see if booking in another currency is cheaper due to exchange rates.
+
+### Flight Quality Score
+Google now shows emission data—but also flight quality indicators. Check for Wi-Fi, legroom, and entertainment options.
+
+## What Google Flights Won't Show You
+
+No tool is perfect. Google Flights misses:
+
+- **Southwest Airlines** (search Southwest.com separately)
+- **Some budget carriers** in certain regions
+- **Package deals** (flights + hotel together)
+- **Error fares** (these get fixed before Google indexes them)
+
+**Solution:** Use Google Flights for research, but also check:
+- NomadSteals for error fares and Value Score deals
+- Skiplagged for hidden-city ticketing
+- Airline websites for exclusive web fares
+
+## Step-by-Step: Finding the Cheapest Flight
+
+1. Start in **Explore** with flexible dates
+2. Identify potential destinations in budget
+3. Switch to standard search for that route
+4. Use **Date grid** to find cheapest dates
+5. Enable **Nearby airports**
+6. Toggle bag filters for true pricing
+7. Set **Price tracking** if not booking today
+8. Compare to NomadSteals Value Scores before booking
+
+## When NOT to Book on Google Flights
+
+Google Flights is a search engine—it sends you to book elsewhere. Sometimes you shouldn't:
+
+- **Book direct with airlines** for easier changes/cancellations
+- **Use credit card portals** for bonus points
+- **Check aggregators** for occasional exclusive prices
+
+## Combining Google Flights with NomadSteals
+
+Use both tools together:
+
+1. **Google Flights** for route research and specific date pricing
+2. **NomadSteals Value Scores** to verify if a price is actually good historically
+3. **NomadSteals alerts** to catch deals Google Flights might miss
+
+A Google Flights search shows you today's price. Our Value Score tells you if that price is a deal.
+
+## Master Google Flights in 5 Minutes
+
+**Quick summary:**
+- Always check **Explore** first if flexible
+- Use **Date grid** to find cheapest dates
+- Enable **Nearby airports** for both ends
+- Add bags to see true costs
+- Track prices you're interested in
+- Verify deals with NomadSteals Value Scores
+
+Happy hunting! 🛫
+`,
+    author: "NomadSteals Team",
+    publishedAt: "2026-03-24T08:00:00Z",
+    updatedAt: "2026-03-24T08:00:00Z",
+    category: "guides",
+    tags: ["google flights", "flight search", "cheap flights", "travel tips", "how to", "2026"],
+    imageUrl: "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200",
+    imageAlt: "Person searching for flights on laptop with coffee",
+    readingTime: 10,
+    featured: true,
+  },
+  {
     slug: "best-time-to-book-cheap-flights-2026",
     title: "Best Time to Book Cheap Flights in 2026",
     description: "Discover the optimal booking windows, seasonal trends, and insider strategies to find the cheapest flights in 2026. Data-backed insights to save hundreds on your next trip.",
