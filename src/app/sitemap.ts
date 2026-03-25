@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
     { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
     { url: `${baseUrl}/newsletter`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
+    { url: `${baseUrl}/alerts`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
   ];
   
   // Blog posts - high priority for SEO

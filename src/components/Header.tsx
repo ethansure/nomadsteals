@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Logo } from "./Logo";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { MapPin, Compass, Info, Search, X, Menu, History } from "lucide-react";
+import { MapPin, Compass, Info, Search, X, Menu, History, Bell } from "lucide-react";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -40,6 +40,13 @@ export function Header() {
             >
               <History className="w-4 h-4" />
               History
+            </Link>
+            <Link 
+              href="/alerts" 
+              className="text-[#2D3436]/70 hover:text-[#FF6B6B] transition-colors duration-300 font-medium flex items-center gap-1.5"
+            >
+              <Bell className="w-4 h-4" />
+              Alerts
             </Link>
             <Link 
               href="/about" 
