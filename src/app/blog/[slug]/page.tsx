@@ -70,6 +70,59 @@ function formatDate(dateString: string): string {
   });
 }
 
+
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/<[^>]+>/g, "")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/`(.+?)`/g, "$1")
+    .trim();
+}
+
+function extractFaqs(content: string): { question: string; answer: string }[] {
+  const lines = content.trim().split("\n");
+  const faqStart = lines.findIndex((line) => /^##\s+FAQ/i.test(line.trim()));
+
+  if (faqStart === -1) {
+    return [];
+  }
+
+  const faqs: { question: string; answer: string }[] = [];
+  let currentQuestion = "";
+  let currentAnswer: string[] = [];
+
+  const flush = () => {
+    const answer = stripMarkdown(currentAnswer.join(" "));
+    if (currentQuestion && answer) {
+      faqs.push({ question: stripMarkdown(currentQuestion), answer });
+    }
+    currentQuestion = "";
+    currentAnswer = [];
+  };
+
+  for (const rawLine of lines.slice(faqStart + 1)) {
+    const line = rawLine.trim();
+
+    if (/^##\s+/.test(line)) {
+      break;
+    }
+
+    if (/^###\s+/.test(line)) {
+      flush();
+      currentQuestion = line.replace(/^###\s+/, "");
+      continue;
+    }
+
+    if (line && currentQuestion) {
+      currentAnswer.push(line);
+    }
+  }
+
+  flush();
+  return faqs;
+}
+
 // Simple markdown-like content renderer
 function renderContent(content: string) {
   const lines = content.trim().split('\n');
@@ -180,9 +233,8 @@ export default async function BlogPostPage({ params }: Props) {
   const relatedPosts = getRelatedPosts(slug, 3);
   const category = blogCategories.find(c => c.slug === post.category);
 
-  // JSON-LD structured data for the article
-  const jsonLd = {
-    "@context": "https://schema.org",
+  // JSON-LD structured data for the article and optional FAQ rich results
+  const articleJsonLd = {
     "@type": "Article",
     headline: post.title,
     description: post.description,
@@ -205,6 +257,29 @@ export default async function BlogPostPage({ params }: Props) {
       "@type": "WebPage",
       "@id": `https://nomadsteals.com/blog/${post.slug}`,
     },
+  };
+
+  const faqs = extractFaqs(post.content);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      articleJsonLd,
+      ...(faqs.length > 0
+        ? [
+            {
+              "@type": "FAQPage",
+              mainEntity: faqs.map((faq) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: faq.answer,
+                },
+              })),
+            },
+          ]
+        : []),
+    ],
   };
 
   return (
