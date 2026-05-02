@@ -779,6 +779,8 @@ Getting 50 alerts daily leads to alert fatigue. Better to have 2-3 high-quality 
 ### 5. Act First, Optimize Later
 Booked a good deal but not perfect? Many airlines allow changes within 24 hours, or you can try for better dates after securing your fare.
 
+If you are traveling soon, pair alerts with our <a href="/blog/last-minute-travel-deals-guide-2026">last minute travel deals guide</a> so you know which near-term fares are actually worth booking.
+
 ## Common Mistakes to Avoid
 
 ### ❌ Setting Unrealistic Thresholds
@@ -814,7 +816,7 @@ Sign up for NomadSteals alerts and let us do the hunting while you focus on deci
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-02T09:00:00Z",
-    updatedAt: "2026-03-02T09:00:00Z",
+    updatedAt: "2026-05-02T09:35:00Z",
     category: "tips",
     tags: ["flight alerts", "deal alerts", "cheap flights", "travel tips", "newsletter"],
     imageUrl: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=1200",
@@ -942,7 +944,7 @@ If a flight is already far below normal, saving another $20 is not worth losing 
 
 ## How to Set Alerts for This Week
 
-To catch deals without refreshing search engines all day:
+To catch deals without refreshing search engines all day, start with our <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts setup guide</a>, then use this last minute workflow for near-term dates:
 
 1. Subscribe to NomadSteals daily travel deals
 2. Set alerts for 3-5 flexible destinations
@@ -970,13 +972,13 @@ Yes, especially in large cities and resort areas with lots of rooms. But always 
 
 ## Bottom Line
 
-The best last minute travel deals come from flexibility, fast comparison, and knowing whether a fare is actually unusual. Search broadly, compare nearby airports, avoid fee traps, and use NomadSteals Value Scores to decide when a deal is worth booking now.
+The best last minute travel deals come from flexibility, fast comparison, and knowing whether a fare is actually unusual. Search broadly, compare nearby airports, avoid fee traps, and use <a href="/blog/how-to-use-value-scores-find-best-deals">NomadSteals Value Scores</a> to decide when a deal is worth booking now.
 
 If a fare scores above 85 and fits your schedule, it is probably time to stop searching and start packing.
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-05-02T07:45:00Z",
-    updatedAt: "2026-05-02T07:45:00Z",
+    updatedAt: "2026-05-02T09:35:00Z",
     category: "deals",
     tags: ["last minute travel deals", "cheap flights", "flight deals", "travel deals", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200",
