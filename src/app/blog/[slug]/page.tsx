@@ -233,12 +233,17 @@ export default async function BlogPostPage({ params }: Props) {
   const relatedPosts = getRelatedPosts(slug, 3);
   const category = blogCategories.find(c => c.slug === post.category);
 
-  // JSON-LD structured data for the article and optional FAQ rich results
+  // JSON-LD structured data (BlogPosting + optional FAQ rich results + breadcrumbs)
+  const postUrl = `https://nomadsteals.com/blog/${post.slug}`;
+
   const articleJsonLd = {
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
     image: post.imageUrl,
+    inLanguage: "en-US",
+    keywords: post.tags.join(", "),
+    articleSection: category?.name ?? post.category,
     author: {
       "@type": "Organization",
       name: post.author,
@@ -251,12 +256,42 @@ export default async function BlogPostPage({ params }: Props) {
         url: "https://nomadsteals.com/logo.png",
       },
     },
+    isPartOf: {
+      "@type": "Blog",
+      name: "NomadSteals Blog",
+      url: "https://nomadsteals.com/blog",
+    },
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://nomadsteals.com/blog/${post.slug}`,
+      "@id": postUrl,
     },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://nomadsteals.com/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: "https://nomadsteals.com/blog",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: postUrl,
+      },
+    ],
   };
 
   const faqs = extractFaqs(post.content);
@@ -264,6 +299,7 @@ export default async function BlogPostPage({ params }: Props) {
     "@context": "https://schema.org",
     "@graph": [
       articleJsonLd,
+      breadcrumbJsonLd,
       ...(faqs.length > 0
         ? [
             {
