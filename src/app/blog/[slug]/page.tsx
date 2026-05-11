@@ -30,16 +30,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  const postUrl = `https://nomadsteals.com/blog/${post.slug}`;
+
   return {
     title: post.title,
     description: post.description,
     keywords: post.tags,
     authors: [{ name: post.author }],
+    alternates: {
+      canonical: postUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
       type: "article",
-      url: `https://nomadsteals.com/blog/${post.slug}`,
+      url: postUrl,
+      siteName: "NomadSteals",
+      locale: "en_US",
       images: [
         {
           url: post.imageUrl,
