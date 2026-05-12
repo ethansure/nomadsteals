@@ -89,7 +89,9 @@ function stripMarkdown(text: string): string {
 
 function extractFaqs(content: string): { question: string; answer: string }[] {
   const lines = content.trim().split("\n");
-  const faqStart = lines.findIndex((line) => /^##\s+FAQ/i.test(line.trim()));
+  const faqStart = lines.findIndex((line) =>
+    /^##\s+(FAQ|FAQs|Frequently Asked Questions)\b/i.test(line.trim())
+  );
 
   if (faqStart === -1) {
     return [];
@@ -115,9 +117,11 @@ function extractFaqs(content: string): { question: string; answer: string }[] {
       break;
     }
 
-    if (/^###\s+/.test(line)) {
+    if (/^####?\s+/.test(line)) {
       flush();
-      currentQuestion = line.replace(/^###\s+/, "");
+      currentQuestion = line
+        .replace(/^####?\s+/, "")
+        .replace(/^Q:\s*/i, "");
       continue;
     }
 
