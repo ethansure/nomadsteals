@@ -53,8 +53,22 @@ export default function BlogPage() {
               The NomadSteals Blog
             </h1>
             <p className="text-xl text-white/80 leading-relaxed">
-              Expert tips on finding cheap flights, scoring error fares, and traveling smarter. 
+              Expert tips on finding cheap flights, scoring error fares, and traveling smarter.
               Your guide to getting more travel for less money.
+            </p>
+            <p className="mt-6 text-white/80">
+              Looking for today’s best flight deals? Browse our{" "}
+              <Link href="/deals" className="underline underline-offset-4 hover:text-white">
+                live deals
+              </Link>
+              {" "}or{" "}
+              <Link
+                href="/newsletter"
+                className="underline underline-offset-4 hover:text-white"
+              >
+                get alerts by email
+              </Link>
+              .
             </p>
           </div>
         </div>
