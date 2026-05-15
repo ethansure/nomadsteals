@@ -134,12 +134,55 @@ function extractFaqs(content: string): { question: string; answer: string }[] {
   return faqs;
 }
 
+function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/['"]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+function extractTableOfContents(content: string): { level: 2 | 3; text: string; id: string }[] {
+  const lines = content.trim().split("\n");
+  const entries: { level: 2 | 3; text: string; id: string }[] = [];
+  const usedIds = new Map<string, number>();
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    const isH2 = line.startsWith("## ");
+    const isH3 = line.startsWith("### ");
+
+    if (!isH2 && !isH3) continue;
+
+    // Skip FAQ sections to avoid noisy TOCs.
+    if (isH2 && /^##\s+(FAQ|FAQs|Frequently Asked Questions)\b/i.test(line)) {
+      continue;
+    }
+
+    const level: 2 | 3 = isH2 ? 2 : 3;
+    const text = (level === 2 ? line.slice(3) : line.slice(4)).trim();
+    if (!text) continue;
+
+    const baseId = slugifyHeading(text);
+    const seen = usedIds.get(baseId) ?? 0;
+    usedIds.set(baseId, seen + 1);
+    const id = seen === 0 ? baseId : `${baseId}-${seen + 1}`;
+
+    entries.push({ level, text, id });
+  }
+
+  return entries;
+}
+
 // Simple markdown-like content renderer
 function renderContent(content: string) {
   const lines = content.trim().split('\n');
   const elements: React.ReactElement[] = [];
   let currentList: string[] = [];
   let listType: 'ul' | 'ol' | null = null;
+  const usedIds = new Map<string, number>();
   
   const flushList = () => {
     if (currentList.length > 0 && listType) {
@@ -176,18 +219,28 @@ function renderContent(content: string) {
     }
     if (trimmed.startsWith('## ')) {
       flushList();
+      const text = trimmed.slice(3).trim();
+      const baseId = slugifyHeading(text);
+      const seen = usedIds.get(baseId) ?? 0;
+      usedIds.set(baseId, seen + 1);
+      const id = seen === 0 ? baseId : `${baseId}-${seen + 1}`;
       elements.push(
-        <h2 key={index} className="text-2xl font-bold text-[#2D3436] mb-4 mt-8">
-          {trimmed.slice(3)}
+        <h2 id={id} key={index} className="text-2xl font-bold text-[#2D3436] mb-4 mt-8 scroll-mt-28">
+          {text}
         </h2>
       );
       return;
     }
     if (trimmed.startsWith('### ')) {
       flushList();
+      const text = trimmed.slice(4).trim();
+      const baseId = slugifyHeading(text);
+      const seen = usedIds.get(baseId) ?? 0;
+      usedIds.set(baseId, seen + 1);
+      const id = seen === 0 ? baseId : `${baseId}-${seen + 1}`;
       elements.push(
-        <h3 key={index} className="text-xl font-bold text-[#2D3436] mb-3 mt-6">
-          {trimmed.slice(4)}
+        <h3 id={id} key={index} className="text-xl font-bold text-[#2D3436] mb-3 mt-6 scroll-mt-28">
+          {text}
         </h3>
       );
       return;
@@ -243,6 +296,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const relatedPosts = getRelatedPosts(slug, 3);
   const category = blogCategories.find(c => c.slug === post.category);
+  const toc = extractTableOfContents(post.content);
 
   // JSON-LD structured data (BlogPosting + optional FAQ rich results + breadcrumbs)
   const postUrl = `https://nomadsteals.com/blog/${post.slug}`;
@@ -391,6 +445,25 @@ export default async function BlogPostPage({ params }: Props) {
           <p className="text-xl text-[#2D3436]/70 leading-relaxed mb-8 pb-8 border-b border-gray-200">
             {post.description}
           </p>
+
+          {/* Table of Contents */}
+          {toc.length > 0 && (
+            <div className="mb-10 p-6 bg-white rounded-2xl shadow-sm border border-gray-100">
+              <div className="text-[#2D3436] font-bold mb-3">On this page</div>
+              <ul className="space-y-2">
+                {toc.map((entry) => (
+                  <li key={entry.id} className={entry.level === 3 ? "pl-4" : ""}>
+                    <a
+                      href={`#${entry.id}`}
+                      className="text-[#2D3436]/80 hover:text-[#FF6B6B] transition-colors"
+                    >
+                      {entry.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Article Content */}
           <div className="prose prose-lg max-w-none">
