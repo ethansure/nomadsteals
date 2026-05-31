@@ -26,9 +26,11 @@ export interface AggregatorResult {
 // Main aggregation function - scrapes from all sources
 export async function aggregateDeals(options: {
   maxDealsPerSource?: number;
+  delayBetweenSourcesMs?: number;
 } = {}): Promise<AggregatorResult> {
   const {
     maxDealsPerSource = 30,
+    delayBetweenSourcesMs = 1500,
   } = options;
 
   console.log('[Aggregator] Starting deal aggregation via web scraping...');
@@ -36,7 +38,7 @@ export async function aggregateDeals(options: {
   // Scrape all sources
   const scrapeResult = await scrapeAllSources({
     maxDealsPerSource,
-    delayBetweenSources: 1500,
+    delayBetweenSources: delayBetweenSourcesMs,
   });
 
   // Convert scraped deals to app format

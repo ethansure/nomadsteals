@@ -38,7 +38,9 @@ export async function GET(request: NextRequest) {
     
     // Then, fetch new deals (will append/update, not overwrite)
     const result = await aggregateDeals({
-      maxDealsPerSource: 40,
+      // Keep the cron within serverless time limits
+      maxDealsPerSource: 30,
+      delayBetweenSourcesMs: 250,
     });
     
     // Process INSTANT email alerts only (daily/weekly handled by newsletter cron)
