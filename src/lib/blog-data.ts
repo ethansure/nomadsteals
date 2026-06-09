@@ -235,6 +235,16 @@ Based on current data, watch for:
 - **Post-pandemic travel surge** continuing to drive prices up
 - **New airline routes** creating competition and lower fares
 
+## June 2026 Update: What to Do Before You Book
+
+Before booking a fare, check three signals together:
+
+1. Compare the route against our <a href="/deals">live flight deals</a> to see whether similar prices are appearing elsewhere
+2. Use the <a href="/blog/flight-price-prediction-tools-2026">flight price prediction tools guide</a> to decide whether the fare is likely to move soon
+3. Turn on <a href="/newsletter">deal alerts</a> for routes you are still watching, especially if your trip is more than 30 days away
+
+If all three signals point in the same direction, you can book with more confidence instead of waiting for a perfect fare that may never show up.
+
 ## Using NomadSteals Value Scores
 
 Our Value Score system (1-100) takes the guesswork out of booking. A score of 90+ indicates historically low pricing—these are the deals you should book immediately.
@@ -253,7 +263,7 @@ Don't obsess over finding the absolute lowest price—focus on finding a great d
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-05T10:00:00Z",
-    updatedAt: "2026-03-05T10:00:00Z",
+    updatedAt: "2026-06-09T23:40:00Z",
     category: "tips",
     tags: ["cheap flights", "booking tips", "flight deals", "travel hacking", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
