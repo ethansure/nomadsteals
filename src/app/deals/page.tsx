@@ -474,6 +474,10 @@ function DealsPageContent() {
                       href: "/blog/flight-price-prediction-tools-2026",
                       label: "Flight price prediction tools",
                     },
+                    {
+                      href: "/blog/last-minute-travel-deals-guide-2026",
+                      label: "Last minute travel deals guide",
+                    },
                   ].map((guide) => (
                     <Link
                       key={guide.href}
