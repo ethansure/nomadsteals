@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, Suspense } from "react";
+import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -449,6 +450,42 @@ function DealsPageContent() {
                 </div>
               </div>
               
+              {/* Deal Guides */}
+              <div className="bg-white rounded-3xl p-6 border border-[#FF6B6B]/5 shadow-soft">
+                <h3 className="font-bold text-[#2D3436] mb-4 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-[#20B2AA]" />
+                  Deal Guides
+                </h3>
+                <p className="text-sm text-[#2D3436]/60 mb-4">
+                  Learn when to book, how to spot real discounts, and how to use price
+                  signals before grabbing a fare.
+                </p>
+                <div className="space-y-2">
+                  {[
+                    {
+                      href: "/blog/best-time-to-book-cheap-flights-2026",
+                      label: "Best time to book cheap flights",
+                    },
+                    {
+                      href: "/blog/error-fares-explained-how-to-find-mistake-fares",
+                      label: "How error fares work",
+                    },
+                    {
+                      href: "/blog/flight-price-prediction-tools-2026",
+                      label: "Flight price prediction tools",
+                    },
+                  ].map((guide) => (
+                    <Link
+                      key={guide.href}
+                      href={guide.href}
+                      className="block rounded-xl px-4 py-3 text-sm font-medium text-[#2D3436] bg-[#FFF8F0] hover:bg-[#FFEFE5] hover:text-[#FF6B6B] transition-colors"
+                    >
+                      {guide.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
               <ValueScoreExplainer />
               <NewsletterForm variant="card" />
             </div>
