@@ -36,6 +36,28 @@ function formatDate(dateString: string): string {
 export default function BlogPage() {
   const featuredPosts = getFeaturedPosts();
   const recentPosts = getRecentPosts(10);
+  const flightDealGuides = [
+    {
+      href: "/blog/last-minute-travel-deals-guide-2026",
+      title: "Last-Minute Travel Deals",
+      description: "How to judge near-term fares, flexible dates, and book-now signals.",
+    },
+    {
+      href: "/blog/best-time-to-book-cheap-flights-2026",
+      title: "Best Time to Book",
+      description: "Booking windows and timing rules for domestic and international trips.",
+    },
+    {
+      href: "/blog/error-fares-explained-how-to-find-mistake-fares",
+      title: "Error Fares",
+      description: "What mistake fares are, where they appear, and when to move quickly.",
+    },
+    {
+      href: "/blog/flight-price-prediction-tools-2026",
+      title: "Flight Price Prediction",
+      description: "Use fare forecasts and price alerts to decide whether to wait or book.",
+    },
+  ];
 
   return (
     <main className="min-h-screen bg-[#FFFAF5]">
@@ -70,6 +92,46 @@ export default function BlogPage() {
               </Link>
               .
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Flight Deal Guides */}
+      <section className="py-12 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-[#2D3436] flex items-center gap-2">
+                <Tag className="w-6 h-6 text-[#FF6B6B]" />
+                Flight Deal Guides
+              </h2>
+              <p className="text-[#2D3436]/60 mt-2">
+                Start here for booking timing, mistake fares, price prediction, and last-minute travel deals.
+              </p>
+            </div>
+            <Link
+              href="/deals"
+              className="text-[#FF6B6B] font-semibold hover:text-[#E85555] transition-colors"
+            >
+              Browse live deals →
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {flightDealGuides.map((guide) => (
+              <Link
+                key={guide.href}
+                href={guide.href}
+                className="group bg-[#FFFAF5] border border-[#FF6B6B]/10 rounded-2xl p-5 hover:border-[#FF6B6B]/30 hover:shadow-md transition-all"
+              >
+                <h3 className="font-bold text-[#2D3436] group-hover:text-[#FF6B6B] transition-colors">
+                  {guide.title}
+                </h3>
+                <p className="text-sm text-[#2D3436]/60 mt-2 leading-relaxed">
+                  {guide.description}
+                </p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
