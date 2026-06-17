@@ -486,6 +486,10 @@ function DealsPageContent() {
                       href: "/blog/skiplagged-hidden-city-ticketing-guide-2026",
                       label: "Skiplagged hidden city ticketing guide",
                     },
+                    {
+                      href: "/blog/credit-card-points-for-flights-guide-2026",
+                      label: "Credit card points for flights",
+                    },
                   ].map((guide) => (
                     <Link
                       key={guide.href}

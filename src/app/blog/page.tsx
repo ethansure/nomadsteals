@@ -67,6 +67,11 @@ export default function BlogPage() {
       title: "Hidden City Ticketing",
       description: "Understand Skiplagged-style fares, baggage rules, and airline risks.",
     },
+    {
+      href: "/blog/credit-card-points-for-flights-guide-2026",
+      title: "Credit Card Points",
+      description: "Use points, portals, transfer partners, and cash fares without overpaying.",
+    },
   ];
 
   return (

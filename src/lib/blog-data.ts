@@ -1439,6 +1439,139 @@ Skiplagged-style hidden city ticketing can unlock cheap flights, but it is not a
     readingTime: 8,
     featured: false,
   },
+  {
+    slug: "credit-card-points-for-flights-guide-2026",
+    title: "Credit Card Points for Flights: How to Decide When to Use Points or Cash",
+    description: "Learn how to use credit card points for flights in 2026, including transfer partners, portals, cash fare comparisons, and when a cheap flight deal is better than redeeming miles.",
+    content: `
+# Credit Card Points for Flights: How to Decide When to Use Points or Cash
+
+Credit card points can make flights cheaper, but they are not automatically better than cash. The best redemption depends on the cash fare, transfer partner options, award taxes, flexibility rules, and how valuable your points are for future trips.
+
+This guide gives you a simple framework for deciding when to use points, when to pay cash, and how to combine rewards with NomadSteals flight deals.
+
+## The Simple Rule: Compare Cents Per Point
+
+Before using points, calculate the value:
+
+**Cents per point = (cash price - award taxes and fees) / points required x 100**
+
+Example:
+
+- Cash fare: $450
+- Award price: 30,000 points + $50 in taxes
+- Value: ($450 - $50) / 30,000 x 100 = 1.33 cents per point
+
+If your points are usually worth more than that through transfer partners, paying cash may be smarter. If the redemption beats your normal value, points may be the better deal.
+
+## When to Use Points for Flights
+
+Points are usually worth using when:
+
+- Cash fares are unusually high
+- Award space is available at a low fixed or saver price
+- You need flexibility that the award ticket provides
+- You can transfer points instantly to a strong airline partner
+- Taxes and fees are low
+- You are booking premium cabins where cash prices are unrealistic
+
+Points can also help when travel dates are fixed and cash prices are not dropping. If you cannot be flexible, rewards may protect your budget.
+
+## When to Pay Cash Instead
+
+Cash is often better when:
+
+- NomadSteals shows a high Value Score cash deal
+- Budget airlines have a low fare after bags and seats
+- Award taxes or fuel surcharges are high
+- The redemption value is weak
+- You want to earn miles, status credit, or credit card travel protections
+- You are saving points for a bigger international or premium-cabin trip
+
+If a fare appears on <a href="/deals">live NomadSteals deals</a> with a strong Value Score, compare that cash price before burning points. A cheap fare can preserve your points for harder-to-find trips.
+
+## Credit Card Portal vs Transfer Partner
+
+Most flexible points programs give you two ways to book:
+
+### Book Through the Card Portal
+
+This is usually easiest. You search flights through your credit card travel portal and pay with points at a fixed value.
+
+Portal bookings are useful when:
+
+- Cash fares are already low
+- You do not want to search award space
+- You want a predictable redemption value
+- You are booking a simple domestic or economy trip
+
+### Transfer to an Airline Partner
+
+This can unlock higher value, but it requires more care. You transfer points to an airline loyalty program and book an award ticket there.
+
+Transfer partners are useful when:
+
+- Saver award space exists
+- You are booking international flights
+- You find a good partner sweet spot
+- Portal pricing is poor
+- Cash fares are expensive
+
+Always confirm award space before transferring points. Transfers are usually irreversible.
+
+## How NomadSteals Fits Into a Points Strategy
+
+Use NomadSteals as the cash-price reality check:
+
+1. Search <a href="/deals">current flight deals</a> for your route or region
+2. Check whether the cash fare has a strong Value Score
+3. Compare that fare against award prices and taxes
+4. Use the <a href="/blog/flight-price-prediction-tools-2026">flight price prediction guide</a> if your dates are flexible
+5. Use points only when they beat the cash deal or solve a flexibility problem
+
+The goal is not to use points on every trip. The goal is to spend the right currency for the right flight.
+
+## Common Mistakes to Avoid
+
+- Transferring points before checking award availability
+- Ignoring taxes, surcharges, and booking fees
+- Redeeming points for a low-value fare just because points feel free
+- Forgetting that cash tickets can earn miles and credit card protections
+- Comparing points to the wrong cash fare instead of the best available deal
+- Letting points sit forever when they could offset an expensive trip
+
+## Quick Decision Checklist
+
+Use points if most of these are true:
+
+- Cash fares are high for your route
+- Award taxes and fees are low
+- The redemption value beats your normal points value
+- You found real award availability
+- Your dates are fixed or the award ticket has better flexibility
+
+Pay cash if most of these are true:
+
+- The fare is already a strong deal
+- A budget airline or nearby-airport option works
+- Points value is weak
+- You want travel protections or mileage earning
+- You are saving points for a better redemption
+
+## Bottom Line
+
+Credit card points are powerful, but cash deals still matter. Compare both before booking. If NomadSteals finds a strong cheap flight, paying cash can be the smarter move. If cash fares are high and award space is good, points can turn an expensive trip into a manageable one.
+`,
+    author: "NomadSteals Team",
+    publishedAt: "2026-06-17T22:00:00Z",
+    updatedAt: "2026-06-17T22:00:00Z",
+    category: "guides",
+    tags: ["credit card points", "flight deals", "cheap flights", "travel rewards", "points and miles", "booking tips"],
+    imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200",
+    imageAlt: "Traveler comparing credit card points and flight prices on a laptop",
+    readingTime: 8,
+    featured: false,
+  },
 ];
 
 // Helper functions
