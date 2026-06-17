@@ -57,6 +57,11 @@ export default function BlogPage() {
       title: "Flight Price Prediction",
       description: "Use fare forecasts and price alerts to decide whether to wait or book.",
     },
+    {
+      href: "/blog/best-budget-airlines-2026",
+      title: "Budget Airlines",
+      description: "Compare low-cost carriers, fees, bags, and when the cheap fare is worth it.",
+    },
   ];
 
   return (
@@ -117,7 +122,7 @@ export default function BlogPage() {
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
             {flightDealGuides.map((guide) => (
               <Link
                 key={guide.href}

@@ -478,6 +478,10 @@ function DealsPageContent() {
                       href: "/blog/last-minute-travel-deals-guide-2026",
                       label: "Last minute travel deals guide",
                     },
+                    {
+                      href: "/blog/best-budget-airlines-2026",
+                      label: "Best budget airlines for cheap flights",
+                    },
                   ].map((guide) => (
                     <Link
                       key={guide.href}
