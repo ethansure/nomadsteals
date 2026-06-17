@@ -145,6 +145,7 @@ Google Flights is a search engine—it sends you to book elsewhere. Sometimes yo
 - **Book direct with airlines** for easier changes/cancellations
 - **Use credit card portals** for bonus points
 - **Check aggregators** for occasional exclusive prices
+- **Compare budget airline fees** before trusting the cheapest base fare; our <a href="/blog/best-budget-airlines-2026">budget airlines guide</a> shows how to include bags, seats, airport transfers, and schedule risk
 
 ## Combining Google Flights with NomadSteals
 
@@ -1048,6 +1049,8 @@ Most flight price prediction tools analyze historical fare data and current mark
 - Airline sale patterns
 - Demand trends for holidays, events, and school breaks
 - Nearby airport and date flexibility
+
+For low-cost carriers, forecasts are only part of the decision. Use the <a href="/blog/best-budget-airlines-2026">budget airlines comparison guide</a> to add bags, seats, airport transfers, and schedule risk before deciding whether a predicted cheap fare is actually worth booking.
 
 A prediction is strongest when a route has lots of historical data and normal demand patterns. It is weaker for rare routes, new airline service, major events, and mistake fares.
 
