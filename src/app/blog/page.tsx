@@ -62,6 +62,11 @@ export default function BlogPage() {
       title: "Budget Airlines",
       description: "Compare low-cost carriers, fees, bags, and when the cheap fare is worth it.",
     },
+    {
+      href: "/blog/skiplagged-hidden-city-ticketing-guide-2026",
+      title: "Hidden City Ticketing",
+      description: "Understand Skiplagged-style fares, baggage rules, and airline risks.",
+    },
   ];
 
   return (
@@ -122,7 +127,7 @@ export default function BlogPage() {
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
             {flightDealGuides.map((guide) => (
               <Link
                 key={guide.href}

@@ -482,6 +482,10 @@ function DealsPageContent() {
                       href: "/blog/best-budget-airlines-2026",
                       label: "Best budget airlines for cheap flights",
                     },
+                    {
+                      href: "/blog/skiplagged-hidden-city-ticketing-guide-2026",
+                      label: "Skiplagged hidden city ticketing guide",
+                    },
                   ].map((guide) => (
                     <Link
                       key={guide.href}
