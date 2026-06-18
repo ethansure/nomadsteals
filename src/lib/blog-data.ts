@@ -1603,7 +1603,7 @@ The <a href="/blog/credit-card-points-for-flights-guide-2026">credit card points
 
 ## Step 1: Search the Cash Price First
 
-Before checking award flights, search the cash fare. This gives you the baseline for whether points are worth using.
+Before checking award flights, search the cash fare. This gives you the baseline for whether points are worth using. If you need a repeatable search workflow, start with the <a href="/blog/google-flights-tips-tricks-2026">Google Flights tips guide</a> before comparing award space.
 
 Use <a href="/deals">live NomadSteals deals</a>, Google Flights, or your preferred booking tool to answer:
 
@@ -1706,7 +1706,7 @@ NomadSteals makes that comparison easier by showing current flight deals and Val
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-18T03:00:00Z",
-    updatedAt: "2026-06-18T03:00:00Z",
+    updatedAt: "2026-06-18T20:34:00Z",
     category: "guides",
     tags: ["award travel", "points and miles", "credit card points", "cheap flights", "flight deals", "travel rewards"],
     imageUrl: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200",
