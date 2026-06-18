@@ -1531,6 +1531,8 @@ Use NomadSteals as the cash-price reality check:
 
 The goal is not to use points on every trip. The goal is to spend the right currency for the right flight.
 
+If you are still learning miles, award space, and transfer partners, start with the <a href="/blog/award-travel-guide-for-beginners-2026">award travel guide for beginners</a> before moving points into an airline program.
+
 ## Common Mistakes to Avoid
 
 - Transferring points before checking award availability
