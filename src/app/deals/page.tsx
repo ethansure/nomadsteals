@@ -490,6 +490,10 @@ function DealsPageContent() {
                       href: "/blog/credit-card-points-for-flights-guide-2026",
                       label: "Credit card points for flights",
                     },
+                    {
+                      href: "/blog/award-travel-guide-for-beginners-2026",
+                      label: "Award travel guide for beginners",
+                    },
                   ].map((guide) => (
                     <Link
                       key={guide.href}

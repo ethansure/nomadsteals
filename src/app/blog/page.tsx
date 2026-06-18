@@ -72,6 +72,11 @@ export default function BlogPage() {
       title: "Credit Card Points",
       description: "Use points, portals, transfer partners, and cash fares without overpaying.",
     },
+    {
+      href: "/blog/award-travel-guide-for-beginners-2026",
+      title: "Award Travel Basics",
+      description: "Learn points-and-miles basics before transferring rewards or booking awards.",
+    },
   ];
 
   return (
