@@ -1425,7 +1425,7 @@ Book a hidden city fare only if all of these are true:
 - You are not relying on airline loyalty benefits
 - You understand the airline may object to repeated use
 
-If any of those are false, use a conventional cheap flight, budget airline, or last-minute deal instead.
+If any of those are false, use a conventional cheap flight, budget airline, or <a href="/blog/last-minute-travel-deals-guide-2026">last-minute deal</a> instead.
 
 ## Bottom Line
 
@@ -1433,7 +1433,7 @@ Skiplagged-style hidden city ticketing can unlock cheap flights, but it is not a
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-17T20:45:00Z",
-    updatedAt: "2026-06-17T20:45:00Z",
+    updatedAt: "2026-06-19T15:40:00Z",
     category: "guides",
     tags: ["skiplagged", "hidden city ticketing", "cheap flights", "flight deals", "travel tips", "booking tips"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
