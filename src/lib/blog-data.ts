@@ -360,6 +360,8 @@ When you find a potential error fare:
 - Appears suddenly and disappears quickly
 - Multiple deal sites are reporting it
 
+If the cheap price comes from exiting at a connection city instead of an airline pricing mistake, treat it as a different tactic. Read the <a href="/blog/skiplagged-hidden-city-ticketing-guide-2026">hidden city ticketing guide</a> before booking because the baggage, roundtrip, and disruption risks are not the same as a true error fare.
+
 ## What If It Gets Canceled?
 
 If your error fare is cancelled:
@@ -399,7 +401,7 @@ The next error fare could appear any moment. Will you be ready?
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-05T09:00:00Z",
-    updatedAt: "2026-06-16T22:34:00Z",
+    updatedAt: "2026-06-19T18:40:00Z",
     category: "tips",
     tags: ["error fares", "mistake fares", "flight deals", "travel hacking", "cheap flights"],
     imageUrl: "https://images.unsplash.com/photo-1556388158-158ea5ccacbd?w=1200",
