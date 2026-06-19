@@ -1269,6 +1269,8 @@ Check these before paying:
 
 If the trip is time-sensitive, a cheaper airline with one daily flight can be riskier than a slightly more expensive carrier with multiple options.
 
+If the regular nonstop fare is still high after checking budget carriers, compare it with the <a href="/blog/skiplagged-hidden-city-ticketing-guide-2026">hidden city ticketing guide</a> before deciding whether an advanced shortcut is worth the baggage and disruption risk.
+
 ## When Budget Airlines Are a Great Deal
 
 Book a budget airline when:
@@ -1334,7 +1336,7 @@ Budget airlines are best when you know the rules before you book. Compare the re
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-17T13:00:00Z",
-    updatedAt: "2026-06-17T13:00:00Z",
+    updatedAt: "2026-06-19T01:06:00Z",
     category: "guides",
     tags: ["budget airlines", "cheap flights", "flight deals", "low cost carriers", "travel tips", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
