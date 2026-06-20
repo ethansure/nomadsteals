@@ -124,7 +124,7 @@ No tool is perfect. Google Flights misses:
 
 **Solution:** Use Google Flights for research, but also check:
 - NomadSteals for error fares and Value Score deals
-- Skiplagged for hidden-city ticketing
+- <a href="/blog/skiplagged-hidden-city-ticketing-guide-2026">Skiplagged for hidden-city ticketing</a> when you understand the baggage and roundtrip risks
 - Airline websites for exclusive web fares
 
 ## Step-by-Step: Finding the Cheapest Flight
@@ -171,7 +171,7 @@ Happy hunting! 🛫
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-24T08:00:00Z",
-    updatedAt: "2026-05-02T17:05:00Z",
+    updatedAt: "2026-06-20T01:08:00Z",
     category: "guides",
     tags: ["google flights", "flight search", "cheap flights", "travel tips", "how to", "2026"],
     imageUrl: "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200",
