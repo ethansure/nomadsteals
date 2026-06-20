@@ -1565,13 +1565,27 @@ Pay cash if most of these are true:
 - You want travel protections or mileage earning
 - You are saving points for a better redemption
 
+## FAQ: Credit Card Points for Flights
+
+### Is it better to use points or cash for cheap flights?
+
+Cash is usually better when the fare is already unusually cheap, especially if the redemption value is low. Use points when cash prices are high, award taxes are reasonable, and the cents-per-point value beats your normal benchmark.
+
+### Should I transfer credit card points before finding award space?
+
+No. Confirm the award seat, mileage price, and taxes before transferring points because most transfers cannot be reversed. If award space disappears, compare the cash fare again before moving rewards.
+
+### Can NomadSteals help decide whether to use points?
+
+Yes. Use NomadSteals as a cash-price check before redeeming rewards. A strong Value Score can mean the cash fare is good enough that saving points for a more expensive trip is smarter.
+
 ## Bottom Line
 
 Credit card points are powerful, but cash deals still matter. Compare both before booking. If NomadSteals finds a strong cheap flight, paying cash can be the smarter move. If cash fares are high and award space is good, points can turn an expensive trip into a manageable one.
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-17T22:00:00Z",
-    updatedAt: "2026-06-17T22:00:00Z",
+    updatedAt: "2026-06-20T15:48:00Z",
     category: "guides",
     tags: ["credit card points", "flight deals", "cheap flights", "travel rewards", "points and miles", "booking tips"],
     imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200",
