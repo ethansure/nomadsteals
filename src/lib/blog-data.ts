@@ -220,6 +220,7 @@ The day you fly matters more than when you book:
 ### Shoulder Season (Best Value)
 - **April-May and September-October:** Often 30-40% cheaper than peak
 - **January (post-holidays):** Great deals as demand drops
+- **Destination flexibility:** Pair shoulder-season dates with our <a href="/blog/top-10-budget-travel-destinations-2026">budget travel destinations guide</a> so you can chase places where airfare and daily costs are both favorable
 
 ## Money-Saving Strategies
 
@@ -265,7 +266,7 @@ Don't obsess over finding the absolute lowest price—focus on finding a great d
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-05T10:00:00Z",
-    updatedAt: "2026-06-19T21:05:00Z",
+    updatedAt: "2026-06-25T16:06:00Z",
     category: "tips",
     tags: ["cheap flights", "booking tips", "flight deals", "travel hacking", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
