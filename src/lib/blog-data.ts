@@ -252,7 +252,7 @@ If the cash, timing, alert, and points signals point in the same direction, you 
 
 Our Value Score system (1-100) takes the guesswork out of booking. A score of 90+ indicates historically low pricing—these are the deals you should book immediately.
 
-**Pro tip:** Set up alerts for your favorite routes and let us notify you when Value Scores spike above 85.
+**Pro tip:** Set up alerts for your favorite routes and let us notify you when Value Scores spike above 85. If you want a tighter alert workflow, use our <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts guide</a> to decide which routes, airports, and thresholds deserve notifications.
 
 ## Bottom Line
 
@@ -266,7 +266,7 @@ Don't obsess over finding the absolute lowest price—focus on finding a great d
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-05T10:00:00Z",
-    updatedAt: "2026-06-25T16:06:00Z",
+    updatedAt: "2026-06-28T17:00:00Z",
     category: "tips",
     tags: ["cheap flights", "booking tips", "flight deals", "travel hacking", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
