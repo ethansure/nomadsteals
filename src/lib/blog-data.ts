@@ -153,7 +153,7 @@ Use both tools together:
 
 1. **Google Flights** for route research and specific date pricing
 2. **NomadSteals Value Scores** to verify if a price is actually good historically
-3. **NomadSteals alerts** to catch deals Google Flights might miss
+3. **<a href="/blog/flight-deal-alerts-never-miss-cheap-fare">NomadSteals alerts</a>** to catch deals Google Flights might miss
 
 A Google Flights search shows you today's price. Our Value Score tells you if that price is a deal.
 
@@ -171,7 +171,7 @@ Happy hunting! 🛫
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-24T08:00:00Z",
-    updatedAt: "2026-06-20T01:08:00Z",
+    updatedAt: "2026-06-29T21:05:00Z",
     category: "guides",
     tags: ["google flights", "flight search", "cheap flights", "travel tips", "how to", "2026"],
     imageUrl: "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200",
