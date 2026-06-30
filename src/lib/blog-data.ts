@@ -1506,7 +1506,7 @@ Points can also help when travel dates are fixed and cash prices are not droppin
 Cash is often better when:
 
 - NomadSteals shows a high Value Score cash deal
-- Budget airlines have a low fare after bags and seats
+- <a href="/blog/best-budget-airlines-2026">Budget airlines</a> have a low fare after bags and seats
 - Award taxes or fuel surcharges are high
 - The redemption value is weak
 - You want to earn miles, status credit, or credit card travel protections
@@ -1604,7 +1604,7 @@ Credit card points are powerful, but cash deals still matter. Compare both befor
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-17T22:00:00Z",
-    updatedAt: "2026-06-20T15:48:00Z",
+    updatedAt: "2026-06-30T13:30:00Z",
     category: "guides",
     tags: ["credit card points", "flight deals", "cheap flights", "travel rewards", "points and miles", "booking tips"],
     imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200",
