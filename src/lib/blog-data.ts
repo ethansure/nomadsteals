@@ -1165,7 +1165,7 @@ Use Google Flights or Kayak to understand the normal price range for your route.
 
 ### Step 2: Set Alerts
 
-Track both your exact route and nearby airports. For flexible trips, set region-level alerts too.
+Track both your exact route and nearby airports. For flexible trips, set region-level alerts too. If you need a repeatable setup, use the <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts guide</a> to choose airports, destination groups, and Value Score thresholds before you start watching prices.
 
 ### Step 3: Watch Deal Quality
 
@@ -1206,7 +1206,7 @@ The smartest booking strategy is not waiting forever. It is knowing your thresho
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-05-02T16:10:00Z",
-    updatedAt: "2026-06-25T23:00:00Z",
+    updatedAt: "2026-06-30T21:00:00Z",
     category: "guides",
     tags: ["flight price prediction", "cheap flights", "flight deals", "google flights", "booking tips"],
     imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200",
