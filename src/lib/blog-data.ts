@@ -28,6 +28,8 @@ If you're flexible on destination, click **Explore** (map icon) to see the cheap
 
 **Pro tip:** Set a budget filter (e.g., "Under $300 roundtrip") to only see destinations within your price range.
 
+Use that map with the <a href="/blog/top-10-budget-travel-destinations-2026">budget travel destinations guide</a> so you can compare low airfare against places where hotels, food, and local transport stay affordable after landing.
+
 ### 2. Enable "Any Dates" for True Price Discovery
 
 In the Explore view, change dates to "Any dates" to see the absolute cheapest time to fly to each destination. This reveals pricing patterns most travelers miss.
@@ -171,7 +173,7 @@ Happy hunting! 🛫
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-24T08:00:00Z",
-    updatedAt: "2026-06-29T21:05:00Z",
+    updatedAt: "2026-06-30T08:00:00Z",
     category: "guides",
     tags: ["google flights", "flight search", "cheap flights", "travel tips", "how to", "2026"],
     imageUrl: "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200",
