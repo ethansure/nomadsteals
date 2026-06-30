@@ -659,7 +659,7 @@ Decide your booking threshold based on flexibility:
 - **Fixed dates:** Book 65+ and be happy
 
 ### Use Alerts
-Set up NomadSteals alerts for your dream destinations. We'll notify you when Value Scores spike—often these deals last only hours.
+Set up NomadSteals alerts for your dream destinations. We'll notify you when Value Scores spike—often these deals last only hours. If you want a repeatable setup, use the <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts guide</a> to choose routes, airports, and score thresholds before the next fare drop.
 
 ### Don't Chase Perfect
 A Value Score of 82 today might be better than hoping for a 95 that never comes. If a deal meets your threshold, book it.
@@ -697,11 +697,11 @@ Value Scores transform you from a price-checker into a deal hunter. Stop wonderi
 
 When you see a Value Score above 85, act fast. These deals are rare, and thousands of travelers are watching.
 
-Ready to find your next high-value deal? Browse our current listings and watch those scores!
+Ready to find your next high-value deal? Browse our <a href="/deals">current travel deal listings</a> and watch those scores!
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-03T11:00:00Z",
-    updatedAt: "2026-03-03T11:00:00Z",
+    updatedAt: "2026-06-30T15:30:00Z",
     category: "guides",
     tags: ["value score", "travel deals", "flight deals", "how to", "guides"],
     imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200",
