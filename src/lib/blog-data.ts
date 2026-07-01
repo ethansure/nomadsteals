@@ -1434,7 +1434,7 @@ Before using a hidden city itinerary, try these lower-risk options:
 4. Compare budget airline total cost after bags and seats
 5. Set alerts for the route and wait if the trip is not urgent
 
-NomadSteals Value Scores are useful here because a high score means the regular fare is already strong compared with typical pricing. If a normal deal is close to the hidden city price, the normal deal is usually better.
+<a href="/blog/how-to-use-value-scores-find-best-deals">NomadSteals Value Scores</a> are useful here because a high score means the regular fare is already strong compared with typical pricing. If a normal deal is close to the hidden city price, the normal deal is usually better.
 
 ## Quick Decision Checklist
 
@@ -1455,7 +1455,7 @@ Skiplagged-style hidden city ticketing can unlock cheap flights, but it is not a
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-17T20:45:00Z",
-    updatedAt: "2026-06-19T15:40:00Z",
+    updatedAt: "2026-07-01T15:00:00Z",
     category: "guides",
     tags: ["skiplagged", "hidden city ticketing", "cheap flights", "flight deals", "travel tips", "booking tips"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
