@@ -1651,7 +1651,7 @@ Use <a href="/deals">live NomadSteals deals</a>, Google Flights, or your preferr
 - Would a budget airline be cheaper after bags and seats?
 - Is the trip flexible enough to wait for a better price?
 
-If NomadSteals shows a high Value Score for the route, paying cash may be better than spending points. Cheap fares are often the best way to save your miles for harder trips.
+If NomadSteals shows a high Value Score for the route, paying cash may be better than spending points. Use the <a href="/blog/how-to-use-value-scores-find-best-deals">Value Scores explainer</a> to understand when a cash fare is strong enough to save your miles for harder trips.
 
 ## Step 2: Check Award Availability
 
@@ -1744,7 +1744,7 @@ NomadSteals makes that comparison easier by showing current flight deals and Val
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-18T03:00:00Z",
-    updatedAt: "2026-06-29T23:30:00Z",
+    updatedAt: "2026-07-01T03:30:00Z",
     category: "guides",
     tags: ["award travel", "points and miles", "credit card points", "cheap flights", "flight deals", "travel rewards"],
     imageUrl: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200",
