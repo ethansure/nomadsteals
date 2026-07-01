@@ -1330,7 +1330,7 @@ Then compare that number against:
 - Nearby airports
 - Alternate dates
 - <a href="/blog/best-time-to-book-cheap-flights-2026">Normal booking windows</a>
-- NomadSteals Value Scores
+- <a href="/blog/how-to-use-value-scores-find-best-deals">NomadSteals Value Scores</a>
 
 If the budget airline still wins after that comparison, it is probably a real deal.
 
@@ -1358,7 +1358,7 @@ Budget airlines are best when you know the rules before you book. Compare the re
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-17T13:00:00Z",
-    updatedAt: "2026-06-26T04:00:00Z",
+    updatedAt: "2026-07-01T00:00:00Z",
     category: "guides",
     tags: ["budget airlines", "cheap flights", "flight deals", "low cost carriers", "travel tips", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
