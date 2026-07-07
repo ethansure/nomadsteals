@@ -58,6 +58,11 @@ export default function BlogPage() {
       description: "Use fare forecasts and price alerts to decide whether to wait or book.",
     },
     {
+      href: "/blog/how-to-use-value-scores-find-best-deals",
+      title: "Value Scores",
+      description: "Learn how NomadSteals grades deals so you can spot truly unusual fares.",
+    },
+    {
       href: "/blog/best-budget-airlines-2026",
       title: "Budget Airlines",
       description: "Compare low-cost carriers, fees, bags, and when the cheap fare is worth it.",
@@ -126,7 +131,7 @@ export default function BlogPage() {
                 Flight Deal Guides
               </h2>
               <p className="text-[#2D3436]/60 mt-2">
-                Start here for booking timing, mistake fares, price prediction, and last-minute travel deals.
+                Start here for booking timing, mistake fares, Value Scores, price prediction, and last-minute travel deals.
               </p>
             </div>
             <Link
@@ -137,7 +142,7 @@ export default function BlogPage() {
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {flightDealGuides.map((guide) => (
               <Link
                 key={guide.href}
