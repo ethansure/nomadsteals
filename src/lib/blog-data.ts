@@ -990,7 +990,7 @@ Good last minute fares disappear quickly. If the Value Score is high and the dat
 
 ### Ignoring Basic Economy Rules
 
-Many late fares are basic economy. Check carry-on rules, seat selection, change restrictions, and cancellation terms before paying.
+Many late fares are basic economy. Check carry-on rules, seat selection, change restrictions, and cancellation terms before paying. If the fare is on a low-cost carrier, compare the real add-on cost with our <a href="/blog/best-budget-airlines-2026">budget airlines guide</a> before assuming the last minute price is actually cheap.
 
 ### Booking Nonrefundable Hotels Too Early
 
@@ -1038,7 +1038,7 @@ If a fare scores above 85 and fits your schedule, it is probably time to stop se
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-05-02T07:45:00Z",
-    updatedAt: "2026-06-11T04:00:00Z",
+    updatedAt: "2026-07-07T09:35:00Z",
     category: "deals",
     tags: ["last minute travel deals", "cheap flights", "flight deals", "travel deals", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200",
