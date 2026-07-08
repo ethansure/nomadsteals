@@ -138,7 +138,7 @@ No tool is perfect. Google Flights misses:
 5. Enable **Nearby airports**
 6. Toggle bag filters for true pricing
 7. Set **Price tracking** if not booking today
-8. Compare to NomadSteals Value Scores before booking
+8. Compare to <a href="/blog/how-to-use-value-scores-find-best-deals">NomadSteals Value Scores</a> before booking
 
 ## When NOT to Book on Google Flights
 
@@ -167,13 +167,13 @@ A Google Flights search shows you today's price. Our Value Score tells you if th
 - Enable **Nearby airports** for both ends
 - Add bags to see true costs
 - Track prices you're interested in
-- Verify deals with NomadSteals Value Scores
+- Verify deals with <a href="/blog/how-to-use-value-scores-find-best-deals">NomadSteals Value Scores</a>
 
 Happy hunting! 🛫
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-24T08:00:00Z",
-    updatedAt: "2026-06-30T08:00:00Z",
+    updatedAt: "2026-07-08T01:05:00Z",
     category: "guides",
     tags: ["google flights", "flight search", "cheap flights", "travel tips", "how to", "2026"],
     imageUrl: "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200",
