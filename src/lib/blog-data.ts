@@ -256,6 +256,8 @@ Our Value Score system (1-100) takes the guesswork out of booking. A score of 90
 
 **Pro tip:** Set up alerts for your favorite routes and let us notify you when Value Scores spike above 85. If you want a tighter alert workflow, use our <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts guide</a> to decide which routes, airports, and thresholds deserve notifications.
 
+If your departure is inside the next two weeks, switch from normal booking-window rules to the <a href="/blog/last-minute-travel-deals-guide-2026">last-minute travel deals guide</a> so baggage fees, bad flight times, refund risk, and hotel availability are part of the decision.
+
 ## Bottom Line
 
 The best time to book a cheap flight in 2026 is:
@@ -268,7 +270,7 @@ Don't obsess over finding the absolute lowest price—focus on finding a great d
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-05T10:00:00Z",
-    updatedAt: "2026-06-28T17:00:00Z",
+    updatedAt: "2026-07-08T14:05:00Z",
     category: "tips",
     tags: ["cheap flights", "booking tips", "flight deals", "travel hacking", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
