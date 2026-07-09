@@ -1441,7 +1441,7 @@ Before using a hidden city itinerary, try these lower-risk options:
 2. Check one-way combinations on different airlines
 3. Try flexible dates around the same week
 4. Compare budget airline total cost after bags and seats
-5. Set alerts for the route and wait if the trip is not urgent
+5. Set <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts</a> for the route and wait if the trip is not urgent
 
 <a href="/blog/how-to-use-value-scores-find-best-deals">NomadSteals Value Scores</a> are useful here because a high score means the regular fare is already strong compared with typical pricing. If a normal deal is close to the hidden city price, the normal deal is usually better.
 
@@ -1464,7 +1464,7 @@ Skiplagged-style hidden city ticketing can unlock cheap flights, but it is not a
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-17T20:45:00Z",
-    updatedAt: "2026-07-01T15:00:00Z",
+    updatedAt: "2026-07-09T22:03:00Z",
     category: "guides",
     tags: ["skiplagged", "hidden city ticketing", "cheap flights", "flight deals", "travel tips", "booking tips"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
