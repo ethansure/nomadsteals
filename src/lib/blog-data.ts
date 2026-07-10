@@ -778,7 +778,7 @@ Be honest about your constraints:
 ### Step 3: Set Your Price Thresholds
 Research typical prices for routes you're interested in, then set alerts 20-30% below average.
 
-If you are not sure what counts as early, late, or unusually cheap for your route, compare the alert threshold with our <a href="/blog/best-time-to-book-cheap-flights-2026">best time to book cheap flights guide</a> and the <a href="/blog/flight-price-prediction-tools-2026">flight price prediction tools framework</a> before deciding whether to wait or book.
+If you are not sure what counts as early, late, or unusually cheap for your route, compare the alert threshold with our <a href="/blog/how-to-use-value-scores-find-best-deals">Value Scores explainer</a>, <a href="/blog/best-time-to-book-cheap-flights-2026">best time to book cheap flights guide</a>, and <a href="/blog/flight-price-prediction-tools-2026">flight price prediction tools framework</a> before deciding whether to wait or book.
 
 ### Step 4: Layer Multiple Services
 No single service catches everything. Combine:
@@ -868,7 +868,7 @@ Sign up for NomadSteals alerts and let us do the hunting while you focus on deci
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-02T09:00:00Z",
-    updatedAt: "2026-06-29T15:30:00Z",
+    updatedAt: "2026-07-10T15:05:00Z",
     category: "tips",
     tags: ["flight alerts", "deal alerts", "cheap flights", "travel tips", "newsletter"],
     imageUrl: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=1200",
