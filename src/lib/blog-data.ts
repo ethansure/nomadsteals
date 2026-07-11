@@ -896,7 +896,7 @@ Before you book a near-term fare, run through this quick check:
 - Compare the fare against at least two nearby airports or flexible date options
 - Check whether the route appears in current <a href="/deals">live flight deals</a> instead of relying on one search result
 - Use the <a href="/blog/flight-price-prediction-tools-2026">flight price prediction framework</a> when departure is still more than a week away
-- Subscribe to <a href="/newsletter">deal alerts</a> for routes where a 24-hour delay could change the price
+- Use the <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts guide</a> to set route thresholds where a 24-hour delay could change the price
 
 For trips inside the next 72 hours, prioritize clean nonstop or one-stop itineraries over tiny savings. A slightly higher fare can be the better last minute travel deal if it avoids overnight layovers, bag surprises, or impossible arrival times.
 
@@ -1045,7 +1045,7 @@ If a fare scores above 85 and fits your schedule, it is probably time to stop se
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-05-02T07:45:00Z",
-    updatedAt: "2026-07-07T09:35:00Z",
+    updatedAt: "2026-07-11T00:05:00Z",
     category: "deals",
     tags: ["last minute travel deals", "cheap flights", "flight deals", "travel deals", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1200",
