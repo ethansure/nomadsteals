@@ -228,7 +228,7 @@ The day you fly matters more than when you book:
 
 1. **Use Incognito Mode:** Prevent cookies from tracking your searches
 2. **Be Flexible:** Even shifting by 1-2 days can save hundreds
-3. **Check Nearby Airports:** Sometimes flying into a secondary airport saves 20%+
+3. **Check Nearby Airports:** Sometimes flying into a secondary airport saves 20%+. Use the <a href="/blog/google-flights-tips-tricks-2026">Google Flights tips guide</a> to compare nearby airports and date grids before locking in one route.
 4. **Consider Positioning Flights:** A cheap flight to a hub city + another cheap flight can beat direct pricing
 
 ## 2026-Specific Trends
@@ -270,7 +270,7 @@ Don't obsess over finding the absolute lowest price—focus on finding a great d
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-05T10:00:00Z",
-    updatedAt: "2026-07-08T14:05:00Z",
+    updatedAt: "2026-07-11T15:35:00Z",
     category: "tips",
     tags: ["cheap flights", "booking tips", "flight deals", "travel hacking", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
