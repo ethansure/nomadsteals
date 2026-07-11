@@ -577,7 +577,7 @@ Before choosing a destination, run the trip through five quick filters:
 
 ## Finding Flights to These Destinations
 
-Set alerts on NomadSteals for these destinations. Our <a href="/blog/how-to-use-value-scores-find-best-deals">Value Score system</a> helps you identify when prices are truly low—not just "on sale."
+Start with the <a href="/blog/google-flights-tips-tricks-2026">Google Flights Explore workflow</a> to compare flexible cities and date ranges, then set alerts on NomadSteals for the destinations that still look affordable after hotels and local costs. Our <a href="/blog/how-to-use-value-scores-find-best-deals">Value Score system</a> helps you identify when prices are truly low—not just "on sale."
 
 Current average savings to these destinations: 38-52% below typical prices.
 
@@ -585,7 +585,7 @@ Where will you explore in 2026?
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-04T14:00:00Z",
-    updatedAt: "2026-07-07T20:35:00Z",
+    updatedAt: "2026-07-11T23:05:00Z",
     category: "destinations",
     tags: ["budget travel", "destinations", "2026 travel", "cheap travel", "backpacking"],
     imageUrl: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200",
