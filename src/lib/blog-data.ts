@@ -1508,7 +1508,7 @@ Points are usually worth using when:
 - Taxes and fees are low
 - You are booking premium cabins where cash prices are unrealistic
 
-Points can also help when travel dates are fixed and cash prices are not dropping. If you cannot be flexible, rewards may protect your budget.
+Points can also help when travel dates are fixed and cash prices are not dropping. If you cannot be flexible, use the <a href="/blog/flight-price-prediction-tools-2026">flight price prediction guide</a> to confirm whether waiting is still realistic before rewards protect your budget.
 
 ## When to Pay Cash Instead
 
@@ -1613,7 +1613,7 @@ Credit card points are powerful, but cash deals still matter. Compare both befor
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-17T22:00:00Z",
-    updatedAt: "2026-07-07T05:00:00Z",
+    updatedAt: "2026-07-11T02:35:00Z",
     category: "guides",
     tags: ["credit card points", "flight deals", "cheap flights", "travel rewards", "points and miles", "booking tips"],
     imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200",
