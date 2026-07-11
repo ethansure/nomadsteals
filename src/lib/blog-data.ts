@@ -1657,7 +1657,7 @@ Use <a href="/deals">live NomadSteals deals</a>, Google Flights, or your preferr
 - What does this route normally cost?
 - Is there a strong sale fare right now?
 - Are nearby dates or airports much cheaper?
-- Would a budget airline be cheaper after bags and seats?
+- Would a <a href="/blog/best-budget-airlines-2026">budget airline</a> be cheaper after bags and seats?
 - Is the trip flexible enough to wait for a better price?
 
 If NomadSteals shows a high Value Score for the route, paying cash may be better than spending points. Use the <a href="/blog/how-to-use-value-scores-find-best-deals">Value Scores explainer</a> to understand when a cash fare is strong enough to save your miles for harder trips, then compare that choice against the <a href="/blog/credit-card-points-for-flights-guide-2026">credit card points for flights guide</a> before transferring rewards.
@@ -1753,7 +1753,7 @@ NomadSteals makes that comparison easier by showing current flight deals and Val
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-18T03:00:00Z",
-    updatedAt: "2026-07-11T04:35:00Z",
+    updatedAt: "2026-07-11T09:35:00Z",
     category: "guides",
     tags: ["award travel", "points and miles", "credit card points", "cheap flights", "flight deals", "travel rewards"],
     imageUrl: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200",
