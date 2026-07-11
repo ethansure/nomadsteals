@@ -145,7 +145,7 @@ No tool is perfect. Google Flights misses:
 Google Flights is a search engine—it sends you to book elsewhere. Sometimes you shouldn't:
 
 - **Book direct with airlines** for easier changes/cancellations
-- **Use credit card portals** for bonus points
+- **Use credit card portals** for bonus points; compare portal value against our <a href="/blog/credit-card-points-for-flights-guide-2026">credit card points for flights guide</a> before redeeming rewards
 - **Check aggregators** for occasional exclusive prices
 - **Compare budget airline fees** before trusting the cheapest base fare; our <a href="/blog/best-budget-airlines-2026">budget airlines guide</a> shows how to include bags, seats, airport transfers, and schedule risk
 
@@ -173,7 +173,7 @@ Happy hunting! 🛫
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-24T08:00:00Z",
-    updatedAt: "2026-07-08T01:05:00Z",
+    updatedAt: "2026-07-11T07:35:00Z",
     category: "guides",
     tags: ["google flights", "flight search", "cheap flights", "travel tips", "how to", "2026"],
     imageUrl: "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200",
