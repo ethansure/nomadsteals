@@ -787,6 +787,8 @@ No single service catches everything. Combine:
 - **Hopper:** Prediction-based alerts
 - **Airline newsletters:** Occasional exclusive deals
 
+When an alert is for a low-cost carrier, compare the fare against the <a href="/blog/best-budget-airlines-2026">best budget airlines guide</a> before booking so bag fees, airport location, and schedule risk do not erase the savings.
+
 ## The NomadSteals Alert System
 
 Our newsletter delivers:
@@ -868,7 +870,7 @@ Sign up for NomadSteals alerts and let us do the hunting while you focus on deci
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-02T09:00:00Z",
-    updatedAt: "2026-07-12T07:35:00Z",
+    updatedAt: "2026-07-12T19:05:00Z",
     category: "tips",
     tags: ["flight alerts", "deal alerts", "cheap flights", "travel tips", "newsletter"],
     imageUrl: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=1200",
