@@ -669,7 +669,7 @@ Decide your booking threshold based on flexibility:
 Set up NomadSteals alerts for your dream destinations. We'll notify you when Value Scores spike—often these deals last only hours. If you want a repeatable setup, use the <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts guide</a> to choose routes, airports, and score thresholds before the next fare drop.
 
 ### Don't Chase Perfect
-A Value Score of 82 today might be better than hoping for a 95 that never comes. If a deal meets your threshold, book it.
+A Value Score of 82 today might be better than hoping for a 95 that never comes. If a deal meets your threshold, book it. When the score is borderline and your dates are flexible, use the <a href="/blog/flight-price-prediction-tools-2026">flight price prediction tools guide</a> to decide whether waiting has real upside or just adds risk.
 
 ### Compare Across Types
 A Value Score of 75 on business class might be better value than 80 on economy if the upgrade is meaningful to you.
@@ -708,7 +708,7 @@ Ready to find your next high-value deal? Browse our <a href="/deals">current tra
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-03T11:00:00Z",
-    updatedAt: "2026-07-07T16:05:00Z",
+    updatedAt: "2026-07-12T01:35:00Z",
     category: "guides",
     tags: ["value score", "travel deals", "flight deals", "how to", "guides"],
     imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200",
