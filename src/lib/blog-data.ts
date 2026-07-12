@@ -782,7 +782,7 @@ If you are not sure what counts as early, late, or unusually cheap for your rout
 
 ### Step 4: Layer Multiple Services
 No single service catches everything. Combine:
-- **Google Flights:** Great for specific routes
+- **<a href="/blog/google-flights-tips-tricks-2026">Google Flights</a>:** Great for specific routes, price tracking, date grids, and nearby-airport checks
 - **NomadSteals:** Curated deals with Value Scores
 - **Hopper:** Prediction-based alerts
 - **Airline newsletters:** Occasional exclusive deals
@@ -868,7 +868,7 @@ Sign up for NomadSteals alerts and let us do the hunting while you focus on deci
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-02T09:00:00Z",
-    updatedAt: "2026-07-10T15:05:00Z",
+    updatedAt: "2026-07-12T07:35:00Z",
     category: "tips",
     tags: ["flight alerts", "deal alerts", "cheap flights", "travel tips", "newsletter"],
     imageUrl: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=1200",
