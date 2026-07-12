@@ -58,6 +58,11 @@ export default function BlogPage() {
       description: "Use fare forecasts and price alerts to decide whether to wait or book.",
     },
     {
+      href: "/blog/flight-deal-alerts-never-miss-cheap-fare",
+      title: "Flight Deal Alerts",
+      description: "Set route alerts, score thresholds, and backup airports before fares drop.",
+    },
+    {
       href: "/blog/how-to-use-value-scores-find-best-deals",
       title: "Value Scores",
       description: "Learn how NomadSteals grades deals so you can spot truly unusual fares.",
