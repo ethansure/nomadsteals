@@ -1734,7 +1734,7 @@ Use this quick rule:
 - If cash fares are high and award space is good, use points
 - If taxes are high, compare another airline program
 - If dates are flexible, <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">set flight deal alerts</a> and wait for a better deal
-- If the trip is urgent, choose the option with the least risk
+- If the trip is urgent, use the <a href="/blog/last-minute-travel-deals-guide-2026">last-minute travel deals guide</a> to compare refund risk, bad flight times, baggage fees, and hotel availability before choosing the least risky option
 
 Budget airlines can also beat award tickets on short routes. Read the <a href="/blog/best-budget-airlines-2026">budget airlines guide</a> before using miles for a route where low-cost carriers compete heavily.
 
@@ -1761,7 +1761,7 @@ NomadSteals makes that comparison easier by showing current flight deals and Val
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-18T03:00:00Z",
-    updatedAt: "2026-07-11T09:35:00Z",
+    updatedAt: "2026-07-13T04:35:00Z",
     category: "guides",
     tags: ["award travel", "points and miles", "credit card points", "cheap flights", "flight deals", "travel rewards"],
     imageUrl: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200",
