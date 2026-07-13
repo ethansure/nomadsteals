@@ -196,6 +196,8 @@ Finding cheap flights isn't just about luck—it's about timing. Our analysis of
 
 **International flights:** Start looking 2-6 months ahead. For popular routes to Europe or Asia, the ideal booking window is 2-8 months before travel.
 
+If your trip is inside the normal booking window and prices are already high, switch from long-range timing rules to the <a href="/blog/last-minute-travel-deals-guide-2026">last minute travel deals workflow</a> so you can compare nearby airports, fee traps, and book-now signals before fares climb again.
+
 ## Best Days to Book
 
 Contrary to popular belief, there's no single "cheapest day to book." However, our data shows:
@@ -270,7 +272,7 @@ Don't obsess over finding the absolute lowest price—focus on finding a great d
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-05T10:00:00Z",
-    updatedAt: "2026-07-11T15:35:00Z",
+    updatedAt: "2026-07-13T10:30:00Z",
     category: "tips",
     tags: ["cheap flights", "booking tips", "flight deals", "travel hacking", "2026 travel"],
     imageUrl: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200",
