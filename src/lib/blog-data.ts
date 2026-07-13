@@ -1524,6 +1524,8 @@ Points are usually worth using when:
 
 Points can also help when travel dates are fixed and cash prices are not dropping. If you cannot be flexible, use the <a href="/blog/flight-price-prediction-tools-2026">flight price prediction guide</a> to confirm whether waiting is still realistic before rewards protect your budget.
 
+When departure is inside the next few weeks, compare the cash fare and award option against the <a href="/blog/last-minute-travel-deals-guide-2026">last-minute travel deals workflow</a> before transferring points. Near-term baggage fees, refund limits, hotel prices, and bad flight times can make a "free" award ticket less useful than a clean cash deal.
+
 ## When to Pay Cash Instead
 
 Cash is often better when:
@@ -1627,7 +1629,7 @@ Credit card points are powerful, but cash deals still matter. Compare both befor
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-17T22:00:00Z",
-    updatedAt: "2026-07-11T02:35:00Z",
+    updatedAt: "2026-07-13T17:05:00Z",
     category: "guides",
     tags: ["credit card points", "flight deals", "cheap flights", "travel rewards", "points and miles", "booking tips"],
     imageUrl: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200",
