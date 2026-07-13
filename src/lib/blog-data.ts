@@ -669,6 +669,8 @@ Decide your booking threshold based on flexibility:
 - **Moderately flexible:** Book 75+
 - **Fixed dates:** Book 65+ and be happy
 
+If the trip is inside the next two weeks, use the <a href="/blog/last-minute-travel-deals-guide-2026">last-minute travel deals workflow</a> before lowering your threshold. A score that looks acceptable can still be a bad buy if baggage fees, bad flight times, hotel scarcity, or limited refund options erase the savings.
+
 ### Use Alerts
 Set up NomadSteals alerts for your dream destinations. We'll notify you when Value Scores spike—often these deals last only hours. If you want a repeatable setup, use the <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts guide</a> to choose routes, airports, and score thresholds before the next fare drop.
 
@@ -712,7 +714,7 @@ Ready to find your next high-value deal? Browse our <a href="/deals">current tra
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-03T11:00:00Z",
-    updatedAt: "2026-07-12T01:35:00Z",
+    updatedAt: "2026-07-13T14:35:00Z",
     category: "guides",
     tags: ["value score", "travel deals", "flight deals", "how to", "guides"],
     imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200",
