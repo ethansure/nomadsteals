@@ -1211,7 +1211,7 @@ Only if the current fare is average and your trip is not urgent. If a fare is al
 
 ### Do flight prices go down at the last minute?
 
-Sometimes, but not reliably. Last minute drops happen when demand is weak or inventory is unsold. During holidays, events, and peak weekends, last minute fares usually rise.
+Sometimes, but not reliably. Last minute drops happen when demand is weak or inventory is unsold. During holidays, events, and peak weekends, last minute fares usually rise. Use the <a href="/blog/last-minute-travel-deals-guide-2026">last-minute travel deals guide</a> to separate realistic near-term opportunities from routes where waiting is likely to cost more.
 
 ## Bottom Line
 
@@ -1221,7 +1221,7 @@ The smartest booking strategy is not waiting forever. It is knowing your thresho
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-05-02T16:10:00Z",
-    updatedAt: "2026-07-11T14:05:00Z",
+    updatedAt: "2026-07-13T00:35:00Z",
     category: "guides",
     tags: ["flight price prediction", "cheap flights", "flight deals", "google flights", "booking tips"],
     imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200",
