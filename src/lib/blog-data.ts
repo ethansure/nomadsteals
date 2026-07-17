@@ -1770,11 +1770,11 @@ If most answers are unclear, do not rush the transfer. Award travel rewards pati
 
 Award travel is powerful when cash prices are high and award space is available at a fair rate. It is weak when you use points for flights that are already cheap. Search the cash fare first, compare the real cents-per-point value, and only transfer rewards when the award clearly beats the cash option.
 
-NomadSteals makes that comparison easier by showing current flight deals and Value Scores, so you can decide whether miles or money should pay for the trip.
+NomadSteals makes that comparison easier by showing <a href="/deals">current flight deals</a> and Value Scores, so you can decide whether miles or money should pay for the trip. If your dates are flexible, pair that cash-price check with the <a href="/blog/flight-deal-alerts-never-miss-cheap-fare">flight deal alerts workflow</a> before moving rewards into an airline program.
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-06-18T03:00:00Z",
-    updatedAt: "2026-07-13T04:35:00Z",
+    updatedAt: "2026-07-17T17:05:00Z",
     category: "guides",
     tags: ["award travel", "points and miles", "credit card points", "cheap flights", "flight deals", "travel rewards"],
     imageUrl: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200",
