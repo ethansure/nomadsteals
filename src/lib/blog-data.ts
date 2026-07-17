@@ -42,7 +42,7 @@ Click the **Date grid** view to see prices across an entire month. The green-hig
 
 Found a good flight but not ready to book? Click **Track prices** to receive email alerts when the price changes. Google will notify you of both drops and increases.
 
-**Important:** Price tracking works best 1-6 months before travel. Closer dates have less price volatility. For a deeper book-now-vs-wait framework, see our <a href="/blog/flight-price-prediction-tools-2026">flight price prediction tools guide</a>.
+**Important:** Price tracking works best 1-6 months before travel. Closer dates have less price volatility. If your trip is inside the next two weeks, switch to the <a href="/blog/last-minute-travel-deals-guide-2026">last-minute travel deals workflow</a> before assuming another price alert will arrive. For a deeper book-now-vs-wait framework, see our <a href="/blog/flight-price-prediction-tools-2026">flight price prediction tools guide</a>.
 
 ### 5. Check "Nearby Airports"
 
@@ -173,7 +173,7 @@ Happy hunting! 🛫
 `,
     author: "NomadSteals Team",
     publishedAt: "2026-03-24T08:00:00Z",
-    updatedAt: "2026-07-11T07:35:00Z",
+    updatedAt: "2026-07-17T00:05:00Z",
     category: "guides",
     tags: ["google flights", "flight search", "cheap flights", "travel tips", "how to", "2026"],
     imageUrl: "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200",
